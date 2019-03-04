@@ -32,7 +32,7 @@ let User = function(id, salt, hash, display){
     this.win = 0;
     this.loss = 0;
     this.items = [];
-}
+};
 
 
 
@@ -40,7 +40,7 @@ let Item = function(name, price, picture){
     this.name = name;
     this.price = price;
     this.picture = picture;
-}
+};
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -86,7 +86,7 @@ var checkUsername = function(req, res, next) {
 var sanitizeContent = function(req, res, next) {
     req.body.content = validator.escape(req.body.content);
     next();
-}
+};
 
 var checkId = function(req, res, next) {
     if (!validator.isAlphanumeric(req.params.id)) return res.status(400).end("bad input");
@@ -105,12 +105,12 @@ app.post('/signup/', checkUsername, function (req, res, next) {
             if (user) return res.status(409).end("username " + username + " already exists");
             var salt = generateSalt();
             var hash = generateHash(password, salt);
-            let user = new User(username, salt, hash, 0);
+            let newUser = new User(username, salt, hash, 0);
             db.close();
             MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
                 var dbo = db.db("mydb");
-                dbo.collection("users").insertOne(user, function(err, res) {
+                dbo.collection("users").insertOne(newUser, function(err, res) {
                     if (err) return res.status(500).end(err);
                     db.close();
                     return res.json("user " + username + " signed up");
@@ -140,6 +140,8 @@ app.post('/signin/', checkUsername, function (req, res, next) {
                 secure: true
             }));
             return res.json("user " + username + " signed in");
+        });
+    });
 });
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
@@ -172,7 +174,7 @@ app.get('/api/user/:userId/picture', checkId, function(req, res, next){
             db.close();
         });
       });
-})
+});
 
 app.get('/api/user/:userId/friends', checkId, function(req, res, next){
     MongoClient.connect(url, function(err, db) {
@@ -186,7 +188,7 @@ app.get('/api/user/:userId/friends', checkId, function(req, res, next){
             return res.json(friends);
         });
       });
-})
+});
 
 const https = require('https');
 const PORT = 3000;
