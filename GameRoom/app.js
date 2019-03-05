@@ -34,8 +34,6 @@ let User = function(id, salt, hash, display){
     this.items = [];
 };
 
-
-
 let Item = function(name, price, picture){
     this.name = name;
     this.price = price;
@@ -71,7 +69,7 @@ function generateHash (password, salt){
     return hash.digest('base64');
 }
 
-app.use(express.static('frontend'));
+app.use(express.static('static'));
 
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
@@ -155,7 +153,6 @@ app.get('/signout/', function (req, res, next) {
     }));
     res.redirect('/');
 });
-
 
 // return picture
 // return friends
