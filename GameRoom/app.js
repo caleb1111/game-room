@@ -157,6 +157,9 @@ app.get('/signout/', function (req, res, next) {
 // return picture
 // return friends
 // return win loss/ items / rank
+app.patch('/api/user/:userId/picture', upload.single('picture'), function(req, res, next){
+    
+})
 
 app.get('/api/user/:userId/picture', checkId, function(req, res, next){
     MongoClient.connect(url, function(err, db) {
