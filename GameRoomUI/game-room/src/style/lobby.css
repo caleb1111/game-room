@@ -24,23 +24,23 @@ ul, li {
 
 #lobby_sidebar {
 	float: right;
-	width: 220px;
+	width: 200px;
 	padding-left: 20px;
 	background:	url(../media/lobby/lobby_sidebar.png) center left no-repeat
 }
 
 #lobby_leftsidebar {
 	float: left;
-	width: 220px;
+	width: 350px;
 	padding-left: 40px;
 	background:	url(../media/lobby/lobby_sidebar.png) center right no-repeat
 }
 
 #lobby_main {
 	float: left;
-	margin-left: 85px;
-	width: 550px;
-	height: 510px;
+	margin-left: 25px;
+	width: 560px;
+	height: 540px;
 	overflow-x: hidden;
 	overflow-y: scroll;  /* hidden 设置gameroom显示的数量 9个*/
 }
@@ -69,45 +69,37 @@ ul, li {
   }
 /* ------------------------------------------------------- */
 
-
-.section {
-	position:relative;
-	float:left;
-	width: 460px;
-	height: 470px;
-	padding: 40px;
-	margin-right: 20px;
-	overflow: hidden;
-	background: url(../media/lobby/content_bg.png) no-repeat
-}
-
 #game_room li {
 	float: left;
 	width: 150px;
 	height: 150px;
 	background: none;
-	margin: 0 15px 15px 0;
-	background: url(../media/lobby/lobby_bg.png)
-}
-#game_room li a
- {
-	display: block;
-	padding: 10px;
+	margin: 15px 15px 15px 15px;
+	text-align: center;
+	color: white;
+	background: url(../media/lobby/gameSessionBackground.png);
+	transform: scale(1);
+    transition: transform 0.5s, opacity 0.5s;
 }
 
+#game_room li:hover {
+	opacity: 1;
+    transform: scale(1.13);
+}
 #game_room li.no_margin_right { margin-right: 0 }
 
-.sidebar_box {
+.player_box {
+	color: white;
 	width: 150px;
 	height: 250px;
-	padding: 10px 10px 10px 90px;
+	padding: 10px 10px 10px 10px;
 	margin-bottom: 20px;
 	font-size: 11px;
 	position: relative;
-	background: url(../media/lobby/sidebar_box.png) repeat
+	background: url(../media/lobby/playerListBackground.png) repeat
 }
 
-.sidebar_box span {
+.player_box span {
 	position: absolute;
 	width: 60px;
 	height: 60px;
@@ -115,20 +107,28 @@ ul, li {
 	top: 20px;
 }
 
-.sidebar_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
-.sidebar_box .menu_desc { margin-left: 0px; margin-top: 20px; width: 200px; color: #000; font-size: 11px; }
+.player_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
 
-.leftsidebar_box {
-	width: 150px;
+.chat_box {
+	color: white;
+	width: 260px;
 	height: 500px;
-	padding: 10px 10px 10px 90px;
+	padding: 10px 10px 10px 10px;
 	margin-bottom: 20px;
 	font-size: 11px;
 	position: relative;
-	background: url(../media/lobby/sidebar_box.png) repeat
+	background: url(../media/lobby/chatBackground.png) repeat;
 }
 
-.leftsidebar_box span {
+.chat_content {
+	margin-top: 25px;
+	border: 1px white solid;
+	height: 440px;
+	width: 240px;
+
+}
+
+.chat_box span {
 	position: absolute;
 	width: 60px;
 	height: 60px;
@@ -136,5 +136,4 @@ ul, li {
 	top: 20px;
 }
 
-.leftsidebar_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
-.leftsidebar_box .menu_desc { margin-left: 0px; margin-top: 20px; width: 200px; color: #000; font-size: 11px; }
+.chat_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
