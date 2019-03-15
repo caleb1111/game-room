@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const path = require('path');
 const express = require('express');
 const app = express();
+const router = express.Router();
 
 let MongoClient = require('mongodb').MongoClient;
 let url = "mongodb://localhost:27017/mydb";
@@ -14,6 +15,11 @@ MongoClient.connect(url, function(err, db) {
       console.log("User collection created!");
       db.close();
     });
+    dbo.createCollection("loggedUsers", function(err, res) {
+        if (err) throw err;
+        console.log("Logged users collection created!");
+        db.close();
+      });
     dbo.createCollection("items", function(err, res) {
         if (err) throw err;
         console.log("Item collection created!");
@@ -69,7 +75,18 @@ function generateHash (password, salt){
     return hash.digest('base64');
 }
 
+app.use(function(req, res, next){
+    req.user = ('user' in req.session)? req.session.user : null;
+    let username = (req.user)? req.user._id : '';
+    res.setHeader('Set-Cookie', cookie.serialize('username', username, {
+          path : '/', 
+          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+    }));
+    next();
+});
+
 app.use(express.static('static'));
+
 
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
@@ -92,7 +109,7 @@ var checkId = function(req, res, next) {
 };
 
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
-app.post('/signup/', checkUsername, function (req, res, next) {
+router.post('/signup/', checkUsername, function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
     MongoClient.connect(url, function(err, db) {
@@ -104,22 +121,17 @@ app.post('/signup/', checkUsername, function (req, res, next) {
             var salt = generateSalt();
             var hash = generateHash(password, salt);
             let newUser = new User(username, salt, hash, 0);
-            db.close();
-            MongoClient.connect(url, function(err, db) {
-                if (err) throw err;
-                var dbo = db.db("mydb");
-                dbo.collection("users").insertOne(newUser, function(err, res) {
-                    if (err) return res.status(500).end(err);
-                    db.close();
-                    return res.json("user " + username + " signed up");
-                });
+            dbo.collection("users").insertOne(newUser, function(err, res) {
+                if (err) return res.status(500).end(err);
+                db.close();
+                return res.json("user " + username + " signed up");
             });
         });
     });
 });
 
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signin/
-app.post('/signin/', checkUsername, function (req, res, next) {
+router.post('/signin/', checkUsername, function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
     // retrieve user from the database
@@ -130,38 +142,51 @@ app.post('/signin/', checkUsername, function (req, res, next) {
             if (err) return res.status(500).end(err);
             if (!user) return res.status(409).end("username " + username + " already exists");
             if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-            db.close();
-            res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
-                path : '/', 
-                maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                sameSite: true,
-                secure: true
-            }));
-            return res.json("user " + username + " signed in");
+            dbo.collection("loggedUsers").insertOne(user, function(err, res) {
+                if (err) return res.status(500).end(err);
+                res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
+                    path : '/', 
+                    maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+                    sameSite: true,
+                    secure: true
+                }));
+                db.close();
+                return res.json("user " + username + " signed in");
+            });
         });
     });
 });
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
-app.get('/signout/', function (req, res, next) {
-    req.session.destroy();
-    res.setHeader('Set-Cookie', cookie.serialize('username', '', {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-          sameSite: true,
-          secure: true
-    }));
-    res.redirect('/');
+router.get('/signout/', function (req, res, next) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mydb");
+        var myquery = {_id: req.user._id};
+        dbo.collection("customers").deleteOne(myquery, function(err, obj) {
+            if (err) throw err;
+            db.close();
+            req.session.destroy();
+            res.setHeader('Set-Cookie', cookie.serialize('username', '', {
+                path : '/', 
+                maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+                sameSite: true,
+                secure: true
+            }));
+            res.redirect('/');
+        });
+    });
+    
 });
 
 // return picture
 // return friends
 // return win loss/ items / rank
-app.patch('/api/user/:userId/picture', upload.single('picture'), function(req, res, next){
+router.patch('/api/user/:userId/picture', upload.single('picture'), function(req, res, next){
     
 })
 
-app.get('/api/user/:userId/picture', checkId, function(req, res, next){
+router.get('/api/user/:userId/picture', checkId, function(req, res, next){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
@@ -176,7 +201,7 @@ app.get('/api/user/:userId/picture', checkId, function(req, res, next){
       });
 });
 
-app.get('/api/user/:userId/friends', checkId, function(req, res, next){
+router.get('/api/user/:userId/friends', checkId, function(req, res, next){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
@@ -189,17 +214,8 @@ app.get('/api/user/:userId/friends', checkId, function(req, res, next){
         });
       });
 });
+app.use("/api/", router);
 
-const https = require('https');
-const PORT = 3000;
-var privateKey = fs.readFileSync( 'server.key' );
-var certificate = fs.readFileSync( 'server.crt' );
-var config = {
-        key: privateKey,
-        cert: certificate
-};
+const PORT = 5000;
 
-https.createServer(config, app).listen(PORT, function (err) {
-    if (err) console.log(err);
-    else console.log("HTTPS server on https://localhost:%s", PORT);
-});
+app.listen(PORT, () => console.log(`LISTENING ON PORT ${PORT}`));
