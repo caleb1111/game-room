@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Logo from './Components/Logo';
 import Nav from './Components/NavBar';
+import Chat from './Chat';
 import '../style/lobby.css';
 
 
@@ -20,11 +21,7 @@ export default class Home extends Component {
         <div className="empty"></div>
 
         <div id="lobby_leftsidebar">
-
-            <div className="chat_box">
-                <span className="menu_title">Chat</span>
-                <div className="chat_content"></div>
-            </div>
+            <Chat />
         </div>
 
         <div id="lobby_main">
