@@ -13,9 +13,9 @@ function AppRouter() {
       <Router>
         <div>
           <Route path="/" exact component={Home} />
-          <Route path="/UserProfile/" component={UserProfile} />
-          <Route path="/shop/" component={Shop} />
-          <Route path="/signin/" component={SignUpIn} />
+          <Route path="/UserProfile" component={UserProfile} />
+          <Route path="/shop" component={Shop} />
+          <Route path="/signin" component={SignUpIn} />
         </div>
       </Router>
     );
