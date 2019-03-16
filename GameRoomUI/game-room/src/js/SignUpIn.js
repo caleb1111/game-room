@@ -11,24 +11,27 @@ const SignLogo = () => (
 
 export default class SignUpIn extends Component {
   // initialize our state 
-  state = {
-    data: [],
-    id: 0,
-    username: null,
-    password: null,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+        password: '',
+        username: '',
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log('The form was submitted with the following data: username: ', 
+    this.state.username, ' password: ', this.state.password);
+  }
 
   // our put method that uses our backend api
   // to create new query into our data base
   putUserToDB = (username, password) => {
-    let currentIds = this.state.data.map(data => data.id);
-    let idToBeAdded = 0;
-    while (currentIds.includes(idToBeAdded)) {
-      ++idToBeAdded;
-    }
-
     axios.post("http://localhost:3000/signup/", {
-      id: idToBeAdded,
       username: username,
       password: password
     });
@@ -37,14 +40,7 @@ export default class SignUpIn extends Component {
   // our put method that uses our backend api
   // to create new query into our data base
   checkUserFromDB = (username, password) => {
-    let currentIds = this.state.data.map(data => data.id);
-    let idToBeAdded = 0;
-    while (currentIds.includes(idToBeAdded)) {
-      ++idToBeAdded;
-    }
-
     axios.post("http://localhost:3000/signin/", {
-      id: idToBeAdded,
       username: username,
       password: password
     });
@@ -55,7 +51,7 @@ export default class SignUpIn extends Component {
       <div className="background">
         <SignLogo/>
         <div id="sign_form">
-          <form className="signup_form" id="create_signup_form">
+          <form onSubmit={this.handleSubmit} className="signup_form" id="create_signup_form">
               <div className="form_title">𝕊𝕚𝕘𝕟 𝕌𝕡/𝕊𝕚𝕘𝕟 𝕀𝕟</div>
               <input type="text" name="username" className="form_element" placeholder="Enter a username" 
               onChange={e => this.setState({ username: e.target.value })} required/>
