@@ -46,6 +46,34 @@ class Chat extends React.Component{
                             <div>{message.message}</div>
                         )
                     })}
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
                     </div>
                 <div>
                 <input type="text" placeholder="Message" className="form_element" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>

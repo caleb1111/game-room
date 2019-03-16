@@ -38,10 +38,12 @@
 /* ------------------------------------------------------- */
 
 .messages {
+    color: white;
+    font-size: 150%;
     border: 1px solid white;
     height: 380px;
     width: 260px;
-    overflow-x: hidden;
+    overflow-x: scroll;
 	overflow-y: scroll;  /* hidden 设置gameroom显示的数量 9个*/
 }
 
