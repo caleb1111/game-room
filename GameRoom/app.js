@@ -86,7 +86,6 @@ app.use(function(req, res, next){
 
 app.use(express.static(path.join(__dirname, 'GameRoomUI/build')));
 
-
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
     next();
@@ -177,9 +176,9 @@ app.get('/signout/', (req, res) => {
         var myquery = {_id: req.user._id};
         dbo.collection("customers").deleteOne(myquery, function(err, obj) {
             if (err) throw err;
+
             db.close();
-            req.session.destroy();
-            res.setHeader('Set-Cookie', cookie.serialize('username', '', {
+            res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
                 path : '/', 
                 maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
                 sameSite: true,
@@ -188,7 +187,18 @@ app.get('/signout/', (req, res) => {
             res.json("successfully logged out");
         });
     });
-    
+});
+
+// curl -b cookie.txt -c cookie.txt localhost:3000/signout/
+app.get('/signout/', function (req, res, next) {
+    req.session.destroy();
+    res.setHeader('Set-Cookie', cookie.serialize('username', '', {
+          path : '/', 
+          maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+          sameSite: true,
+          secure: true
+    }));
+    res.redirect('/');
 });
 
 // return picture

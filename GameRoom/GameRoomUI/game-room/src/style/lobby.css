@@ -1,0 +1,139 @@
+ul, li {
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+
+.empty {
+	height: 100px;
+}
+
+.clear {
+	clear:left;
+}
+
+.half { width: 220px }
+
+.left { float: left }
+.right { float: right }
+
+#lobby_wrapper {
+	width: 1140px;
+	margin: 0 auto
+}
+
+#lobby_sidebar {
+	float: right;
+	width: 200px;
+	padding-left: 20px;
+	background:	url(../media/lobby/lobby_sidebar.png) center left no-repeat
+}
+
+#lobby_leftsidebar {
+	float: left;
+	width: 350px;
+	padding-left: 40px;
+	background:	url(../media/lobby/lobby_sidebar.png) center right no-repeat
+}
+
+#lobby_main {
+	float: left;
+	margin-left: 25px;
+	width: 560px;
+	height: 540px;
+	overflow-x: hidden;
+	overflow-y: scroll;  /* hidden 设置gameroom显示的数量 9个*/
+}
+
+/* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
+/* width */
+::-webkit-scrollbar {
+	width: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px grey; 
+	border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+	background: white; 
+	border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+	background: gray; 
+  }
+/* ------------------------------------------------------- */
+
+#game_room li {
+	float: left;
+	width: 150px;
+	height: 150px;
+	background: none;
+	margin: 15px 15px 15px 15px;
+	text-align: center;
+	color: white;
+	background: url(../media/lobby/gameSessionBackground.png);
+	transform: scale(1);
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+#game_room li:hover {
+	opacity: 1;
+    transform: scale(1.13);
+}
+#game_room li.no_margin_right { margin-right: 0 }
+
+.player_box {
+	color: white;
+	width: 150px;
+	height: 250px;
+	padding: 10px 10px 10px 10px;
+	margin-bottom: 20px;
+	font-size: 11px;
+	position: relative;
+	background: url(../media/lobby/playerListBackground.png) repeat
+}
+
+.player_box span {
+	position: absolute;
+	width: 60px;
+	height: 60px;
+	left: 15px;
+	top: 20px;
+}
+
+.player_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
+
+.chat_box {
+	color: white;
+	width: 260px;
+	height: 500px;
+	padding: 10px 10px 10px 10px;
+	margin-bottom: 20px;
+	font-size: 11px;
+	position: relative;
+	background: url(../media/lobby/chatBackground.png) repeat;
+}
+
+.chat_content {
+	margin-top: 25px;
+	border: 1px white solid;
+	height: 440px;
+	width: 240px;
+
+}
+
+.chat_box span {
+	position: absolute;
+	width: 60px;
+	height: 60px;
+	left: 15px;
+	top: 20px;
+}
+
+.chat_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
