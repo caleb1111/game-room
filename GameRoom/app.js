@@ -2,23 +2,21 @@ const crypto = require('crypto');
 const path = require('path');
 const express = require('express');
 const app = express();
-const router = express.Router();
-
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 let MongoClient = require('mongodb').MongoClient;
 let url = "mongodb://localhost:27017/mydb";
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
     if (err) throw err;
     var dbo = db.db("mydb");
     dbo.createCollection("users", function(err, res) {
       if (err) throw err;
       console.log("User collection created!");
-      db.close();
     });
     dbo.createCollection("loggedUsers", function(err, res) {
         if (err) throw err;
         console.log("Logged users collection created!");
-        db.close();
       });
     dbo.createCollection("items", function(err, res) {
         if (err) throw err;
@@ -38,6 +36,7 @@ let User = function(id, salt, hash, display){
     this.win = 0;
     this.loss = 0;
     this.items = [];
+    this.socket = 0;
 };
 
 let Item = function(name, price, picture){
@@ -85,7 +84,7 @@ app.use(function(req, res, next){
     next();
 });
 
-app.use(express.static('static'));
+app.use(express.static(path.join(__dirname, 'GameRoomUI/build')));
 
 
 app.use(function (req, res, next){
@@ -108,11 +107,24 @@ var checkId = function(req, res, next) {
     next();
 };
 
+io.on("connection", function (socket) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("mydb");
+        var myquery = { _id: req.user._id };
+        var newvalues = { $set: {socket: socket.id} };
+        dbo.collection("users").updateOne(myquery, newvalues, function(err, res) {
+          if (err) throw err;
+          db.close();
+        });
+      });
+});
+
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
-router.post('/signup/', checkUsername, function (req, res, next) {
+app.post('/signup/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
         dbo.collection("users").findOne({_id: username}, function(err, user) {
@@ -123,19 +135,19 @@ router.post('/signup/', checkUsername, function (req, res, next) {
             let newUser = new User(username, salt, hash, 0);
             dbo.collection("users").insertOne(newUser, function(err, res) {
                 if (err) return res.status(500).end(err);
+                res.json("user " + username + " signed up");
                 db.close();
-                return res.json("user " + username + " signed up");
             });
         });
     });
 });
 
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signin/
-router.post('/signin/', checkUsername, function (req, res, next) {
+app.post('/signin/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
     // retrieve user from the database
-    MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
         dbo.collection("users").findOne({_id: username}, function(err, user) {
@@ -150,16 +162,16 @@ router.post('/signin/', checkUsername, function (req, res, next) {
                     sameSite: true,
                     secure: true
                 }));
+                res.json("user " + username + " signed in");
                 db.close();
-                return res.json("user " + username + " signed in");
             });
         });
     });
 });
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
-router.get('/signout/', function (req, res, next) {
-    MongoClient.connect(url, function(err, db) {
+app.get('/signout/', (req, res) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         var dbo = db.db("mydb");
         var myquery = {_id: req.user._id};
@@ -173,7 +185,7 @@ router.get('/signout/', function (req, res, next) {
                 sameSite: true,
                 secure: true
             }));
-            res.redirect('/');
+            res.json("successfully logged out");
         });
     });
     
@@ -182,12 +194,12 @@ router.get('/signout/', function (req, res, next) {
 // return picture
 // return friends
 // return win loss/ items / rank
-router.patch('/api/user/:userId/picture', upload.single('picture'), function(req, res, next){
+app.patch('/api/user/:userId/picture', upload.single('picture'), (req, res) => {
     
 })
 
-router.get('/api/user/:userId/picture', checkId, function(req, res, next){
-    MongoClient.connect(url, function(err, db) {
+app.get('/api/user/:userId/picture', checkId, (req, res) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
         dbo.collection("users").findOne({_id: req.params.userId}, function(err, user) {
@@ -201,21 +213,23 @@ router.get('/api/user/:userId/picture', checkId, function(req, res, next){
       });
 });
 
-router.get('/api/user/:userId/friends', checkId, function(req, res, next){
-    MongoClient.connect(url, function(err, db) {
+app.get('/api/user/:userId/friends', checkId, (req, res) => {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         if (err) throw err;
         let dbo = db.db("mydb");
         dbo.collection("users").findOne({_id: req.params.userId}, function(err, user) {
             if (err) return res.status(500).end(err);
             if (!user) return res.status(404).end('Image id ' + req.params.imageid + ' does not exists');
             let friends = user.friends;
+            res.json(friends);
             db.close();
-            return res.json(friends);
         });
       });
 });
-app.use("/api/", router);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/GameRoomUI/build/index.html'));
+  });
 
 const PORT = 5000;
-
 app.listen(PORT, () => console.log(`LISTENING ON PORT ${PORT}`));
