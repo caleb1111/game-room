@@ -1,3 +1,4 @@
+
 .chat_box {
 	width: 280px;
 	height: 500px;
@@ -5,7 +6,8 @@
 	margin-bottom: 20px;
 	font-size: 11px;
 	position: relative;
-	background: url(../media/lobby/chatBackground.png) repeat;
+  background: url(../media/lobby/chatBackground.png) repeat;
+  border-radius: 10px;
 }
 
 .chat_content {
@@ -16,35 +18,38 @@
 /* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
 /* width */
 ::-webkit-scrollbar {
-	width: 15px;
+  width: 15px;
+  border-radius: 10px;
+  background: black; 
   }
   
   /* Track */
   ::-webkit-scrollbar-track {
-	box-shadow: inset 0 0 5px grey; 
+	box-shadow: inset 0 0 5px black; 
 	border-radius: 10px;
   }
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-	background: white; 
+	background: #777; 
 	border-radius: 10px;
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-	background: gray; 
+	background: black; 
   }
 /* ------------------------------------------------------- */
 
 .messages {
-    color: white;
-    font-size: 150%;
-    border: 1px solid white;
-    height: 380px;
-    width: 260px;
-    overflow-x: scroll;
-	overflow-y: scroll;  /* hidden 设置gameroom显示的数量 9个*/
+  background-color: #ecf0f1;
+  color: black;
+  font-size: 120%;
+  border: 1px solid white;
+  border-radius: 10px;
+  height: 380px;
+  width: 260px;
+  overflow-y: scroll; 
 }
 
 .chat_box .menu_title { color: white; margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 20px; font-weight: bold; }
@@ -87,3 +92,26 @@ button[type="submit"]{
     border: 1px solid #e2b70d;
     color: #e2b70d;
 }
+
+#message {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  transform: scale(1);
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+#message li {
+  padding: 5px 10px;
+}
+
+#message li:nth-child(odd) {
+  background: #bdc3c7;
+}
+
+#message li:hover {
+  background: #777;
+  opacity: 1;
+  transform: scale(1.03);
+}
+

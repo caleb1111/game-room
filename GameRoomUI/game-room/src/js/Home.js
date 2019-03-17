@@ -1,21 +1,41 @@
 import React, { Component } from 'react';
 import Logo from './Components/Logo';
 import Nav from './Components/NavBar';
-import Chat from './Chat';
+import Loading from './Components/Loading';
+import Chat from './Components/Chat';
 import '../style/lobby.css';
 
 
 export default class Home extends Component {
 
+  authenticate(){
+    return new Promise(resolve => setTimeout(resolve, 2000))
+  }
+
+  componentDidMount(){
+    this.authenticate().then(() => {
+      const ele = document.getElementById('ipl-progress-indicator')
+      if(ele){
+        // fade out
+        ele.classList.add('available')
+        setTimeout(() => {
+          // remove from DOM
+          ele.outerHTML = ''
+        }, 2000)
+      }
+    })
+  }
+  
   render() {
     return (
       <div className="background">
+        <Loading/>
         <header>
           <a href="/"><Logo/></a>
           <Nav/>
         </header>
         <br></br>
-        <hr></hr>
+
         <div>
         <div id="lobby_wrapper">
         <div className="empty"></div>

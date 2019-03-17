@@ -14,7 +14,6 @@ export default class UserProfile extends Component {
             <Nav/>
           </header>
           <br></br>
-          <hr />
           <div>
               <h1 style={{color: 'white'}}>This is Shop Page</h1>
           </div>

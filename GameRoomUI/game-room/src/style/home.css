@@ -205,7 +205,7 @@ a:active {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 90%; /* use percentage */
+    font-size: 100%; /* use percentage */
     /* hide the border before hovering */
     border-bottom: 2px solid transparent;
 }

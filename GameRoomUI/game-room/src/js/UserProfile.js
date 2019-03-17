@@ -15,7 +15,6 @@ export default class UserProfile extends Component {
             <Nav/>
           </header>
           <br></br>
-          <hr />
           <User />
         </div>
       );

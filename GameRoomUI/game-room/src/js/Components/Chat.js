@@ -1,6 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
-import '../style/chat.css';
+import '../../style/chat.css';
 
 class Chat extends React.Component{
     constructor(props){
@@ -43,37 +43,38 @@ class Chat extends React.Component{
                     {this.state.messages.map(message => {
                         return (
                             // <div>{message.username}: {message.message}</div>
-                            <div>{message.message}</div>
+                            <ul id="message">{message.message}</ul>
                         )
                     })}
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
+                    <ul id="message">
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        <li>1</li>
+                        </ul>
                     </div>
                 <div>
                 <input type="text" placeholder="Message" className="form_element" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>
