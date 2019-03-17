@@ -1,9 +1,112 @@
 #playerBoard {
-    width: 400px;
-    height: 400px;
+    background: #f1f1f1;
+    border:  2px solid white
 }
 
+#player{
+    margin-right: 30px;
+}
+
+#opponent{
+    margin-left: 30px;
+}
+
+
 #opponentBoard {
-    width: 400px;
+    background: #f1f1f1;
+    border:  2px solid white
+}
+
+.board {
+    display: flex;
+    flex-direction: row;
+}
+
+#fleetText {
+    text-align: center;
+    font-size: 20px;
+}
+
+#gameTitle {
+    text-align: center;
+    font-size: 40px;
+    
+}
+
+#logs{
+    margin-left: 80px;
+}
+
+
+
+#deployments{
+    display: flex;
+    flex-direction: row;
+}
+
+#textLog{
+    width: 350px;
     height: 400px;
+    border-radius: 15px;
+    padding: 15px 15px 15px 15px;
+    background-color: #f1f1f1;
+    overflow: auto;
+}
+
+.entry{
+    width: 100px;
+    align-self: center;
+    margin-left: 50px;
+    margin-right: 50px;
+    padding-right: 40px;
+}
+
+.shipName{
+    text-align: center;
+    display: block;
+}
+
+.selector{
+    display: none;
+    width: inherit;
+    height: 5px;
+    background: cyan;
+    margin-top: 25px;
+}
+
+#rotateShips{
+    border: 2px dashed lightgreen;
+    color: lightgreen;
+    font-weight: bolder;
+    background-color: white;
+    width: 80px;
+    height: 100px;
+    margin-top: 15px;
+}
+
+#ending{
+    display: none;
+}
+
+.place{
+    
+}
+
+#result{
+    font-size: 50px;
+    text-align: center;
+}
+
+#returnButton{
+    display: inline-block;
+}
+
+#status{
+    text-align: center;
+    font-weight: bolder;
+    color: lightgreen;
+}
+
+body{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
