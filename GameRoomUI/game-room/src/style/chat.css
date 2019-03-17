@@ -102,6 +102,7 @@ button[type="submit"]{
 }
 
 #message li {
+  border-radius:10px;
   padding: 5px 10px;
 }
 
