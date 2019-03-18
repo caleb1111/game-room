@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios";
 import Logo from '../media/title.png';
+import Loading from './Components/Loading';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';
@@ -50,9 +51,31 @@ export default class SignUpIn extends Component {
     });
   };
 
+  // loading gif ---------------------------------------------------------------------------------
+  authenticate(){
+    return new Promise(resolve => setTimeout(resolve, 2000))
+  }
+
+  componentDidMount(){
+    this.authenticate().then(() => {
+      const ele = document.getElementById('ipl-progress-indicator')
+      if(ele){
+        // fade out
+        ele.classList.add('available')
+        setTimeout(() => {
+          // remove from DOM
+          ele.outerHTML = ''
+        }, 2000)
+      }
+    })
+  }
+
+  // ----------------------------------------------------------------------------------
+
   render() {
     return (
       <div className="background">
+      <Loading/>
         <SignLogo/>
         <div id="sign_form">
           <form onSubmit={this.handleSubmit} className="signup_form" id="create_signup_form">
