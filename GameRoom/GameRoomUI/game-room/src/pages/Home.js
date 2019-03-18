@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Logo from './Components/Logo';
-import Nav from './Components/NavBar';
-import Chat from './Components/Chat';
+import Logo from '../Components/Logo';
+import Nav from '../Components/NavBar';
+import Chat from '../Components/Chat';
 import '../style/lobby.css';
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import '../../style/home.css';
-import LogoSrc from '../../media/title.png';
+import '../style/home.css';
+import LogoSrc from '../media/title.png';
 
 const Logo = () => (
     <img src={LogoSrc} alt='logo' className='logo'/>

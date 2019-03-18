@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios";
 import Logo from '../media/title.png';
-import Loading from './Components/Loading';
+import Loading from '../Components/Loading';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';

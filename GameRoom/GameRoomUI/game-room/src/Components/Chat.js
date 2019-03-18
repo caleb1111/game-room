@@ -1,6 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
-import '../../style/chat.css';
+import '../style/chat.css';
 
 class Chat extends React.Component{
     constructor(props){

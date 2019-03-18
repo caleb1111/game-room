@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../style/loading.css';
+import '../style/loading.css';
 
 const Loading = () => (
     <div class="ipl-progress-indicator" id="ipl-progress-indicator">

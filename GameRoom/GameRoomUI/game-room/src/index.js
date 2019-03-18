@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Home from './js/Home';
-import Shop from './js/Shop';
-import SignUpIn from './js/SignUpIn';
-import UserProfile from './js/UserProfile';
+import Home from './pages/Home';
+import Shop from './pages/Shop';
+import SignUpIn from './pages/SignUpIn';
+import UserProfile from './pages/UserProfile';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
 

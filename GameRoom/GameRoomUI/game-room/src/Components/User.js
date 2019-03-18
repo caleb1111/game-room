@@ -1,6 +1,6 @@
 import React from 'react';
-import '../../style/home.css';
-import UserPhoto from '../../media/user.png';
+import '../style/home.css';
+import UserPhoto from '../media/user.png';
 
 const User = () => (
         <section className="section-features">

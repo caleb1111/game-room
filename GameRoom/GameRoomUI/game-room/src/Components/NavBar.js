@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-
-import '../../style/home.css';
+import '../style/home.css';
 
 const Nav = () => (
     <div className="row">
