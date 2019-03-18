@@ -12,7 +12,8 @@ function AppRouter() {
     return (
       <Router>
         <div>
-          <Route path="/" exact component={Home} />
+          <Route path="/" exact component={SignUpIn} />
+          <Route path="/home/" component={Home} />
           <Route path="/UserProfile/" component={UserProfile} />
           <Route path="/shop/" component={Shop} />
           <Route path="/signin/" component={SignUpIn} />

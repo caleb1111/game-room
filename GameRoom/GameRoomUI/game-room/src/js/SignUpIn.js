@@ -26,7 +26,7 @@ export default class SignUpIn extends Component {
     e.preventDefault();
     
     // 无条件登录
-    this.props.history.push("/");
+    this.props.history.push("/home/");
 
     console.log('The form was submitted with the following data: username: ', 
     this.state.username, ' password: ', this.state.password);
