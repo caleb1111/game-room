@@ -8,17 +8,36 @@ import PlayersOnline from '../Components/PlayersOnline';
 
 
 export default class Home extends Component {
-  state = {
+
+  constructor(props) {
+    super(props);
+    this.handleMouseHover = this.handleMouseHover.bind(this);
+    this.state = {
+      isHovering: false,
+    };
+  }
+
+  handleMouseHover() {
+    this.setState(this.toggleHoverState);
+  }
+
+  toggleHoverState(state) {
+    return {
+      isHovering: !state.isHovering,
+    };
+  }
+
+  Rooms = {
     items: [
-      {room_id:1, room_name: "Room 1"},
-      {room_id:2, room_name: "Room 2"},
-      {room_id:3, room_name: "Room 3"},
-      {room_id:4, room_name: "Room 4"},
-      {room_id:5, room_name: "Room 5"},
-      {room_id:6, room_name: "Room 6"},
-      {room_id:7, room_name: "Room 7"},
-      {room_id:8, room_name: "Room 8"},
-      {room_id:9, room_name: "Room 9"},
+      {room_id:1, room_name: "Game Room 1"},
+      {room_id:2, room_name: "Game Room 2"},
+      {room_id:3, room_name: "Game Room 3"},
+      {room_id:4, room_name: "Game Room 4"},
+      {room_id:5, room_name: "Game Room 5"},
+      {room_id:6, room_name: "Game Room 6"},
+      {room_id:7, room_name: "Game Room 7"},
+      {room_id:8, room_name: "Game Room 8"},
+      {room_id:9, room_name: "Game Room 9"},
     ]
   }
   render() {
@@ -41,12 +60,16 @@ export default class Home extends Component {
         <div id="lobby_main">
                 <div id="game_rooms">
                     <ul id="game_room">
-                    {this.state.items.map(item => {
+                    {this.Rooms.items.map(item => {
                         return (
-                            <li>ID{item.room_id}:{item.room_name}</li>
+                            <li onMouseEnter={this.handleMouseHover}
+                                onMouseLeave={this.handleMouseHover} >
+                                {item.room_name}
+                                {this.state.isHovering && <button className="join_btn">Join Game</button>}  
+                            </li>
                         )
                     })}
-                    </ul>   
+                    </ul> 
                 </div>
         </div>
 

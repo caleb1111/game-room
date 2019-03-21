@@ -41,8 +41,6 @@ ul, li {
 	margin-left: 25px;
 	width: 560px;
 	height: 540px;
-	overflow-x: hidden;
-	overflow-y: scroll;  /* hidden 设置gameroom显示的数量 9个*/
 }
 
 /* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
@@ -80,7 +78,7 @@ ul, li {
 	color: white;
 	background: url(../media/lobby/gameSessionBackground.png);
 	transform: scale(1);
-    transition: transform 0.5s, opacity 0.5s;
+  transition: transform 0.5s, opacity 0.5s;
 }
 
 #game_room li:hover {
@@ -89,3 +87,24 @@ ul, li {
 }
 #game_room li.no_margin_right { margin-right: 0 }
 
+.join_btn,
+.join_btn:visited {
+		background-color: #111;
+		margin-top: 80px;
+		font-weight: bold;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.join_btn:hover,
+.join_btn:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}

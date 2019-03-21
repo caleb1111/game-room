@@ -6,12 +6,29 @@ import User_img from '../media/user.png';
 class Chat extends React.Component{
     constructor(props){
         super(props);
-
+        /*
         this.state = {
             username: '',
             message: '',
             messages: []
-        };
+        }; */
+
+        this.state = {
+            messages : [
+                {messageId: 1, message: "Hello", username: "User1", img: User_img},
+                {messageId: 2, message: "Hello", username: "User2", img: User_img},
+                {messageId: 3, message: "Hello", username: "User3", img: User_img},
+                {messageId: 4, message: "Hello", username: "User4", img: User_img},
+                {messageId: 5, message: "Hello", username: "User5", img: User_img},
+                {messageId: 6, message: "Hello", username: "User6", img: User_img},
+                {messageId: 7, message: "Hello", username: "User7", img: User_img},
+                {messageId: 8, message: "Hello", username: "User8", img: User_img},
+                {messageId: 9, message: "Hello", username: "User9", img: User_img},
+                {messageId: 10, message: "Hello", username: "User10", img: User_img},
+                {messageId: 11, message: "Hello", username: "User11", img: User_img},
+            ]
+        }
+
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
         this.socket = io('localhost:3000');
 
@@ -41,40 +58,13 @@ class Chat extends React.Component{
                 <div className="menu_title">Chat</div>
                 <div className="chat_content">
                     <div className="messages_box">
+                    <ul id="message">
                     {this.state.messages.map(message => {
                         return (
-                            // <div>{message.username}: {message.message}</div>
-                            <ul id="message">{message.message}</ul>
+                            <li><cite><img src={message.img} alt='user_img'/>{message.username}: {message.message}</cite></li>
                         )
                     })}
-                    <ul id="message">
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
-                        </ul>
+                    </ul>
                     </div>
                 <div>
                 <input type="text" placeholder="Enter Your Message" className="form_element" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>
