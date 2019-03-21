@@ -8,7 +8,19 @@ import PlayersOnline from '../Components/PlayersOnline';
 
 
 export default class Home extends Component {
-  
+  state = {
+    items: [
+      {room_id:1, room_name: "Room 1"},
+      {room_id:2, room_name: "Room 2"},
+      {room_id:3, room_name: "Room 3"},
+      {room_id:4, room_name: "Room 4"},
+      {room_id:5, room_name: "Room 5"},
+      {room_id:6, room_name: "Room 6"},
+      {room_id:7, room_name: "Room 7"},
+      {room_id:8, room_name: "Room 8"},
+      {room_id:9, room_name: "Room 9"},
+    ]
+  }
   render() {
     return (
       <div className="background">
@@ -29,24 +41,12 @@ export default class Home extends Component {
         <div id="lobby_main">
                 <div id="game_rooms">
                     <ul id="game_room">
-                        <li>game room 1</li>
-                        <li>game room 2</li>
-                        <li>game room 3</li>
-                        <li>game room 4</li>
-                        <li>game room 5</li>
-                        <li>game room 6</li>
-                        <li>game room 7</li>
-                        <li>game room 8</li>
-                        <li>game room 9</li>
-                        <li>game room 1</li>
-                        <li>game room 2</li>
-                        <li>game room 3</li>
-                        <li>game room 4</li>
-                        <li>game room 5</li>
-                        <li>game room 6</li>
-                        <li>game room 7</li>
-                        <li>game room 8</li>
-                        <li>game room 9</li>
+                    {this.state.items.map(item => {
+                        return (
+                            // <div>{message.username}: {message.message}</div>
+                            <li>ID{item.room_id}:{item.room_name}</li>
+                        )
+                    })}
                     </ul>   
                 </div>
         </div>
