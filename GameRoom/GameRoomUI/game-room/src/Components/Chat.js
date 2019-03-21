@@ -1,6 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import '../style/chat.css';
+import User_img from '../media/user.png';
 
 class Chat extends React.Component{
     constructor(props){
@@ -39,7 +40,7 @@ class Chat extends React.Component{
             <div className="chat_box">
                 <div className="menu_title">Chat</div>
                 <div className="chat_content">
-                    <div className="messages">
+                    <div className="messages_box">
                     {this.state.messages.map(message => {
                         return (
                             // <div>{message.username}: {message.message}</div>
@@ -47,37 +48,36 @@ class Chat extends React.Component{
                         )
                     })}
                     <ul id="message">
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
-                        <li>1</li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
+                        <li><cite><img src={User_img} alt='user_img'/>Milton Chapman: message</cite></li>
                         </ul>
                     </div>
                 <div>
-                <input type="text" placeholder="Message" className="form_element" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>
+                <input type="text" placeholder="Enter Your Message" className="form_element" value={this.state.message} onChange={ev => this.setState({message: ev.target.value})}/>
                 <br/>
                 <button onClick={this.sendMessage} className="btn_msg">Send</button>
                 </div>

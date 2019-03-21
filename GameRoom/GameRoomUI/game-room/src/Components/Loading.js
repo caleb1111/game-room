@@ -2,8 +2,8 @@ import React from 'react';
 import '../style/loading.css';
 
 const Loading = () => (
-    <div class="ipl-progress-indicator" id="ipl-progress-indicator">
-          <div class="insp-logo-frame">
+    <div className="ipl-progress-indicator" id="ipl-progress-indicator">
+          <div className="insp-logo-frame">
           </div>
         </div>
   );

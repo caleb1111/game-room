@@ -21,10 +21,6 @@ const User = () => (
             <br />
             <br />
             <br />
-            <br />
-            <br />
-            <br />
-            <br />
             <div className="row">
                 <div className="col span-1-of-4 box random_box" style={{border: "1px solid white"}}>
                     <h3>Your Rank here</h3>

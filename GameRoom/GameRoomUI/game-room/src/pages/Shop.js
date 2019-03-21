@@ -10,11 +10,9 @@ export default class UserProfile extends Component {
       return (
         <div className="background">
           <header>
-            <Link to="/"><Logo/></Link>
+            <Link to="/home/"><Logo/></Link>
             <Nav/>
           </header>
-          <br></br>
-          <hr />
           <div>
               <h1 style={{color: 'white'}}>This is Shop Page</h1>
           </div>

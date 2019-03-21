@@ -48,6 +48,7 @@ ul, li {
 /* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
 /* width */
 ::-webkit-scrollbar {
+	background: black; 
 	width: 15px;
   }
   
@@ -88,52 +89,3 @@ ul, li {
 }
 #game_room li.no_margin_right { margin-right: 0 }
 
-.player_box {
-	color: white;
-	width: 150px;
-	height: 250px;
-	padding: 10px 10px 10px 10px;
-	margin-bottom: 20px;
-	font-size: 11px;
-	position: relative;
-	background: url(../media/lobby/playerListBackground.png) repeat
-}
-
-.player_box span {
-	position: absolute;
-	width: 60px;
-	height: 60px;
-	left: 15px;
-	top: 20px;
-}
-
-.player_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
-
-.chat_box {
-	color: white;
-	width: 260px;
-	height: 500px;
-	padding: 10px 10px 10px 10px;
-	margin-bottom: 20px;
-	font-size: 11px;
-	position: relative;
-	background: url(../media/lobby/chatBackground.png) repeat;
-}
-
-.chat_content {
-	margin-top: 25px;
-	border: 1px white solid;
-	height: 440px;
-	width: 240px;
-
-}
-
-.chat_box span {
-	position: absolute;
-	width: 60px;
-	height: 60px;
-	left: 15px;
-	top: 20px;
-}
-
-.chat_box .menu_title { margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 16px; font-weight: bold; }
