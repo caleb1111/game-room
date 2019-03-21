@@ -5,6 +5,7 @@ import Chat from '../Components/Chat';
 import FriendList from '../Components/FriendList';
 import '../style/lobby.css';
 import PlayersOnline from '../Components/PlayersOnline';
+import RoomHovered from '../Components/RoomHovered';
 
 
 export default class Home extends Component {
@@ -40,6 +41,7 @@ export default class Home extends Component {
       {room_id:9, room_name: "Game Room 9"},
     ]
   }
+
   render() {
     return (
       <div className="background">
@@ -65,7 +67,7 @@ export default class Home extends Component {
                             <li onMouseEnter={this.handleMouseHover}
                                 onMouseLeave={this.handleMouseHover} >
                                 {item.room_name}
-                                {this.state.isHovering && <button className="join_btn">Join Game</button>}  
+                                {this.state.isHovering && <RoomHovered />} 
                             </li>
                         )
                     })}
@@ -75,7 +77,6 @@ export default class Home extends Component {
 
         <div id="lobby_sidebar">
                 <FriendList />
-
                 <PlayersOnline />
             </div>
         </div>
