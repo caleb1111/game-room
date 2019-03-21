@@ -43,7 +43,6 @@ export default class Home extends Component {
                     <ul id="game_room">
                     {this.state.items.map(item => {
                         return (
-                            // <div>{message.username}: {message.message}</div>
                             <li>ID{item.room_id}:{item.room_name}</li>
                         )
                     })}
