@@ -15,17 +15,19 @@
     let cruiserSelect = document.getElementById("cruiserSelect");
     let dreadnoughtSelect = document.getElementById("dreadnoughtSelect");
     let carrierSelect = document.getElementById("carrierSelect");
-    let playerStatus = document.getElementById("playerStatus");
-    let opponentStatus = document.getElementById("opponentStatus");
     let status = document.getElementById("status");
     let playerDraw = playerGrid.getContext('2d');
     let shipArray = null;
-    let ready = false; 
+    let ending = document.getElementById("ending");
+    let returnButton = document.getElementById("returnButton");
+    let ready = false;
+    let winner = document.getElementById("result");
     let opponentDraw = opponentGrid.getContext('2d');
     let logs = document.getElementById("textLog");
     let drawHeight = playerGrid.height;
     let drawWidth = playerGrid.width;
     let selectedShip = "";
+    let gained = document.getElementById("earned");
     let rotated = 1;
     let prevX = 0;
     let prevY = 0;
@@ -33,15 +35,19 @@
     let yOpp = 0;
     let line = null;
     let remainingDeployment = [1,1,2,2,3]; //5,4,3,3,2
+    let lobbyId = sessionStorage.getItem("lobbyId");
     playerDraw.fillStyle = "#d4d4d4";
 
-    let remainingFleet = function (){
+    let remainingFleet = function (position){
         let carrierRemaining = document.getElementById("carrierRemaining");
         let dreadnoughtRemaining = document.getElementById("dreadnoughtRemaining");
         let submarineRemaining = document.getElementById("submarineRemaining");
         let cruiserRemaining = document.getElementById("cruiserRemaining");
         let destroyerRemaining = document.getElementById("destroyerRemaining");
-
+        console.log("position" + position);
+        if (position != null){
+            remainingDeployment[position] = remainingDeployment[position] - 1;
+        }
         carrierRemaining.innerHTML = "Remaining: " + remainingDeployment[0];
         dreadnoughtRemaining.innerHTML = "Remaining: " + remainingDeployment[1];
         submarineRemaining.innerHTML = "Remaining: " + remainingDeployment[2];
@@ -318,24 +324,27 @@
     
 
     let shoot = function(x, y){
-        socket.emit("shot", x, y, function(result){
-            if (result[0] === true){
+        socket.emit("shot",lobbyId, x, y, function(result){
+            if (result == -1){ // something very bad went wrong need to redirect back to lobby
+                ///////////////////////////////////////////////////////////////////////////////// caleb, please redirect back lobby
+            }
+            else if (result == 1){
                 // success shot was a hit
                 let d = new Date().toLocaleTimeString();
-                writeLog("The shot Hit", d);
+                writeLog("The Shot Hit", d);
             }
-            else if (result[0] === false){
+            else if (result == 2){
                 // miss shot
                 let d = new Date().toLocaleTimeString();
-                writeLog("The shot missed", d);
+                writeLog("The Shot Missed", d);
             }
-            else if (result[0] === -1){
+            else if (result == 3){
                 // already shot there
                 onError("Already shot there, Pick something else");
             }
-            else if (result[0] === -2){
+            else if (result == 4){
                 // not your turn
-                onError("Not your turn, please wait")
+                onError("Not your turn, please wait");
             }
         });
     }
@@ -344,11 +353,13 @@
     let placeShip = function (x, y){
         let size = 0;
         let valid = false;
+        let position = 0;
         switch(selectedShip){
             case "destroyer":
                 if (remainingDeployment[4] > 0){
                     valid = true;
                     size = 2;
+                    position = 4;
                 }
                 break;
 
@@ -356,6 +367,7 @@
                 if (remainingDeployment[3] > 0){
                     valid = true;
                     size = 3;
+                    position = 3;
                 }
                 break;
             
@@ -363,6 +375,7 @@
                 if (remainingDeployment[2] > 0){
                     valid = true;
                     size = 3;
+                    position = 2;
                 }
                 break;
 
@@ -370,6 +383,7 @@
                 if (remainingDeployment[1] > 0){
                     valid = true;
                     size = 4;
+                    position = 1;
                 }
                 break;
 
@@ -377,12 +391,12 @@
                 if (remainingDeployment[0] > 0){
                     valid = true;
                     size = 5;
+                    position = 0;
                 }
                 break;
 
             default:
                 size = 0;
-                //notify error listeners TODO
                 break;
         }
 
@@ -391,12 +405,19 @@
                 onError("Cannot place ship off side of board");
             }
             else if (valid){
-                socket.emit("place", selectedShip, y , x, rotated, function(err){
-                    if (err) onError(err);
-                }); // 0 - horizontal, 1 - vertical
+                socket.emit("place", lobbyId, selectedShip, y , x, rotated, function(err){
+                    if (err === -1){ // very bad, never supposed to happen
+                        //redirect CHANGE THIS LATER /////////////////////////////////////////////////////////////////////////////////// Caleb maybe if u see this, redirect to lobby
+                        //window.location.replace("");
+                    }
+                    else if (err) onError(err);
+                    else{
+                        remainingFleet(position);
+                    }
+                });
             }
             else{
-                onError("Cannot place more " + selectedShip + "s");
+                onError("Cannot place that");
             }
         }
         else{
@@ -404,17 +425,19 @@
                 onError("Cannot place ship off top of board");
             }
             else if (valid){
-                socket.emit("place", selectedShip, y , x, rotated, function(err){
+                socket.emit("place", lobbyId, selectedShip, y , x, rotated, function(err){
                     if (err) onError(err);
+                    else{
+                        remainingFleet(position);
+                    }
                 });  
             }
             else{
-                onError("Cannot place more " + selectedShip + "s");
+                onError("Cannot place that");
             }
         }
         selectedShip = "";
         selectorDisplay(); 
-        remainingFleet();       
     }
 
     let drawSelected = function (x, y){
@@ -430,7 +453,7 @@
         switch(selectedShip){
             case "destroyer":
                 line = document.getElementById("destroyerBar");
-                line.style.display = "inherit";
+                line.style.display = "table";
                 line = document.getElementById("carrierBar");
                 line.style.display = "none";  
                 line = document.getElementById("cruiserBar");
@@ -443,7 +466,7 @@
 
             case "cruiser":
                 line = document.getElementById("cruiserBar");
-                line.style.display = "inherit";
+                line.style.display = "table";
                 line = document.getElementById("carrierBar");
                 line.style.display = "none";
                 line = document.getElementById("dreadnoughtBar");
@@ -457,7 +480,7 @@
             
             case "submarine":
                 line = document.getElementById("submarineBar");
-                line.style.display = "inherit"
+                line.style.display = "table"
                 line = document.getElementById("carrierBar");
                 line.style.display = "none";  
                 line = document.getElementById("cruiserBar");
@@ -470,7 +493,7 @@
 
             case "dreadnought":
                 line = document.getElementById("dreadnoughtBar");
-                line.style.display = "inherit";
+                line.style.display = "table";
                 line = document.getElementById("carrierBar");
                 line.style.display = "none";  
                 line = document.getElementById("cruiserBar");
@@ -483,7 +506,7 @@
 
             case "carrier":
                 line = document.getElementById("carrierBar");
-                line.style.display = "inherit";
+                line.style.display = "table";
                 line = document.getElementById("cruiserBar");
                 line.style.display = "none";
                 line = document.getElementById("dreadnoughtBar");
@@ -510,6 +533,7 @@
 
 
 
+
     let onError = function(err){
         let d = new Date().toLocaleTimeString();
         writeLog(err, d, 1);
@@ -518,7 +542,7 @@
 
     window.addEventListener('load', function () {
         createGrid();
-        remainingFleet();
+        remainingFleet(null);
         playerGrid.addEventListener("click", function (e) {
             let bounds = playerGrid.getBoundingClientRect();
             let x = e.clientX - bounds.left;
@@ -578,6 +602,7 @@
             opponentDraw.fillStyle = "#f1f1f1";
             opponentDraw.fillRect((xOpp*40) + 1, (yOpp*40) + 1, 38, 38);
             opponentDraw.fillStyle = "#bad4ff";
+            redrawBoard();
         });
 
         opponentGrid.addEventListener("mouseover", function (e){
@@ -617,7 +642,7 @@
             let y = e.clientY - bounds.top;
             let xIndex = Math.floor(x / 40);
             let yIndex = Math.floor(y / 40);
-            if (setupMode){
+            if (setupMode && ready){
                 shoot(yIndex, xIndex);
             }
             
@@ -661,10 +686,40 @@
             writeLog("Set up your boards", d);
         });
 
-        
+        socket.on("gameOver", function (result, money){
+            // and another for coins
+            ready = false;
+            status.style.color = "black";
+            status.innerHTML = "Game Over!"
+            ending.style.display = "table";
+            
+            if (result){
+                winner.innerHTML = "You Win";
+            }
+            else{
+                winner.innerHTML = "You Lose";
+            }
+            gained.innerHTML = money;
+            socket.emit("updateCoins", money);
+            returnButton.addEventListener("click", function (e){
+                // some sort of redirect;
+
+            });
+            
+        });      
+
+        socket.on("changeTurn", function (who){
+            if (who){
+                status.innerHTML = "Your Turn";
+                status.style.color = "green";
+            }
+            else{
+                status.innerHTML = "Opponent's Turn";
+                status.style.color = "red";
+            }
+        });
 
         socket.on("message", function (msg){
-            //updateStatus(msg, 3);
             let d = new Date().toLocaleTimeString();
             writeLog(msg, d);
         });
@@ -673,11 +728,7 @@
             remainingDeployment = ship;
         });
 
-        socket.on("end", function (who, amount){
-
-        });
-
-        socket.on("ready", function(){
+        socket.on("finished", function(){
             ready = true;
         });
 

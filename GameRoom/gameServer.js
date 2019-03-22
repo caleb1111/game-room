@@ -9,6 +9,7 @@ const io = require('socket.io')(http);
 
 app.use(express.static("static")); // replace later
 
+/// remove this once merging
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/static/battleshipGame.html');
 })
@@ -72,6 +73,10 @@ let gameState = 0;
     io.clients[secondId].join(gameName);
 }*/
 
+io.on("ready", function (socket) {
+
+})
+
 io.on("connection", function (socket) {
     console.info((new Date().toISOString()) + ": ID " + socket.id + " connected.");
     // once socked has connected, increment number of players and have socket join the game if they can
@@ -92,7 +97,8 @@ io.on("connection", function (socket) {
         players[0].setOpponent(players[1]);
         players[1].setOpponent(players[0]);
     }
-    socket.on("place", function (type, x, y, rotated) {
+
+    socket.on("place", function (type, x, y, rotated, returnStatus) {
         let player;
         let placed = false;
         players.forEach((el) => {
@@ -107,12 +113,15 @@ io.on("connection", function (socket) {
                 if(player.Ready() && player.opponent.Ready()) {
                     io.to("game").emit("ready");
                     players[0].turn = true;
+                    io.to(players[0].socketId).emit("changeTurn", true);
+                    io.to(players[1].socketId).emit("changeTurn", false);
+
                 }
             }
         }
-        return placed ? null : "Could not place ship there.";
+        return placed ? returnStatus(null) : returnStatus("Cannot Place There");
     });
-    socket.on("shot", function (x, y) {
+    socket.on("shot", function (x, y, returnResult) {
         let player;
         players.forEach((el) => {
             if (el.socketId === socket.id) {
@@ -124,17 +133,21 @@ io.on("connection", function (socket) {
             console.log(player.turn);
             if(player.turn) {
                 hit = player.opponent.Hit(x, y);
-                if(hit === -1) { return [-1, "Already shot there."] }
-                socket.emit("displayShots", player.board, player.opponent.board);
-                socket.emit("message", "Already Shot There");
-                io.to(player.opponent.socketId).emit("dislayShots", player.opponent.board, player.board);
-                if(hit === 9)  {
-                    socket.emit("gameOver", true);
-                    io.to(player.opponent.socketId).emit("gameOver", false);
+                if(hit === -1) { //return [-1, "Already shot there."] 
+                    returnResult(3);
                 }
-                return hit ? [true, "Hit."] : [false, "Miss."]
+                socket.emit("displayShots", player.board, player.opponent.board);
+                io.to(player.opponent.socketId).emit("displayShots", player.opponent.board, player.board);
+                
+                if(hit === 9)  {
+                    socket.emit("gameOver", true, 50);
+                    io.to(player.opponent.socketId).emit("gameOver", false, 25);
+                }
+                hit ? returnResult(1) : returnResult(2);
+                io.to(player.socketId).emit("changeTurn", false);
+                io.to(player.opponent.socketId).emit("changeTurn", true);
             } else {
-                return [-2, "It is not your turn."]
+                returnResult(4);
             }
         }
     });
@@ -377,17 +390,19 @@ class player {
     }
 
     Ready() {
+        let isReady = true;
         for(let key in this.ships) {
             if(this.ships.hasOwnProperty(key)) {
                 this.ships[key].forEach((ship) => {
                     if (!ship.placed) {
-                        return false;
+                        isReady = false;
+                        return;
                     }
                 })
             }
         }
-        this.ready = true;
-        return true;
+        this.ready = isReady;
+        return isReady;
     }
 
 }
