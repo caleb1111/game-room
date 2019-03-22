@@ -1,18 +1,19 @@
 import React from "react";
 import io from "socket.io-client";
 import '../style/chat.css';
-import User_img from '../media/user.png';
+// import User_img from '../media/user.png';
 
 class Chat extends React.Component{
     constructor(props){
         super(props);
-        /*
+        
         this.state = {
             username: '',
             message: '',
             messages: []
-        }; */
+        }; 
 
+        /*
         this.state = {
             messages : [
                 {messageId: 1, message: "Hello", username: "User1", img: User_img},
@@ -27,10 +28,10 @@ class Chat extends React.Component{
                 {messageId: 10, message: "Hello", username: "User10", img: User_img},
                 {messageId: 11, message: "Hello", username: "User11", img: User_img},
             ]
-        }
+        }*/
 
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
-        this.socket = io('localhost:3000');
+        this.socket = io('localhost:5000');
 
         this.sendMessage = ev => {
             ev.preventDefault();

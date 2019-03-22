@@ -14,9 +14,9 @@ render(){
     return(
     <div className="room_hover">
         <div className="hovered">
-        {this.state.players.map(player => {
+        {this.state.players.map((player, i) => {
                         return (
-                            <div><img src={player.img} alt="player"/>{player.player_name}</div>
+                            <div key={i}><img src={player.img} alt="player"/>{player.player_name}</div>
                         )
                     })}
         </div>

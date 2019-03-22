@@ -19,9 +19,9 @@ class PlayersOnline extends React.Component{
                 <div className="menu_title">Players Online</div>
                     <div className="player_box">
                     <ul id="players">
-                    {this.state.players.map(player => {
+                    {this.state.players.map((player, i) => {
                             return (
-                                <li><cite><img src={player.img} alt='user_img'/>{player.name}</cite></li>
+                                <li key={i}><cite><img src={player.img} alt='user_img'/>{player.name}</cite></li>
                             )
                         })}
                         </ul>

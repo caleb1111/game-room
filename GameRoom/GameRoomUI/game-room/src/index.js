@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './style/index.css';
+import './style/vendors/grid.css';
+import './style/vendors/normalize.css';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import SignUpIn from './pages/SignUpIn';

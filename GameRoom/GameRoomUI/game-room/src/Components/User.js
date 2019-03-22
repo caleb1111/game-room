@@ -14,27 +14,21 @@ const User = () => (
                 <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
                     <h3>Something here</h3>
                 </div>
-                <div class="col span-1-of-3 box random_box" style={{border: "1px solid white", margin: "150 0 0 0px"}}>
+                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white", margin: "150 0 0 0px"}}>
                     <h3>Friends List can be here</h3>
                 </div>
             </div>
-            <br />
-            <br />
-            <br />
+
             <div className="row">
-                <div className="col span-1-of-4 box random_box" style={{border: "1px solid white"}}>
+                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
                     <h3>Your Rank here</h3>
                 </div>
-                <div className="col span-1-of-4 box random_box" style={{border: "1px solid white"}}>
+                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
                     <h3>Items You purchased</h3>
                 </div>
-                <div className="col span-1-of-4 box random_box" style={{border: "1px solid white"}}>
+                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
                     <h3>Random thing here</h3>
                 </div>
-                <div className="col span-1-of-4 box random_box" >
-                    <h3>Random thing here</h3>
-                </div>
-                
             </div>
         </section>
 

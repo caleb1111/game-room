@@ -62,9 +62,9 @@ export default class Home extends Component {
         <div id="lobby_main">
                 <div id="game_rooms">
                     <ul id="game_room">
-                    {this.Rooms.items.map(item => {
+                    {this.Rooms.items.map((item, i) => {
                         return (
-                            <li onMouseEnter={this.handleMouseHover}
+                            <li key={i} onMouseEnter={this.handleMouseHover}
                                 onMouseLeave={this.handleMouseHover} >
                                 {item.room_name}
                                 {this.state.isHovering && <RoomHovered />} 

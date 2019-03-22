@@ -19,9 +19,9 @@ class FriendList extends React.Component{
                 <div className="menu_title">Friend List</div>
                     <div className="friend_box">
                     <ul id="friends">
-                        {this.state.friends.map(friend => {
+                        {this.state.friends.map((friend, i) => {
                             return (
-                                <li><cite><img src={friend.img} alt='user_img'/>{friend.name}</cite></li>
+                                <li key={i}><cite><img src={friend.img} alt='user_img'/>{friend.name}</cite></li>
                             )
                         })}
                         </ul>
