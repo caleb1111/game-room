@@ -33,14 +33,9 @@
     transition: transform 0.9s, opacity 0.5s;
 }
 
-.item_photo:hover {
-    opacity: 1.1;
-    transform: scale(1.2);
-}
-
 .item_photo img:hover {
     opacity: 1.2;
-    transform: scale(1.13);
+    transform: scale(1.18);
 }
 
 .coin {
@@ -51,33 +46,32 @@
 }
   
 .coin img {
-    height: 50px;
+    height: 40px;
     border-radius: 50%;
     vertical-align: middle;
   }
 
-  .btn_purchase,
-  .btn_purchase:visited {
-      background-color: #111;
-      width: 50%;
-      margin-bottom: 30px;
-      text-align: center;
-      padding: 10px 20px;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 200px;
-      transition: background-color 0.2s, border 0.2s, color 0.2s;
-      border: 1px solid #808080;
-      color: white;
-      cursor: pointer;
-  }
-  
-  .btn_purchase:hover,
-  .btn_purchase:active {
-      background-color: #fff;
-      border: 1px solid #111;
-      color: #111;
-  }
+.btn_purchase,
+.btn_purchase:visited {
+    background-color: #111;
+    width: 50%;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_purchase:hover,
+.btn_purchase:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}
 
 .plus_sign {
     margin-left: 10px;
@@ -88,6 +82,6 @@
 }
 
 .plus_sign:hover {
-    transform: scale(1.1);
+    transform: scale(1.3);
 }
 

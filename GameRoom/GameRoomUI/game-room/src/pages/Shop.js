@@ -16,6 +16,7 @@ import catBG from '../media/items/catBG.png';
 import cloudsBG from '../media/items/cloudsBG.png';
 import chocolateBG from '../media/items/chocolateBG.png';
 import plus_sign from '../media/items/plus-sign.png';
+import circlesBG from '../media/items/circlesBG.png';
 
 export default class Shop extends Component {
 
@@ -32,6 +33,7 @@ export default class Shop extends Component {
     {itemId: 9, item_name:"Cat Background", item_img: catBG, price: 500},
     {itemId: 10, item_name:"Clouds Background", item_img: cloudsBG, price: 500},
     {itemId: 11, item_name:"Chocolate Backgroundbbles", item_img: chocolateBG, price: 500},
+    {itemId: 12, item_name:"Circles Backgroundbbles", item_img: circlesBG, price: 500},
   ]}
 
 

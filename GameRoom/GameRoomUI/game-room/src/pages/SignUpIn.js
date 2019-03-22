@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from "axios";
 import Logo from '../media/title.png';
 import Loading from '../Components/Loading';
 import '../style/sign_form.css';
@@ -33,22 +32,32 @@ export default class SignUpIn extends Component {
     this.state.username, ' password: ', this.state.password);
   }
 
-  // our put method that uses our backend api
-  // to create new query into our data base
+  // get request  
+  // fetch('/signup/').then((response) => response.json()).then((data)=> console.log(data)); 
+
+
   putUserToDB = (username, password) => {
-    axios.post("http://localhost:5000/signup/", {
-      username: username,
-      password: password
-    });
+    fetch('/signup/', {
+      method : 'POST',
+      body : JSON.stringify({username: username, password: password}),
+      headers : {
+        'Content-type' : "application/json"
+      }
+    }).then((response) => response.json()).then((data)=> console.log(data))
   };
+
 
   // our put method that uses our backend api
   // to create new query into our data base
   checkUserFromDB = (username, password) => {
-    axios.post("http://localhost:5000/signin/", {
-      username: username,
-      password: password
-    });
+    fetch('/signin/', {
+      method : 'POST',
+      body : JSON.stringify({username: username, password: password}),
+      headers : {
+        'Content-type' : "application/json"
+      }
+    }).then(
+      (response) => response.json()).then((data)=> console.log(data))
   };
 
   // loading gif ---------------------------------------------------------------------------------

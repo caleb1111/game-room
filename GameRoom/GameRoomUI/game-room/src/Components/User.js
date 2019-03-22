@@ -9,7 +9,7 @@ const User = () => (
                     <img src={UserPhoto} alt='user'/>
                     <br />
                     <br />
-                    <a className="btn btn-full" href="/" style={{margin: "0 0 0 30px"}}>Edite Your Profile</a>
+                    <a className="btn btn_profile" href="/" style={{margin: "0 0 0 30px"}}>Edite Your Profile</a>
                 </div>
                 <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
                     <h3>Something here</h3>

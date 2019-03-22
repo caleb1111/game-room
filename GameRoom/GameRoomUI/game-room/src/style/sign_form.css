@@ -68,7 +68,6 @@ button[type="submit"]{
     margin-right: auto; 
     text-align: center;
     padding: 10px 20px;
-    font-weight: bold;
     text-decoration: none;
     border-radius: 200px;
     transition: background-color 0.2s, border 0.2s, color 0.2s;

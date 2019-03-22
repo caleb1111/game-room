@@ -38,8 +38,7 @@ section {
 
 /* ------------HEADINGS------------  */
 
-h1,h2,h3 {
-    font-weight: 300;
+h1,h2{
     text-transform: uppercase;
 }
 
@@ -61,7 +60,8 @@ h2 {
 }
 
 h3{
-    font-size: 110%px;
+    text-align: center;
+    font-size: 90%;
     margin-bottom: 15px;
 }
 
@@ -76,48 +76,6 @@ h2:after {
     /* center the object */
     margin: 0 auto;
     margin-top: 30px;
-}
-
-
-
-/* -----------Links----------- */
-
-a:link,
-a:visited {
-    color: #e67e22;
-    text-decoration: none;
-    padding-bottom: 1px;
-    border-bottom: 1px solid #e67e22;
-    transition: border-bottom 0.2s, color 0.2s;
-}
-
-a:hover,
-a:active {
-    color: #7b7b7b;
-    border-bottom: 1px solid transparent;
-}
-
-
-/* ------------PARAGRAPH------------  */
-
-.long-copy {
-    line-height: 145%;
-    width: 70%;
-    margin-left: 15%;
-}
-
-.box p{
-    font-size: 90%;
-    line-height: 145%;
-}
-
-/* ------------FEATURE------------  */
-.section-features {
-    color: white;
-}
-
-.long-copy {
-    margin-bottom: 30px;
 }
 
 /* ------------BUTTONS------------  */
@@ -169,19 +127,18 @@ a:active {
 .logo {
     position: absolute;
     height: 50px;
-    margin-left: 10px;
+    margin-left: 20px;
     cursor: pointer;
     float: left;
-    /* distance from top to the logo */
     margin-top: 20px;
+    transform: scale(1);
+    transition: transform 1s, opacity 0.5s;
     z-index: 3;
 }
 
 .logo:hover,
 .logo:active{
-    border-bottom: 2px solid #918a85;
-    /* add the transition */
-    transition: border-bottom 0.4s;
+    transform: scale(1.2);
 }
 
 .main-nav {
@@ -208,13 +165,16 @@ a:active {
     font-size: 90%; /* use percentage */
     /* hide the border before hovering */
     border-bottom: 2px solid transparent;
+    transform: scale(1);
+    transition: transform 1s, opacity 0.5s;
 }
 
 .main-nav li a:hover,
 .main-nav li a:active{
-    border-bottom: 3px solid #918a85;
+    font-size: 100%;
+    border-bottom: 3px solid #fff;
     /* add the transition */
-    transition: border-bottom 0.2s;
+    transition: border-bottom 0.5s, font-size 0.8s;
 }
 
 /* -------- User Photo ----------- */
@@ -230,14 +190,6 @@ a:active {
 .user_photo img:hover {
     opacity: 1;
     transform: scale(1.03);
-}
-
-/* ------- Lobby Vertical line ----------- */
-.vertical_line {
-    position: absolute;
-    right: 25%;
-    border-left: 1px solid white;
-    height: 100vh;
 }
 
 .box img {
@@ -256,12 +208,14 @@ a:active {
 
 /* ------- random boxes ----------- */
 .random_box {
+    color:white;
     border: 1px solid white;
     height: 300px;
     width: 300px;
 }
 
 .random_box2 {
+    color:white;
     border: 1px solid white;
     height: 300px;
     width: 200px;
@@ -273,3 +227,25 @@ a:active {
     width: 200px;
 }
 
+.btn_profile,
+.btn_profile:visited {
+    font-size: 90%;
+    background-color: #111;
+    width: 50%;
+    text-align: center;
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_profile:hover,
+.btn_profile:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}

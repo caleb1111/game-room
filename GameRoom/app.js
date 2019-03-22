@@ -17,7 +17,7 @@ MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb",
   // Save database object from the callback for reuse.
     db = client.db();
     // Initialize the app.
-    var server = app.listen(process.env.PORT || 5000, function () {
+    var server = app.listen(5000, function () {
         var port = server.address().port;
         console.log("App now running on port", port);
     });
