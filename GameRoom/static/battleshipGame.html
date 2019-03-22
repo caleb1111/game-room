@@ -12,9 +12,11 @@
     <p id="error_box"></p>
 
     <div id="ending">
-        <h3 id="result"></h3>
+        <p id="result">Result</p>
         <div class="board">
-            <p id="earned"></p>
+            <p>Gained </p>
+            <p id="earned">xxx </p>
+            <img class="coin" src="assets/coin.png"></img>
         </div>
         <button id="returnButton">Return to Lobby</button>
     </div>
@@ -26,12 +28,10 @@
                 <!--Seems like setting canvas size within css breaks canvas scaling-->
                 <p id="yFleet">Your Fleet</p>
                 <canvas width="400" height="400" id="playerBoard"></canvas>
-                <p id="playerStatus">None</p>
             </div>
             <div id="opponent">
                 <p id="oFleet">Opponent's Fleet</p>
                 <canvas width="400" height="400" id="opponentBoard"></canvas>
-                <p id="opponentStatus">None</p>
             </div>
             <div id="turnText"></div>
 
@@ -41,7 +41,7 @@
             </div>
             
         </div>
-        <h3 id="status">Waiting</h3>
+        <h3 id="status">Waiting For Both Players To Set Up</h3>
         <div id="fl">
             <p id="fleetText">Fleet</p>
             <div id="deployments">
@@ -50,35 +50,35 @@
                     <img id="carrierImg" class="shipName" src="assets/carrier.png"></img>
                     <div id ="carrierBar" class="selector"></div>
                     <p class="shipName">Carrier</p>
-                    <p id="carrierRemaining">Remaining: </p>
+                    <p class="shipName" id="carrierRemaining">Remaining: </p>
                 </div>
 
                 <div id="dreadnoughtSelect" class="entry">
                     <img id="dreadnoughtImg" class="shipName" src="assets/dreadnought.png"></img>
                     <div id="dreadnoughtBar" class="selector"></div>
                     <p class="shipName">Dreadnought</p>
-                    <p id="dreadnoughtRemaining">Remaining: </p>
+                    <p class="shipName" id="dreadnoughtRemaining">Remaining: </p>
                 </div>
 
                 <div id="cruiserSelect" class="entry">
                     <img id="cruiserImg" class="shipName" src="assets/cruiser.png"></img>
                     <div id="cruiserBar"class="selector"></div>
                     <p class="shipName">Cruiser</p>
-                    <p id="cruiserRemaining">Remaining: </p>
+                    <p class="shipName" id="cruiserRemaining">Remaining: </p>
                 </div>
 
                 <div id="submarineSelect" class="entry">
                     <img id="submarineImg" class="shipName" src="assets/submarine.png"></img>
                     <div id="submarineBar" class="selector"></div>
                     <p class="shipName">Submarine</p>
-                    <p id="submarineRemaining">Remaining: </p>
+                    <p class="shipName" id="submarineRemaining">Remaining: </p>
                 </div>
 
                 <div id="destroyerSelect" class="entry">
                     <img id="destroyerImg" class="shipName" src="assets/destroyer.png"></img>
                     <div id="destroyerBar" class="selector"></div>
                     <p class="shipName">Destroyer</p>
-                    <p id="destroyerRemaining">Remaining: </p>
+                    <p class="shipName" id="destroyerRemaining">Remaining: </p>
                 </div>
 
                 <button id="rotateShips">ROTATE</button>
@@ -87,7 +87,7 @@
 
     </div>
 
-<div class="deployments">
+<div class="deployments" id="drawingTemplates">
     <img id="destroyerPlace" class="place" src="assets/destroyer.png"></img>
     <img id="destroyerHPlace" class="place" src="assets/destroyerH.png"></img>
     <img id="submarinePlace" class="place" src="assets/submarine.png"></img>

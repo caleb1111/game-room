@@ -29,8 +29,8 @@
 
 #gameTitle {
     text-align: center;
-    font-size: 40px;
-    
+    font-size: 50px;
+    font-weight: bolder;
 }
 
 #logs{
@@ -58,12 +58,13 @@
     align-self: center;
     margin-left: 50px;
     margin-right: 50px;
-    padding-right: 40px;
 }
 
 .shipName{
     text-align: center;
-    display: block;
+    display: table;
+    margin: 0 auto;
+    font-weight: bolder;
 }
 
 .selector{
@@ -72,13 +73,14 @@
     height: 5px;
     background: cyan;
     margin-top: 25px;
+    margin: 25px auto;
 }
 
 #rotateShips{
-    border: 2px dashed lightgreen;
+    border: 5px solid lightgreen;
     color: lightgreen;
     font-weight: bolder;
-    background-color: white;
+    background-color: black;
     width: 80px;
     height: 100px;
     margin-top: 15px;
@@ -86,25 +88,55 @@
 
 #ending{
     display: none;
-}
-
-.place{
+    margin: 0 auto;
+    padding-bottom: 20px;
+    padding: 0px 20px 20px 20px;
+    background-color: lightgray;
+    border-radius: 20px;
     
 }
+#earned{
+    margin-left: 10px;
+    font-weight: bolder;
+    color: royalblue;
+}
+
 
 #result{
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
 }
 
 #returnButton{
-    display: inline-block;
+    display: table;
+    margin: 0 auto;
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    border: 5px solid lightgreen;
+    background-color: black;
+    color: white;
 }
 
 #status{
     text-align: center;
     font-weight: bolder;
     color: lightgreen;
+}
+
+.coin{
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+}
+
+#gameContent{
+    display: table;
+    margin: 0 auto;
+}
+
+#drawingTemplates{
+    padding-top: 1000px;
 }
 
 body{
