@@ -52,10 +52,10 @@ export default class Shop extends Component {
           <div className="shop">
           <div className="row">
             <ul className="item_list_1">
-              {this.items_list.items.map(item => {
+              {this.items_list.items.map((item, i) => {
                 return (
-                    <li>
-                      <div className="col span-1-of-3 item_photo">
+                    <li key={i}>
+                      <div className="col span-1-of-3 item_photo" key={i}>
                         <h4> {item.item_name} </h4>
                         <h6> {item.price} coins </h6>
                         <img src={item.item_img} alt='item_img'/>

@@ -36,7 +36,7 @@ export default class SignUpIn extends Component {
   // our put method that uses our backend api
   // to create new query into our data base
   putUserToDB = (username, password) => {
-    axios.post("http://localhost:3000/signup/", {
+    axios.post("http://localhost:5000/signup/", {
       username: username,
       password: password
     });
@@ -45,7 +45,7 @@ export default class SignUpIn extends Component {
   // our put method that uses our backend api
   // to create new query into our data base
   checkUserFromDB = (username, password) => {
-    axios.post("http://localhost:3000/signin/", {
+    axios.post("http://localhost:5000/signin/", {
       username: username,
       password: password
     });

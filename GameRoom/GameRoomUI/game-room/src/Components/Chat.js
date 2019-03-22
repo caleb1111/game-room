@@ -1,7 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import '../style/chat.css';
-// import User_img from '../media/user.png';
+import User_img from '../media/user.png';
 
 class Chat extends React.Component{
     constructor(props){
@@ -9,6 +9,7 @@ class Chat extends React.Component{
         
         this.state = {
             username: '',
+            img: User_img,
             message: '',
             messages: []
         }; 
@@ -31,7 +32,7 @@ class Chat extends React.Component{
         }*/
 
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
-        this.socket = io('localhost:5000');
+        this.socket = io('http://localhost:5000');
 
         this.sendMessage = ev => {
             ev.preventDefault();

@@ -20,13 +20,19 @@ const User = () => (
             </div>
 
             <div className="row">
-                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
+                <div className="col box random_box2" style={{border: "1px solid white"}}>
                     <h3>Your Rank here</h3>
                 </div>
-                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
+                <div className="col box random_box2" style={{border: "1px solid white"}}>
                     <h3>Items You purchased</h3>
                 </div>
-                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
+                <div className="col box random_box2" style={{border: "1px solid white"}}>
+                    <h3>Random thing here</h3>
+                </div>
+                <div className="col box random_box2" style={{border: "1px solid white"}}>
+                    <h3>Random thing here</h3>
+                </div>
+                <div className="col box random_box2" style={{border: "1px solid white"}}>
                     <h3>Random thing here</h3>
                 </div>
             </div>

@@ -261,6 +261,12 @@ a:active {
     width: 300px;
 }
 
+.random_box2 {
+    border: 1px solid white;
+    height: 300px;
+    width: 200px;
+}
+
 .game_box {
     border: 1px solid white;
     height: 200px;
