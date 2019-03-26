@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Logo from '../media/title.png';
 import Loading from '../Components/Loading';
+import axios from 'axios';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';
@@ -16,48 +17,53 @@ export default class SignUpIn extends Component {
 
     this.state = {
         password: '',
-        username: '',
+        username: ''
+    };
+
+    this.formAction = {
+      action: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e) {
+    var that = this;
     e.preventDefault();
-    
-    // 无条件登录
-    
+
+    this.props.history.push("/home/");
 
     console.log('The form was submitted with the following data: username: ', 
-    this.state.username, ' password: ', this.state.password);
+    this.state.username, ' password: ', this.state.password, 'action: ', this.formAction.action);
+    if (this.formAction.action === 'signup'){
+      axios.post("http://localhost:5000/signup/", {
+      username: this.state.username,
+      password: this.state.password
+      })
+      .then(function(response){
+        console.log(response);
+        that.props.history.push("/home/");
+      })
+      .catch(function(error){
+        console.log(error);
+        that.props.history.push("/");
+      })
+    }
+    if (this.formAction.action === 'signin'){
+      axios.post("http://localhost:5000/signin/", {
+      username: this.state.username,
+      password: this.state.password
+      })
+      .then(function(response) {
+        console.log(response);
+        that.props.history.push("/home/");
+      })
+      .catch(function(error){
+        console.log(error);
+        that.props.history.push("/");
+      })
+      }
   }
-
-  // get request  
-  // fetch('/signup/').then((response) => response.json()).then((data)=> console.log(data)); 
-
-
-  putUserToDB = (username, password) => {
-    fetch('/signup/', {
-      method : 'POST',
-      body : JSON.stringify({username: username, password: password}),
-      headers : {
-        'Content-type' : "application/json"
-      }
-    }).then(this.props.history.push("/home/"));
-  };
-
-
-  // our put method that uses our backend api
-  // to create new query into our data base
-  checkUserFromDB = (username, password) => {
-    fetch('/signin/', {
-      method : 'POST',
-      body : JSON.stringify({username: username, password: password}),
-      headers : {
-        'Content-type' : "application/json"
-      }
-    }).then(this.props.history.push("/home/"));
-  };
 
   // loading gif ---------------------------------------------------------------------------------
   authenticate(){
@@ -95,10 +101,12 @@ export default class SignUpIn extends Component {
               <div className="buttons">
                   <label htmlFor="signup" className="btn_signup">Sign Up</label>
                   <label htmlFor="signin" className="btn_signin">Sign in</label>
-                  <button id="signup" style={{visibility:"hidden"}} name="action" 
-                  onClick={() => this.putUserToDB(this.state.username, this.state.password)}></button>
-                  <button id="signin" style={{visibility:"hidden"}} name="action" 
-                  onClick={() => this.checkUserFromDB(this.state.username, this.state.password)}></button>
+                  <button id="signup" style={{visibility:"hidden"} }
+                  onClick={() => this.formAction.action ='signup'}>
+                  </button>
+                  <button id="signin" style={{visibility:"hidden"}}
+                  onClick={() => this.formAction.action ='signin'}>
+                  </button>
               </div>
           </form>
         </div>
