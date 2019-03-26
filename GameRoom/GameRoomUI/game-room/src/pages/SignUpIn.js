@@ -26,7 +26,7 @@ export default class SignUpIn extends Component {
     e.preventDefault();
     
     // 无条件登录
-    this.props.history.push("/home/");
+    
 
     console.log('The form was submitted with the following data: username: ', 
     this.state.username, ' password: ', this.state.password);
@@ -43,7 +43,7 @@ export default class SignUpIn extends Component {
       headers : {
         'Content-type' : "application/json"
       }
-    }).then((response) => response.json()).then((data)=> console.log(data))
+    }).then(this.props.history.push("/home/"));
   };
 
 
@@ -56,8 +56,7 @@ export default class SignUpIn extends Component {
       headers : {
         'Content-type' : "application/json"
       }
-    }).then(
-      (response) => response.json()).then((data)=> console.log(data))
+    }).then(this.props.history.push("/home/"));
   };
 
   // loading gif ---------------------------------------------------------------------------------
