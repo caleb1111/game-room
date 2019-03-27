@@ -7,36 +7,37 @@ class Chat extends React.Component{
     constructor(props){
         super(props);
         
-        // this.state = {
-        //     username: '',
-        //     img: User_img,
-        //     message: '',
-        //     messages: []
-        // }; 
+        this.state = {
+            username: '',
+            img: User_img,
+            message: '',
+            messages: []
+        }; 
 
         
-        this.state = {
-            messages : [
-                {messageId: 1, message: "Hello", username: "User1", img: User_img},
-                {messageId: 2, message: "Hello", username: "User2", img: User_img},
-                {messageId: 3, message: "Hello", username: "User3", img: User_img},
-                {messageId: 4, message: "Hello", username: "User4", img: User_img},
-                {messageId: 5, message: "Hello", username: "User5", img: User_img},
-                {messageId: 6, message: "Hello", username: "User6", img: User_img},
-                {messageId: 7, message: "Hello", username: "User7", img: User_img},
-                {messageId: 8, message: "Hello", username: "User8", img: User_img},
-                {messageId: 9, message: "Hello", username: "User9", img: User_img},
-                {messageId: 10, message: "Hello", username: "User10", img: User_img},
-                {messageId: 11, message: "Hello", username: "User11", img: User_img},
-            ]
-        }
+        // this.state = {
+        //     messages : [
+        //         {messageId: 1, message: "Hello", username: "User1", img: User_img},
+        //         {messageId: 2, message: "Hello", username: "User2", img: User_img},
+        //         {messageId: 3, message: "Hello", username: "User3", img: User_img},
+        //         {messageId: 4, message: "Hello", username: "User4", img: User_img},
+        //         {messageId: 5, message: "Hello", username: "User5", img: User_img},
+        //         {messageId: 6, message: "Hello", username: "User6", img: User_img},
+        //         {messageId: 7, message: "Hello", username: "User7", img: User_img},
+        //         {messageId: 8, message: "Hello", username: "User8", img: User_img},
+        //         {messageId: 9, message: "Hello", username: "User9", img: User_img},
+        //         {messageId: 10, message: "Hello", username: "User10", img: User_img},
+        //         {messageId: 11, message: "Hello", username: "User11", img: User_img},
+        //     ]
+        // }
 
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
         this.socket = io.connect('http://localhost:5000');
 
         this.sendMessage = ev => {
+            console.log("send:", this.state.username, "  ", this.state.message);
             ev.preventDefault();
-            this.socket.emit('SEND_MESSAGE', {
+            this.socket.emit('sendMessage', {
                 author: this.state.username,
                 message: this.state.message,
                 image: this.state.img
@@ -44,7 +45,7 @@ class Chat extends React.Component{
             this.setState({message: ''});
         }
 
-        this.socket.on('RECEIVE_MESSAGE', function(data){
+        this.socket.on('receiveMessage', function(data){
             addMessage(data);
         });
         

@@ -2,12 +2,17 @@ const crypto = require('crypto');
 const path = require('path');
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const http = require('http').createServer(app);
+var server = http.listen(5000, function () {
+    var port = server.address().port;
+    console.log("App now running on port", port);
+});
+const io = require('socket.io').listen(server);
+io.origins(['http://localhost:3000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
 const validator = require("validator");
-const sanitize = require('validator').sanitize;
+const sanitize = require('express-sanitizer');
 
 var db;
 MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb", { useNewUrlParser: true }, function (err, client) {
@@ -19,10 +24,6 @@ MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb",
   // Save database object from the callback for reuse.
     db = client.db();
     // Initialize the app.
-    var server = app.listen(5000, function () {
-        var port = server.address().port;
-        console.log("App now running on port", port);
-    });
 });
 
 let User = function(id, salt, hash, display){
@@ -59,7 +60,7 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const session = require('express-session');
 app.use(session({
-    secret: 'very secret secret',
+    secret: 'very secret very secret',
     resave: false,
     saveUninitialized: true,
 }));
@@ -74,6 +75,8 @@ function generateHash (password, salt){
     return hash.digest('base64');
 }
 
+app.use(sanitize);
+
 app.use(function(req, res, next){
     req.user = ('user' in req.session)? req.session.user : null;
     let username = (req.user)? req.user._id : '';
@@ -86,7 +89,8 @@ app.use(function(req, res, next){
 
 let corsOptions = {
     origin: "http://localhost:3000",
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    credentials: true
 }
 
 app.use(cors(corsOptions));
@@ -321,13 +325,13 @@ for(let i = 0; i < 9; i++) {
 };
 
 io.on("connection", function (socket) {
-    users.push(socket);
-    var myquery = { _id: req.user._id };
-    var newvalues = { $set: {socket: socket} };
-    db.getCollection("users").updateOne(myquery, newvalues, function(err, res) {
-        if (err) throw err;
-        db.close();
-    });
+    // users.push(socket);
+    // var myquery = { _id: req.user._id };
+    // var newvalues = { $set: {socket: socket} };
+    // db.getCollection("users").updateOne(myquery, newvalues, function(err, res) {
+    //     if (err) throw err;
+    //     db.close();
+    // });
 
     socket.on("updateCoins", function(coin){
         myquery = { socket: socket.id};
@@ -339,7 +343,6 @@ io.on("connection", function (socket) {
     });
 
     socket.on("sendMessage", function(data){
-        data.message = sanitize(data.message).xss();
         io.emit('receiveMessage', data);
     });
 
@@ -477,11 +480,12 @@ app.post('/signup/', checkUsername, (req, res) => {
         var salt = generateSalt();
         var hash = generateHash(password, salt);
         let newUser = new User(username, salt, hash, 0);
-        db.collection("users").insertOne(newUser, function(err, result) {
-            if (err) return res.status(500).end(err);
-            req.user = newUser;
-            res.json(newUser);
-        });
+        //db.collection("users").insertOne(newUser, function(err, result) {
+            //if (err) return res.status(500).end(err);
+        req.user = newUser;
+        console.log("user: ", req.user);
+        res.json(newUser);
+        //});
     });
 });
 
@@ -494,23 +498,30 @@ app.post('/signin/', checkUsername, (req, res) => {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(409).end("username " + username + " already exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        db.collection("loggedUsers").insertOne(user, function(err, result) {
-            if (err) return res.status(500).end(err);
-            res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
-                path : '/', 
-                maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                sameSite: true,
-                secure: true
-            }));
-            req.user = user;
-            res.json(user);
-        });
+        // db.collection("loggedUsers").insertOne(user, function(err, result) {
+        //     if (err) return res.status(500).end(err);
+        res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
+            path : '/', 
+            maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+            sameSite: true,
+            secure: true
+        }));
+        req.user = user;
+        console.log("user: ", req.user);
+        res.json(user);
+       // });
     });
 });
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
     //req.user.socket.disconnect();
+    // console.log(req.user);
+    // let myquery = { _id: req.user._id };
+    // db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
+    //     if (err) throw err;
+    //     console.log("removed user: ", obj);
+    // });
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 
