@@ -6,7 +6,7 @@ import FriendList from '../Components/FriendList';
 import '../style/lobby.css';
 import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
-
+import MovingLogo from '../Components/MovingLogo';
 
 export default class Home extends Component {
 
@@ -82,6 +82,7 @@ export default class Home extends Component {
         </div>
             <div className="clear"></div>
         </div>
+        <MovingLogo />
       </div>
     );
   }
