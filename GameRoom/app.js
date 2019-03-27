@@ -12,7 +12,6 @@ io.origins(['http://localhost:3000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
 const validator = require("validator");
-const sanitize = require('express-sanitizer');
 
 var db;
 MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb", { useNewUrlParser: true }, function (err, client) {
@@ -74,8 +73,6 @@ function generateHash (password, salt){
     hash.update(password);
     return hash.digest('base64');
 }
-
-app.use(sanitize);
 
 app.use(function(req, res, next){
     req.user = ('user' in req.session)? req.session.user : null;
@@ -480,12 +477,12 @@ app.post('/signup/', checkUsername, (req, res) => {
         var salt = generateSalt();
         var hash = generateHash(password, salt);
         let newUser = new User(username, salt, hash, 0);
-        //db.collection("users").insertOne(newUser, function(err, result) {
-            //if (err) return res.status(500).end(err);
-        req.user = newUser;
-        console.log("user: ", req.user);
-        res.json(newUser);
-        //});
+        db.collection("users").insertOne(newUser, function(err, result) {
+            if (err) return res.status(500).end(err);
+            req.user = newUser;
+            console.log("user: ", req.user);
+            res.json(newUser);
+        });
     });
 });
 
@@ -496,7 +493,7 @@ app.post('/signin/', checkUsername, (req, res) => {
     // retrieve user from the database
     db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
-        if (!user) return res.status(409).end("username " + username + " already exists");
+        if (!user) return res.status(409).end("username " + username + " does not exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
         // db.collection("loggedUsers").insertOne(user, function(err, result) {
         //     if (err) return res.status(500).end(err);
@@ -515,13 +512,13 @@ app.post('/signin/', checkUsername, (req, res) => {
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
-    //req.user.socket.disconnect();
     // console.log(req.user);
     // let myquery = { _id: req.user._id };
     // db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
     //     if (err) throw err;
     //     console.log("removed user: ", obj);
     // });
+    //req.user.socket.disconnect();
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 
