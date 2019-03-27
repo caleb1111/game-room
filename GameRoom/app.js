@@ -4,9 +4,10 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
-const validator = require('validator');
-const sanitize = validator.sanitize;
+const validator = require("validator");
+const sanitize = require('validator').sanitize;
 
 var db;
 MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb", { useNewUrlParser: true }, function (err, client) {
@@ -28,7 +29,7 @@ let User = function(id, salt, hash, display){
     this._id = id;
     this.salt = salt;
     this.hash = hash;
-    this.picture = defaultPic;
+    this.picture = 0;
     this.friends = [];
     this.display = display;
     this.coins = 0;
@@ -82,6 +83,13 @@ app.use(function(req, res, next){
     }));
     next();
 });
+
+let corsOptions = {
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, 'GameRoomUI/game-room/build')));
 
@@ -306,9 +314,9 @@ class gameSession {
     }
 }
 
-const users = [];
-const gameSessions = Array(9);
-for(let i = 0; i < gameSessions.length; i++) {
+let users = [];
+const gameSessions = Array(0);
+for(let i = 0; i < 9; i++) {
     gameSessions.push(new gameSession(i))
 };
 
@@ -316,27 +324,29 @@ io.on("connection", function (socket) {
     users.push(socket);
     var myquery = { _id: req.user._id };
     var newvalues = { $set: {socket: socket} };
-    db.Collection("users").updateOne(myquery, newvalues, function(err, res) {
+    db.getCollection("users").updateOne(myquery, newvalues, function(err, res) {
         if (err) throw err;
+        db.close();
     });
 
     socket.on("updateCoins", function(coin){
         myquery = { socket: socket.id};
         newvalues = { $inc: {coins: coin}};
-        db.Collection('users').updateOne(myquery, newvalues, function(err, res){
+        db.getCollection('users').updateOne(myquery, newvalues, function(err, res){
             if (err) throw err;
-        })
-    })
+            db.close();
+        });
+    });
 
     socket.on("sendMessage", function(data){
         data.message = sanitize(data.message).xss();
         io.emit('receiveMessage', data);
-    })
+    });
 
-    socket.on('disconnect', function(){
+    socket.on("disconnect", function(){
         let index = users.indexOf(socket);
         users.splice(index, 1);
-    })
+    });
 
     socket.on("joinSession", function(lobbyId) {
         let joined = false;
@@ -344,8 +354,29 @@ io.on("connection", function (socket) {
             joined = gameSessions[lobbyId].addPlayer(new player(socket.id, lobbyId));
             socket.join("lobby"+lobbyId);
         }
-        socket.emit("joined", joined, lobbyId);
+        
+        socket.emit("joined", joined, lobbyId); // is joined a boolean or an int?
     });
+
+    /*
+    socket.on("joined", function(result, lobbyId){
+        if (result){
+            lobbyId = lobbyId;
+            sessionStorage.setItem("lobbyId", lobbyId);
+        }    
+    });
+
+    readyButton.addEventListener("click", function(){
+        socket.emit("ready", lobbyId);
+        // change something to indicate player is ready
+    });
+
+    leaveRoom.addEventListener("click", function(){
+        lobbyId = null;
+        // remove player from list
+    });
+    
+    */
 
     socket.on("ready", function(lobbyId) {
         const session = gameSessions[lobbyId];
@@ -434,30 +465,21 @@ io.on("connection", function (socket) {
             returnResult(-1);
         }
     });
-});
 
+});
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
 app.post('/signup/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
-    db.Collection("users").findOne({_id: username}, function(err, user) {
+    db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (user) return res.status(409).end("username " + username + " already exists");
         var salt = generateSalt();
         var hash = generateHash(password, salt);
         let newUser = new User(username, salt, hash, 0);
-        db.collection("users").insertOne(newUser, function(err, res) {
+        db.collection("users").insertOne(newUser, function(err, result) {
             if (err) return res.status(500).end(err);
-            db.collection("loggedUsers").insertOne(res, function(err, storedRes) {
-                if (err) return res.status(500).end(err);
-                res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
-                    path : '/', 
-                    maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                    sameSite: true,
-                    secure: true
-                }));
-                res.json(user);
-            });
+            res.json(newUser);
         });
     });
 });
@@ -467,11 +489,11 @@ app.post('/signin/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
     // retrieve user from the database
-    db.Collection("users").findOne({_id: username}, function(err, user) {
+    db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(409).end("username " + username + " already exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        db.collection("loggedUsers").insertOne(user, function(err, storedUser) {
+        db.collection("loggedUsers").insertOne(user, function(err, result) {
             if (err) return res.status(500).end(err);
             res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
                 path : '/', 
@@ -509,21 +531,23 @@ app.get('/api/currUser/', (req, res) => {
 })
 
 app.get('/api/user/:userId/picture', checkId, (req, res) => {
-    db.Collection("users").findOne({_id: req.params.userId}, function(err, user) {
+    db.collection("users").findOne({_id: req.params.userId}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(404).end('Image id ' + req.params.imageid + ' does not exists');
         let file = user.picture;
         res.setHeader('Content-Type', file.mimetype);
         res.sendFile(path.join(__dirname, file.path));
+        db.close();
     });
 });
 
 app.get('/api/user/:userId/friends', checkId, (req, res) => {
-    db.Collection("users").findOne({_id: req.params.userId}, function(err, user) {
+    db.collection("users").findOne({_id: req.params.userId}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(404).end('Image id ' + req.params.imageid + ' does not exists');
         let friends = user.friends;
         res.json(friends);
+        db.close();
     });
       
 });
