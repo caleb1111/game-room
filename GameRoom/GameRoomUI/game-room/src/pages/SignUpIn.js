@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Logo from '../media/title.png';
 import Loading from '../Components/Loading';
-import axios from 'axios';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';
@@ -36,27 +35,37 @@ export default class SignUpIn extends Component {
     console.log('The form was submitted with the following data: username: ', 
     this.state.username, ' password: ', this.state.password, 'action: ', this.formAction.action);
     if (this.formAction.action === 'signup'){
-      axios.post("http://localhost:5000/signup/", {
-      username: this.state.username,
-      password: this.state.password
-      })
-      .then(function(response){
-        console.log(response);
-        that.props.history.push("/home/");
-      })
+      fetch('http://localhost:5000/signup/', {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify({ username: this.state.username, password: this.state.password }), // data can be `string` or {object}!
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(function(response){
+        return response.json(); })
+        .then(function(data) {
+            const items = data;
+            console.log(items)
+            that.props.history.push("/home/");
+        })
       .catch(function(error){
         console.log(error);
         that.props.history.push("/");
       })
     }
     if (this.formAction.action === 'signin'){
-      axios.post("http://localhost:5000/signin/", {
-      username: this.state.username,
-      password: this.state.password
-      })
-      .then(function(response) {
-        console.log(response);
-        that.props.history.push("/home/");
+      fetch('http://localhost:5000/signin/', {
+        method: 'POST', // or 'PUT'
+        body: JSON.stringify({ username: this.state.username, password: this.state.password }), // data can be `string` or {object}!
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      }).then(function(response) {
+        return response.json(); })
+        .then(function(data) {
+            const items = data;
+            console.log(items)
+            that.props.history.push("/home/");
       })
       .catch(function(error){
         console.log(error);
