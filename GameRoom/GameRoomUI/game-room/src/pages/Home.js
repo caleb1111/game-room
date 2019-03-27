@@ -30,15 +30,15 @@ export default class Home extends Component {
 
   Rooms = {
     items: [
-      {room_id:1, room_name: "Game Room 1"},
-      {room_id:2, room_name: "Game Room 2"},
-      {room_id:3, room_name: "Game Room 3"},
-      {room_id:4, room_name: "Game Room 4"},
-      {room_id:5, room_name: "Game Room 5"},
-      {room_id:6, room_name: "Game Room 6"},
-      {room_id:7, room_name: "Game Room 7"},
-      {room_id:8, room_name: "Game Room 8"},
-      {room_id:9, room_name: "Game Room 9"},
+      {room_id:1, room_name: "Game Room 1", player1: null, player2: null},
+      {room_id:2, room_name: "Game Room 2", player1: null, player2: null},
+      {room_id:3, room_name: "Game Room 3", player1: null, player2: null},
+      {room_id:4, room_name: "Game Room 4", player1: null, player2: null},
+      {room_id:5, room_name: "Game Room 5", player1: null, player2: null},
+      {room_id:6, room_name: "Game Room 6", player1: null, player2: null},
+      {room_id:7, room_name: "Game Room 7", player1: null, player2: null},
+      {room_id:8, room_name: "Game Room 8", player1: null, player2: null},
+      {room_id:9, room_name: "Game Room 9", player1: null, player2: null},
     ]
   }
 
