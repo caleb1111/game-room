@@ -12,14 +12,12 @@ class Nav extends React.Component {
     }
 
     handleSignout() {
-        var that = this;
           fetch('http://localhost:5000/signout/')
           .then(function(response) {
             return response.json(); })
             .then(function(data) {
                 const items = data;
                 console.log(items)
-                that.props.history.push("/");
           })
           .catch(function(error){
             console.log(error);
