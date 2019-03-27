@@ -473,6 +473,7 @@ app.post('/signup/', checkUsername, (req, res) => {
         let newUser = new User(username, salt, hash, 0);
         db.collection("users").insertOne(newUser, function(err, result) {
             if (err) return res.status(500).end(err);
+            req.user = newUser;
             res.json(newUser);
         });
     });
@@ -487,7 +488,7 @@ app.post('/signin/', checkUsername, (req, res) => {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(409).end("username " + username + " already exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        db.collection("loggedUsers").insert(user, function(err2, result) {
+        db.collection("loggedUsers").insertOne(user, function(err2, result) {
             if (err2) return res.status(500).end(err2);
             res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
                 path : '/', 
@@ -495,6 +496,7 @@ app.post('/signin/', checkUsername, (req, res) => {
                 sameSite: true,
                 secure: true
             }));
+            req.user = user;
             res.json(user);
         });
     });
