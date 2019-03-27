@@ -29,7 +29,7 @@ let User = function(id, salt, hash, display){
     this._id = id;
     this.salt = salt;
     this.hash = hash;
-    this.picture = 0;   
+    this.picture = 0;
     this.friends = [];
     this.display = display;
     this.coins = 0;
@@ -37,6 +37,12 @@ let User = function(id, salt, hash, display){
     this.loss = 0;
     this.items = [];
     this.socket = 0;
+};
+
+let Item = function(name, price, picture){
+    this.name = name;
+    this.price = price;
+    this.picture = picture;
 };
 
 const bodyParser = require('body-parser');
@@ -488,8 +494,8 @@ app.post('/signin/', checkUsername, (req, res) => {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(409).end("username " + username + " already exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        db.collection("loggedUsers").insertOne(user, function(err2, result) {
-            if (err2) return res.status(500).end(err2);
+        db.collection("loggedUsers").insertOne(user, function(err, result) {
+            if (err) return res.status(500).end(err);
             res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
                 path : '/', 
                 maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
@@ -504,12 +510,7 @@ app.post('/signin/', checkUsername, (req, res) => {
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
-    // req.user.socket.disconnect();
-    let myquery = { _id: req.user._id };
-    db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
-        if (err) throw err;
-        console.log("removed user: ", obj);
-    });
+    //req.user.socket.disconnect();
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 
