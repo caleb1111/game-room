@@ -1,7 +1,7 @@
 
 .player_list {
   width: 250px;
-	height: 260px;
+	height: 280px;
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
     position: relative;
@@ -15,7 +15,7 @@
   color: black;
   font-size: 120%;
   border-radius: 10px;
-  height: 200px;
+  height: 220px;
   width: 230px;
   overflow-y: scroll;
   overflow-x: hidden;

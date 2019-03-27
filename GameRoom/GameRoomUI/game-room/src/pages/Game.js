@@ -107,7 +107,7 @@ export default class Game extends Component {
 
     </div>
 
-<div className="deployments" id="drawingTemplates" style={{visibility:"hidden"}}>
+<div className="deployments" id="drawingTemplates">
     <img id="destroyerPlace" className="place" src={destroyer} alt="ship"></img>
     <img id="destroyerHPlace" className="place" src={destroyerH} alt="ship"></img>
     <img id="submarinePlace" className="place" src={submarine} alt="ship" ></img>

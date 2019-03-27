@@ -32,6 +32,7 @@ ul, li {
 #lobby_leftsidebar {
 	float: left;
 	width: 350px;
+	margin-left: -100px;
 	padding-left: 40px;
 	background:	url(../media/lobby/lobby_sidebar.png) center right no-repeat
 }
@@ -39,8 +40,8 @@ ul, li {
 #lobby_main {
 	float: left;
 	margin-left: 25px;
-	width: 560px;
-	height: 540px;
+	width: 660px;
+	height: 640px;
 }
 
 /* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
@@ -70,8 +71,8 @@ ul, li {
 
 #game_room li {
 	float: left;
-	width: 150px;
-	height: 150px;
+	width: 180px;
+	height: 180px;
 	margin: 15px 15px 15px 15px;
 	text-align: center;
 	color: white;
