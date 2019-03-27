@@ -20,6 +20,10 @@ import circlesBG from '../media/items/circlesBG.png';
 
 export default class Shop extends Component {
 
+  Coins = {
+        coin: "1000"
+  }
+
   items_list = {
     items : [
     {itemId: 1, item_name:"Bronze Medal", item_img: bronzeMedal, price: 100},
@@ -47,7 +51,7 @@ export default class Shop extends Component {
             <hr />
             <br />
             <div className="coin">
-             <img src={coin} alt='coin'/> 1000 Coins 
+             <img src={coin} alt='coin'/> <p> {this.Coins.coin}  Coins </p>
              <img className="plus_sign" src={plus_sign} alt='plus sign' />
             </div>
           </header>

@@ -39,9 +39,12 @@
 }
 
 .coin {
+    vertical-align: middle;
+
     color: white;
     font-size: 90%;
-    display: block;
+    display: flex;
+    flex-direction: row;
     margin-left: 50px;
 }
   
@@ -49,7 +52,16 @@
     height: 40px;
     border-radius: 50%;
     vertical-align: middle;
+    margin-right: 10px;
+    margin-bottom: 5px;
   }
+
+  .coin p {
+    margin-top: 5px;
+    font-size: 90%;
+    margin-right: 5px;
+  }
+
 
 .btn_purchase,
 .btn_purchase:visited {
@@ -74,6 +86,7 @@
 }
 
 .plus_sign {
+    vertical-align: middle;
     margin-left: 10px;
     height: 15px;
     cursor: pointer;

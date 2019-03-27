@@ -2,7 +2,6 @@ import React from 'react';
 import Sky from 'react-sky';
 import LogoImg from '../media/logo.png';
 
-
 class MovingLogo extends React.Component {
 
   render(){

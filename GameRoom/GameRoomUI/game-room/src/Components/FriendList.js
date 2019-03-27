@@ -5,7 +5,7 @@ import User_img from '../media/user.png';
 class FriendList extends React.Component{
     state = {
         friends: [
-            {friendId: 1, name: "friend1", img: User_img},
+            {friendId: 1, player_name: null, img: User_img},
             {friendId: 2, name: "friend2", img: User_img},
             {friendId: 3, name: "friend3", img: User_img},
             {friendId: 4, name: "friend4", img: User_img},
@@ -21,7 +21,7 @@ class FriendList extends React.Component{
                     <ul id="friends">
                         {this.state.friends.map((friend, i) => {
                             return (
-                                <li key={i}><cite><img src={friend.img} alt='user_img'/>{friend.name}</cite></li>
+                                <li key={i}><cite style={{textAlign:"center"}}>{friend.name}</cite></li>
                             )
                         })}
                         </ul>

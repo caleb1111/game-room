@@ -107,23 +107,22 @@ export default class Game extends Component {
 
     </div>
 
-<div class="deployments" id="drawingTemplates" style={{visibility:"hidden"}}>
-    <img id="destroyerPlace" class="place" src={destroyer} alt="ship"></img>
-    <img id="destroyerHPlace" class="place" src={destroyerH} alt="ship"></img>
-    <img id="submarinePlace" class="place" src={submarine} alt="ship" ></img>
-    <img id="submarineHPlace" class="place" src={submarineH} alt="ship"></img>
-    <img id="cruiserPlace" class="place" src={cruiser} alt="ship"></img>
-    <img id="cruiserHPlace" class="place" src={cruiserH} alt="ship"></img>
-    <img id="dreadnoughtPlace" class="place" src={dreadnought} alt="ship"></img>
-    <img id="dreadnoughtHPlace" class="place" src={dreadnoughtH} alt="ship"></img>
-    <img id="carrierPlace" class="place" src={carrier} alt="ship"></img>
-    <img id="carrierHPlace" class="place" src={carrierH} alt="ship"></img>
-    <img id="hit" class="place" src={hit} alt="ship"></img>
-    <img id="miss" class="place" src={miss} alt="ship"></img>
+    <div class="deployments" id="drawingTemplates" style={{visibility:"hidden"}}>
+        <img id="destroyerPlace" class="place" src={destroyer} alt="ship"></img>
+        <img id="destroyerHPlace" class="place" src={destroyerH} alt="ship"></img>
+        <img id="submarinePlace" class="place" src={submarine} alt="ship" ></img>
+        <img id="submarineHPlace" class="place" src={submarineH} alt="ship"></img>
+        <img id="cruiserPlace" class="place" src={cruiser} alt="ship"></img>
+        <img id="cruiserHPlace" class="place" src={cruiserH} alt="ship"></img>
+        <img id="dreadnoughtPlace" class="place" src={dreadnought} alt="ship"></img>
+        <img id="dreadnoughtHPlace" class="place" src={dreadnoughtH} alt="ship"></img>
+        <img id="carrierPlace" class="place" src={carrier} alt="ship"></img>
+        <img id="carrierHPlace" class="place" src={carrierH} alt="ship"></img>
+        <img id="hit" class="place" src={hit} alt="ship"></img>
+        <img id="miss" class="place" src={miss} alt="ship"></img>
 
+    </div>
 </div>
-
-        </div>
       );
     }
   }

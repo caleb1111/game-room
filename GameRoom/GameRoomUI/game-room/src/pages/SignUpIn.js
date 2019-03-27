@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Logo from '../media/title.png';
-import Loading from '../Components/Loading';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';
@@ -37,12 +36,13 @@ export default class SignUpIn extends Component {
     if (this.formAction.action === 'signup'){
       fetch('http://localhost:5000/signup/', {
         method: 'POST', // or 'PUT'
-        body: JSON.stringify({ username: this.state.username, password: this.state.password }), // data can be `string` or {object}!
+        body: JSON.stringify({ username: this.state.username, password: this.state.password }),
         headers:{
           'Content-Type': 'application/json'
         }
       }).then(function(response){
-        return response.json(); })
+        return response.json(); 
+      })
         .then(function(data) {
             const items = data;
             console.log(items)
@@ -56,7 +56,7 @@ export default class SignUpIn extends Component {
     if (this.formAction.action === 'signin'){
       fetch('http://localhost:5000/signin/', {
         method: 'POST', // or 'PUT'
-        body: JSON.stringify({ username: this.state.username, password: this.state.password }), // data can be `string` or {object}!
+        body: JSON.stringify({ username: this.state.username, password: this.state.password }), 
         headers:{
           'Content-Type': 'application/json'
         }
@@ -74,31 +74,9 @@ export default class SignUpIn extends Component {
       }
   }
 
-  // loading gif ---------------------------------------------------------------------------------
-  authenticate(){
-    return new Promise(resolve => setTimeout(resolve, 2000))
-  }
-
-  componentDidMount(){
-    this.authenticate().then(() => {
-      const ele = document.getElementById('ipl-progress-indicator')
-      if(ele){
-        // fade out
-        ele.classList.add('available')
-        setTimeout(() => {
-          // remove from DOM
-          ele.outerHTML = ''
-        }, 2000)
-      }
-    })
-  }
-
-  // ----------------------------------------------------------------------------------
-
   render() {
     return (
       <div className="background">
-      <Loading/>
         <SignLogo/>
         <div id="sign_form">
           <form onSubmit={this.handleSubmit} className="signup_form" id="create_signup_form">
