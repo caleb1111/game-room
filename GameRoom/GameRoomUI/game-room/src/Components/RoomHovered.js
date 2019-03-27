@@ -3,11 +3,16 @@ import '../style/room_hovered.css';
 import User_img from '../media/user.png';
 
 class RoomHovered extends Component {
-    state = {
-        players:[
-            {playerId: 1, player_name: "player1", img:User_img},
-            {playerId: 2, player_name: "player2", img:User_img}
-        ]
+
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            players:[
+                {playerId: 1, player_name: "player1", img:User_img},
+                {playerId: 2, player_name: "player2", img:User_img}
+            ]
+        }
     }
 
 render(){
@@ -20,7 +25,8 @@ render(){
                         )
                     })}
         </div>
-        <button className="join_btn">Join Game</button>
+        <button className="join_btn"
+        onClick={() => console.log("join room", )}>Join Game</button>
     </div>
     );
  }

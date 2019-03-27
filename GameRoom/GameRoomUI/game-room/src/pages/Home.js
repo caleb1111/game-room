@@ -6,6 +6,9 @@ import FriendList from '../Components/FriendList';
 import '../style/lobby.css';
 import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
+import MovingLogo from '../Components/MovingLogo';
+import io from "socket.io-client";
+
 
 
 export default class Home extends Component {
@@ -45,6 +48,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="background">
+      <MovingLogo />
         <header>
           <a href="/"><Logo/></a>
           <Nav/>
@@ -65,7 +69,7 @@ export default class Home extends Component {
                     {this.Rooms.items.map((item, i) => {
                         return (
                             <li key={i} onMouseEnter={this.handleMouseHover}
-                                onMouseLeave={this.handleMouseHover} >
+                                onMouseLeave={this.handleMouseHover}>
                                 {item.room_name}
                                 {this.state.isHovering && <RoomHovered />} 
                             </li>

@@ -32,7 +32,7 @@ class Chat extends React.Component{
         }
 
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
-        this.socket = io('http://localhost:5000');
+        this.socket = io.connect('http://localhost:5000');
 
         this.sendMessage = ev => {
             ev.preventDefault();

@@ -34,17 +34,17 @@ export default class Game extends Component {
 
     <div id="ending">
         <p id="result">Result</p>
-        <div class="board">
+        <div className="board">
             <p>Gained </p>
             <p id="earned">xxx </p>
-            <img class="coin" src={coin} alt="coin"></img>
+            <img className="coin" src={coin} alt="coin"></img>
         </div>
         <button id="returnButton">Return to Lobby</button>
     </div>
 
     <div id="gameContent">
 
-        <div class="board">
+        <div className="board">
             <div id="player">
                 <p id="yFleet">Your Fleet</p>
                 <canvas width="400" height="400" id="playerBoard"></canvas>
@@ -65,61 +65,61 @@ export default class Game extends Component {
         <div id="fl">
             <p id="fleetText">Fleet</p>
             <div id="deployments">
-                <div id="carrierSelect" class="entry">
+                <div id="carrierSelect" className="entry">
                     
-                    <img id="carrierImg" class="shipName" src={carrier} alt="ship"></img>
-                    <div id ="carrierBar" class="selector"></div>
-                    <p class="shipName">Carrier</p>
-                    <p class="shipName" id="carrierRemaining">Remaining: </p>
+                    <img id="carrierImg" className="shipName" src={carrier} alt="ship"></img>
+                    <div id ="carrierBar" className="selector"></div>
+                    <p className="shipName">Carrier</p>
+                    <p className="shipName" id="carrierRemaining">Remaining: </p>
                 </div>
 
-                <div id="dreadnoughtSelect" class="entry">
-                    <img id="dreadnoughtImg" class="shipName" src={dreadnought} alt="ship"></img>
-                    <div id="dreadnoughtBar" class="selector"></div>
-                    <p class="shipName">Dreadnought</p>
-                    <p class="shipName" id="dreadnoughtRemaining">Remaining: </p>
+                <div id="dreadnoughtSelect" className="entry">
+                    <img id="dreadnoughtImg" className="shipName" src={dreadnought} alt="ship"></img>
+                    <div id="dreadnoughtBar" className="selector"></div>
+                    <p className="shipName">Dreadnought</p>
+                    <p className="shipName" id="dreadnoughtRemaining">Remaining: </p>
                 </div>
 
-                <div id="cruiserSelect" class="entry">
-                    <img id="cruiserImg" class="shipName" src={cruiser} alt="ship"></img>
-                    <div id="cruiserBar"class="selector"></div>
-                    <p class="shipName">Cruiser</p>
-                    <p class="shipName" id="cruiserRemaining">Remaining: </p>
+                <div id="cruiserSelect" className="entry">
+                    <img id="cruiserImg" className="shipName" src={cruiser} alt="ship"></img>
+                    <div id="cruiserBar"className="selector"></div>
+                    <p className="shipName">Cruiser</p>
+                    <p className="shipName" id="cruiserRemaining">Remaining: </p>
                 </div>
 
-                <div id="submarineSelect" class="entry">
-                    <img id="submarineImg" class="shipName" src={submarine} alt="ship"></img>
-                    <div id="submarineBar" class="selector"></div>
-                    <p class="shipName">Submarine</p>
-                    <p class="shipName" id="submarineRemaining">Remaining: </p>
+                <div id="submarineSelect" className="entry">
+                    <img id="submarineImg" className="shipName" src={submarine} alt="ship"></img>
+                    <div id="submarineBar" className="selector"></div>
+                    <p className="shipName">Submarine</p>
+                    <p className="shipName" id="submarineRemaining">Remaining: </p>
                 </div>
 
-                <div id="destroyerSelect" class="entry">
-                    <img id="destroyerImg" class="shipName" src={destroyer} alt="ship"></img>
-                    <div id="destroyerBar" class="selector"></div>
-                    <p class="shipName">Destroyer</p>
-                    <p class="shipName" id="destroyerRemaining">Remaining: </p>
+                <div id="destroyerSelect" className="entry">
+                    <img id="destroyerImg" className="shipName" src={destroyer} alt="ship"></img>
+                    <div id="destroyerBar" className="selector"></div>
+                    <p className="shipName">Destroyer</p>
+                    <p className="shipName" id="destroyerRemaining">Remaining: </p>
                 </div>
 
-                <button id="rotateShips">ROTATE</button>
+                <button className="btn_rotate" id="rotateShips">ROTATE</button>
             </div>
         </div>
 
     </div>
 
-<div class="deployments" id="drawingTemplates" style={{visibility:"hidden"}}>
-    <img id="destroyerPlace" class="place" src={destroyer} alt="ship"></img>
-    <img id="destroyerHPlace" class="place" src={destroyerH} alt="ship"></img>
-    <img id="submarinePlace" class="place" src={submarine} alt="ship" ></img>
-    <img id="submarineHPlace" class="place" src={submarineH} alt="ship"></img>
-    <img id="cruiserPlace" class="place" src={cruiser} alt="ship"></img>
-    <img id="cruiserHPlace" class="place" src={cruiserH} alt="ship"></img>
-    <img id="dreadnoughtPlace" class="place" src={dreadnought} alt="ship"></img>
-    <img id="dreadnoughtHPlace" class="place" src={dreadnoughtH} alt="ship"></img>
-    <img id="carrierPlace" class="place" src={carrier} alt="ship"></img>
-    <img id="carrierHPlace" class="place" src={carrierH} alt="ship"></img>
-    <img id="hit" class="place" src={hit} alt="ship"></img>
-    <img id="miss" class="place" src={miss} alt="ship"></img>
+<div className="deployments" id="drawingTemplates" style={{visibility:"hidden"}}>
+    <img id="destroyerPlace" className="place" src={destroyer} alt="ship"></img>
+    <img id="destroyerHPlace" className="place" src={destroyerH} alt="ship"></img>
+    <img id="submarinePlace" className="place" src={submarine} alt="ship" ></img>
+    <img id="submarineHPlace" className="place" src={submarineH} alt="ship"></img>
+    <img id="cruiserPlace" className="place" src={cruiser} alt="ship"></img>
+    <img id="cruiserHPlace" className="place" src={cruiserH} alt="ship"></img>
+    <img id="dreadnoughtPlace" className="place" src={dreadnought} alt="ship"></img>
+    <img id="dreadnoughtHPlace" className="place" src={dreadnoughtH} alt="ship"></img>
+    <img id="carrierPlace" className="place" src={carrier} alt="ship"></img>
+    <img id="carrierHPlace" className="place" src={carrierH} alt="ship"></img>
+    <img id="hit" className="place" src={hit} alt="ship"></img>
+    <img id="miss" className="place" src={miss} alt="ship"></img>
 
 </div>
 

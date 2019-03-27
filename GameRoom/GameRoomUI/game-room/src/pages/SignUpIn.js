@@ -14,9 +14,9 @@ export default class SignUpIn extends Component {
     super();
 
     this.state = {
-        password: '',
-        username: ''
-    };
+        username: '',
+        password: ''
+    }
 
     this.formAction = {
       action: '',
@@ -28,8 +28,7 @@ export default class SignUpIn extends Component {
   handleSubmit(e) {
     var that = this;
     e.preventDefault();
-
-    this.props.history.push("/home/");
+    console.log("front end user", this.state);
 
     console.log('The form was submitted with the following data: username: ', 
     this.state.username, ' password: ', this.state.password, 'action: ', this.formAction.action);

@@ -54,6 +54,7 @@
 }
 
 .entry{
+    color: #fff;
     width: 100px;
     align-self: center;
     margin-left: 50px;
@@ -76,14 +77,28 @@
     margin: 25px auto;
 }
 
-#rotateShips{
-    border: 5px solid lightgreen;
-    color: lightgreen;
-    font-weight: bolder;
-    background-color: black;
-    width: 80px;
-    height: 100px;
-    margin-top: 15px;
+.btn_rotate,
+.btn_rotate:visited {
+    background-color: #111;
+    width: 10%;
+    height: 10%;
+    margin-top: 100px;
+    margin-left: 60px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_rotate:hover,
+.btn_rotate:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
 }
 
 #ending{

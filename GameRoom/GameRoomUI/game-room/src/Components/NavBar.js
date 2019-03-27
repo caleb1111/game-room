@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import '../style/home.css';
-import MovingLogo from './MovingLogo';
 
 class Nav extends React.Component {
 
@@ -27,7 +26,6 @@ class Nav extends React.Component {
     render(){
       return(
         <div className="row">
-            <MovingLogo />
             <ul className="main-nav">
                 <li style={{visibility:"hidden"}}><Link to='/game/'>Game</Link></li>
                 <li><Link to='/home/'>Lobby</Link></li>
