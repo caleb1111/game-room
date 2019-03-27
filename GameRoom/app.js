@@ -502,7 +502,7 @@ app.post('/signin/', checkUsername, (req, res) => {
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
-    req.user.socket.disconnect();
+    // req.user.socket.disconnect();
     let myquery = { _id: req.user._id };
     db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
         if (err) throw err;
