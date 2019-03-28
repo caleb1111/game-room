@@ -13,7 +13,9 @@ class Chat extends React.Component{
             message: '',
             messages: []
         }; 
+    }
 
+    componentDidMount(){
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
         this.socket = io.connect('http://localhost:5000');
 
@@ -53,7 +55,7 @@ class Chat extends React.Component{
                     <ul id="message">
                     {this.state.messages.map((message, i) => {
                         return (
-                            <li key={i}><cite><img src={message.img} alt='user_img'/>{message.username}: {message.message}</cite></li>
+                            <li key={i}><div className="msg"><img src={message.img} alt='user_img'/>{message.username}: {message.message}</div></li>
                         )
                     })}
                     </ul>
