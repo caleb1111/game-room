@@ -102,6 +102,7 @@ app.use(function(req, res, next){
 });
 
 app.use(function (req, res, next){
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     console.log("HTTP request", req.method, req.url, req.body);
     next();
 });
@@ -348,9 +349,8 @@ io.on("connection", function (socket) {
     socket.on("updateCoins", function(coin){
         myquery = { socket: socket.id};
         newvalues = { $inc: {coins: coin}};
-        db.getCollection('users').updateOne(myquery, newvalues, function(err, res){
+        db.collection('users').updateOne(myquery, newvalues, function(err, res){
             if (err) throw err;
-            db.close();
         });
     });
 
@@ -446,7 +446,7 @@ io.on("connection", function (socket) {
     socket.on("shot", (lobbyId, x, y, returnResult) => {
         let player;
         const session = gameSessions[lobbyId];
-        let placed = false;
+        let errored = false;
         if(session) {
             if(session.player1.socketId === socket.id) {
                 player = session.player1.socketId
@@ -462,18 +462,31 @@ io.on("connection", function (socket) {
                 hit = player.opponent.Hit(x, y);
                 if(hit === -1) { //return [-1, "Already shot there."] 
                     returnResult(3);
+                    errored = true;
                 }
                 socket.emit("displayShots", player.board, player.opponent.board);
                 io.to(player.opponent.socketId).emit("displayShots", player.opponent.board, player.board);
                 
                 if(hit === 9)  {
                     socket.emit("gameOver", true, 50);
+                    myquery = { socket: socket.id};
+                    newvalues = { $inc: {win: 1}};
+                    db.collection('users').updateOne(myquery, newvalues, function(err, res){
+                        if (err) throw err;
+                    });
                     io.to(player.opponent.socketId).emit("gameOver", false, 25);
+                    myquery = { socket: player.opponent.socketId};
+                    newvalues = { $inc: {loss: 1}};
+                    db.collection('users').updateOne(myquery, newvalues, function(err, res){
+                        if (err) throw err;
+                    });
                     gameList[lobby].reset();
                 }
                 hit ? returnResult(1) : returnResult(2);
-                io.to(player.socketId).emit("changeTurn", false);
-                io.to(player.opponent.socketId).emit("changeTurn", true);
+                if (!errored){
+                    io.to(player.socketId).emit("changeTurn", false);
+                    io.to(player.opponent.socketId).emit("changeTurn", true);
+                }  
             } else {
                 returnResult(4);
             }
@@ -521,7 +534,7 @@ app.post('/signin/', checkUsername, (req, res) => {
     //res.setHeader('Access-Control-Allow-Credentials', 'true')
     db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
-        if (!user) return res.status(409).end("username " + username + " does not exists");
+        if (!user) return res.status(404).end("username " + username + " does not exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
         db.collection("loggedUsers").insertOne(user, function(err, result) {
             if (err) return res.status(500).end(err);
@@ -539,10 +552,9 @@ app.post('/signin/', checkUsername, (req, res) => {
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Credentials', 'true')
     let myquery = { _id: req.user._id };
     db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
-        if (err) throw err;
+        if (err) return res.status(500).end(err);
         console.log("removed user: ", obj);
     });
     req.session.destroy();
@@ -554,6 +566,24 @@ app.get('/signout/', function (req, res, next) {
     }));
     res.json("user successfully logged out")
 });
+
+app.patch('/api/user/:userId/:socketId', (req, res) => {
+    let userId = req.params.userId;
+    let socketId = req.params.socketId;
+    myquery = { _id: userId };
+    newvalues = { $set: {socket: socketId} };
+    db.collection('users').updateOne(myquery, newvalues, function(err, res){
+        if (err) return res.status(500).end(err);
+        res.json("suceesfully updated socket id");
+    });
+})
+
+app.get("/api/user/loggedUsers", (req, res) => {
+    db.collection("loggedUsers").find({}).toArray(function(err, result){
+        if (err) return res.status(500).end(err);
+        res.json(result);
+    })
+})
 
 // return picture
 // return friends
