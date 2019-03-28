@@ -93,6 +93,8 @@ export default class Home extends Component {
   }
 
   render() {
+    const userName = this.state.user._id;
+
     return (
       <div className="background">
         <header onLoad={this.handleUser}>
@@ -106,7 +108,7 @@ export default class Home extends Component {
         <div className="empty"></div>
 
         <div id="lobby_leftsidebar">
-            <Chat />
+            <Chat userName={userName}/>
         </div>
 
         <div id="lobby_main">
