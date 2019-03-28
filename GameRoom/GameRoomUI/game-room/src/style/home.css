@@ -227,8 +227,8 @@ h2:after {
     width: 200px;
 }
 
-.btn_profile,
-.btn_profile:visited {
+.btn_profile, .btn_upload,
+.btn_profile:visited, .btn_upload:visited {
     font-size: 90%;
     background-color: #111;
     width: 50%;
@@ -243,9 +243,26 @@ h2:after {
     cursor: pointer;
 }
 
-.btn_profile:hover,
-.btn_profile:active {
+.btn_profile:hover, .btn_upload:hover,
+.btn_profile:active,  .btn_upload:active {
     background-color: #fff;
     border: 1px solid #111;
     color: #111;
+}
+
+.btn_upload {
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
+.welcome_msg {
+    font-size: 220%;
+    color: white;
+    margin-left: 50px;
+    margin-bottom: 10px;
+}
+
+.upload_img{
+    margin-left: 20px;
+    color: white;
 }
