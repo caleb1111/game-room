@@ -81,6 +81,7 @@ button[type="submit"]{
   word-break: break-all;
   font-size: 120%;
   cursor: pointer;
+  transform: scale(0.9);
 }
 
 #message li:nth-child(odd) {
@@ -89,7 +90,7 @@ button[type="submit"]{
 
 #message li:hover {
   opacity: 1;
-  transform: scale(1.03);
+  transform: scale(1);
 }
 
 .msg img {
