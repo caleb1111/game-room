@@ -76,13 +76,12 @@ ul, li {
 	margin: 15px 15px 15px 15px;
 	text-align: center;
 	color: white;
-	background: url(../media/lobby/gameSessionBackground.png);
+	background: url(../media/lobby/roomBG.png);
 	transform: scale(1);
   transition: transform 1s, opacity 0.5s;
 }
 
 #game_room li:hover {
-	opacity: 1;
-  transform: scale(1.2);
+  transform: scale(1.13);
 }
 #game_room li.no_margin_right { margin-right: 0 }
