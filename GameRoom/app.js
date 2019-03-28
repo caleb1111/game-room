@@ -572,7 +572,7 @@ app.patch('/api/user/:userId/:socketId', (req, res) => {
     let socketId = req.params.socketId;
     myquery = { _id: userId };
     newvalues = { $set: {socket: socketId} };
-    db.collection('users').updateOne(myquery, newvalues, function(err, res){
+    db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
         res.json("suceesfully updated socket id");
     });
