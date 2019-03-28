@@ -3,6 +3,7 @@ import Logo from '../Components/Logo';
 import Nav from '../Components/NavBar';
 import Chat from '../Components/Chat';
 import FriendList from '../Components/FriendList';
+import io from "socket.io-client";
 import '../style/lobby.css';
 import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
@@ -12,32 +13,60 @@ export default class Home extends Component {
 
   constructor(props) {
     super(props);
+
     this.handleMouseHover = this.handleMouseHover.bind(this);
+    this.handleUser = this.handleUser.bind(this);
+
     this.state = {
       isHovering: false,
+      user: {}
     };
 
-  //   this.socket = this.props.socket;
+    this.socket = io.connect('http://localhost:5000');
 
-  //   this.socket.on("joined", function(result, lobbyId){
-  //     if (result){
-  //         lobbyId = lobbyId;
-  //         sessionStorage.setItem("lobbyId", lobbyId);
-  //     }    
-  //   });
+    // this.socket.on("joined", function(result, lobbyId){
+    //   if (result){
+    //       lobbyId = lobbyId;
+    //       sessionStorage.setItem("lobbyId", lobbyId);
+    //   }    
+    // });
   }
 
-/*
-  handleReady(){
-    this.socket.emit("ready", lobbyId);
-    // change something to indicate player is ready
-  };
 
-  handleLeave(){
-    lobbyId = null;
-            // remove player from list
+
+  handleUser(){
+    const that = this;
+    fetch('http://localhost:5000/api/currUser/', {
+        credentials: 'include',
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+            const user = data;
+            that.setState({
+              user: user
+            })
+            console.log("user: ", user)
+            console.log("user name: ", user._id)
+            fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/' + that.socket.id + '/', {
+            credentials: 'include',
+            method: 'PATCH'
+            }).then(function(response){
+                return response.json(); 
+            })
+                .then(function(data) {
+                    const items = data;
+                    console.log(items);
+                })
+            .catch(function(error){
+                console.log(error);
+              })
+            })
+      .catch(function(error){
+        console.log(error);
+      })
   }
-*/
 
   handleMouseHover() {
     this.setState(this.toggleHoverState);
@@ -49,7 +78,6 @@ export default class Home extends Component {
     };
   }
   
-
   Rooms = {
     items: [
       {room_id:1, room_name: "Game Room 1", player1: null, player2: null},
@@ -67,7 +95,7 @@ export default class Home extends Component {
   render() {
     return (
       <div className="background">
-        <header>
+        <header onLoad={this.handleUser}>
           <a href="/"><Logo/></a>
           <Nav/>
         </header>
@@ -102,7 +130,6 @@ export default class Home extends Component {
                 <PlayersOnline />
             </div>
         </div>
-            <div className="clear"></div>
         </div>
       </div>
     );

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import '../style/home.css';
+import io from "socket.io-client";
+
 
 class Nav extends React.Component {
 
@@ -8,22 +10,27 @@ class Nav extends React.Component {
         super();
     
         this.handleSignout = this.handleSignout.bind(this);
+
+        this.socket = io.connect('http://localhost:5000');
+
     }
 
     handleSignout() {
-          fetch('http://localhost:5000/signout/',{
-            credentials: 'include' 
-          })
-          .then(function(response) {
-            return response.json(); })
-            .then(function(data) {
-                const items = data;
-                console.log(items)
-          })
-          .catch(function(error){
-            console.log(error);
-          })
-      }
+      const that = this;
+      fetch('http://localhost:5000/signout/', {
+        credentials: 'include',
+      })
+      .then(function(response) {
+        return response.json(); })
+        .then(function(data) {
+            const items = data;
+            console.log(items)
+            that.socket.disconnect();
+      })
+      .catch(function(error){
+        console.log(error);
+      })
+    }
 
     render(){
       return(

@@ -27,11 +27,9 @@ class RoomHovered extends Component {
     }
 
     clickJoinState(state) {
-        if (this.state.joined === false){
-                this.setState({ready: false})
-        }
         return {
           joined: !state.joined,
+          ready: false
         };
       }
 
