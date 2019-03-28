@@ -20,8 +20,34 @@ import circlesBG from '../media/items/circlesBG.png';
 
 export default class Shop extends Component {
 
-  Coins = {
-        coin: "1000"
+  constructor(){
+    super();
+
+    this.state = {
+        user: {},
+    }
+
+    this.getUser = this.getUser.bind(this);
+
+}
+
+  getUser(){
+    const that = this;
+    fetch('http://localhost:5000/api/currUser/', {
+        credentials: 'include',
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+            const user = data;
+            that.setState({
+              user: user
+            })
+        })
+      .catch(function(error){
+        console.log(error);
+      })
   }
 
   items_list = {
@@ -44,14 +70,14 @@ export default class Shop extends Component {
     render() {
       return (
         <div className="background">
-          <header>
+          <header onLoad={this.getUser}>
             <Link to="/home/"><Logo/></Link>
             <Nav/>
             <br />
             <hr />
             <br />
             <div className="coin">
-             <img src={coin} alt='coin'/> <p> {this.Coins.coin}  Coins </p>
+             <img src={coin} alt='coin'/> <p> {this.state.user.coins}</p> <p> Coins </p>
              <img className="plus_sign" src={plus_sign} alt='plus sign' />
             </div>
           </header>
