@@ -45,24 +45,28 @@ let Item = function(name, price, picture){
     this.picture = picture;
 };
 
+let multer  = require('multer');
+let upload = multer({ dest: 'uploads/' });
+let fs = require('file-system');
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let multer  = require('multer');
-let upload = multer({ dest: 'uploads/' });
-
-let fs = require('file-system');
-
-const cookie = require('cookie');
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
 const session = require('express-session');
 app.use(session({
     secret: 'very secret very secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: { 
+        httpOnly: false, // key
+        maxAge: null
+    }
 }));
+
+const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 function generateSalt (){
     return crypto.randomBytes(16).toString('base64');
@@ -74,15 +78,7 @@ function generateHash (password, salt){
     return hash.digest('base64');
 }
 
-app.use(function(req, res, next){
-    req.user = ('user' in req.session)? req.session.user : null;
-    let username = (req.user)? req.user._id : '';
-    res.setHeader('Set-Cookie', cookie.serialize('username', username, {
-          path : '/', 
-          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
-    }));
-    next();
-});
+
 
 let corsOptions = {
     origin: "http://localhost:3000",
@@ -94,10 +90,22 @@ app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, 'GameRoomUI/game-room/build')));
 
+
+app.use(function(req, res, next){
+    req.user = ('user' in req.session)? req.session.user : null;
+    let username = (req.user)? req.user._id : '';
+    res.setHeader('Set-Cookie', cookie.serialize('username', username, {
+          path : '/', 
+          maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
+    }));
+    next();
+});
+
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
     next();
 });
+
 
 var checkUsername = function(req, res, next) {
     if (!validator.isAlphanumeric(req.body.username)) return res.status(400).end("bad input");
@@ -302,16 +310,23 @@ class gameSession {
         case 0:
             this.player1 = player;
             this.numPlayers++;
-            return true;
+            return 1;
             break;
         case 1:
             this.player2 = player;
             this.numPlayers++;
-            return true;
+            return 2;
             break;
         default:
-            return false;
+            return 0;
         }
+    }
+    reset() {
+        this.numPlayers = 0;
+        this.player1 = null;
+        this.player2 = null;
+        this.p1Ready = false;
+        this.p2Ready = false;
     }
 }
 
@@ -355,7 +370,7 @@ io.on("connection", function (socket) {
             socket.join("lobby"+lobbyId);
         }
         
-        socket.emit("joined", joined, lobbyId); // is joined a boolean or an int?
+        socket.emit("joined", joidned, lobbyId); // is joined a boolean or an int?
     });
 
     /*
@@ -454,6 +469,7 @@ io.on("connection", function (socket) {
                 if(hit === 9)  {
                     socket.emit("gameOver", true, 50);
                     io.to(player.opponent.socketId).emit("gameOver", false, 25);
+                    gameList[lobby].reset();
                 }
                 hit ? returnResult(1) : returnResult(2);
                 io.to(player.socketId).emit("changeTurn", false);
@@ -467,10 +483,13 @@ io.on("connection", function (socket) {
     });
 
 });
+
+
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
 app.post('/signup/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
     db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (user) return res.status(409).end("username " + username + " already exists");
@@ -479,9 +498,17 @@ app.post('/signup/', checkUsername, (req, res) => {
         let newUser = new User(username, salt, hash, 0);
         db.collection("users").insertOne(newUser, function(err, result) {
             if (err) return res.status(500).end(err);
-            req.user = newUser;
-            console.log("user: ", req.user);
-            res.json(newUser);
+            db.collection("loggedUsers").insertOne(newUser, function(err, result) {
+                if (err) return res.status(500).end(err);
+                res.setHeader('Set-Cookie', cookie.serialize('username', newUser._id, {
+                    path : '/', 
+                    maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+                    sameSite: true,
+                    secure: true
+                }));
+                req.session.user = newUser;
+                res.json(newUser);
+            });
         });
     });
 });
@@ -491,34 +518,33 @@ app.post('/signin/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
     // retrieve user from the database
+    //res.setHeader('Access-Control-Allow-Credentials', 'true')
     db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(409).end("username " + username + " does not exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        // db.collection("loggedUsers").insertOne(user, function(err, result) {
-        //     if (err) return res.status(500).end(err);
-        res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
-            path : '/', 
-            maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-            sameSite: true,
-            secure: true
-        }));
-        req.user = user;
-        console.log("user: ", req.user);
-        res.json(user);
-       // });
+        db.collection("loggedUsers").insertOne(user, function(err, result) {
+            if (err) return res.status(500).end(err);
+            res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
+                path : '/', 
+                maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+                sameSite: true,
+                secure: true
+            }));
+            req.session.user = user;
+            res.json(user);
+        });
     });
 });
 
 // curl -b cookie.txt -c cookie.txt localhost:3000/signout/
 app.get('/signout/', function (req, res, next) {
-    // console.log(req.user);
-    // let myquery = { _id: req.user._id };
-    // db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
-    //     if (err) throw err;
-    //     console.log("removed user: ", obj);
-    // });
-    //req.user.socket.disconnect();
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
+    let myquery = { _id: req.user._id };
+    db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
+        if (err) throw err;
+        console.log("removed user: ", obj);
+    });
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 

@@ -35,6 +35,7 @@ export default class SignUpIn extends Component {
     if (this.formAction.action === 'signup'){
       fetch('http://localhost:5000/signup/', {
         method: 'POST', // or 'PUT'
+        credentials: 'include',
         body: JSON.stringify({ username: this.state.username, password: this.state.password }),
         headers:{
           'Content-Type': 'application/json'
@@ -55,6 +56,7 @@ export default class SignUpIn extends Component {
     if (this.formAction.action === 'signin'){
       fetch('http://localhost:5000/signin/', {
         method: 'POST', // or 'PUT'
+        credentials: 'include',
         body: JSON.stringify({ username: this.state.username, password: this.state.password }), 
         headers:{
           'Content-Type': 'application/json'

@@ -11,7 +11,9 @@ class Nav extends React.Component {
     }
 
     handleSignout() {
-          fetch('http://localhost:5000/signout/')
+          fetch('http://localhost:5000/signout/',{
+            credentials: 'include' 
+          })
           .then(function(response) {
             return response.json(); })
             .then(function(data) {
