@@ -6,9 +6,6 @@ import FriendList from '../Components/FriendList';
 import '../style/lobby.css';
 import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
-import MovingLogo from '../Components/MovingLogo';
-import io from "socket.io-client";
-
 
 
 export default class Home extends Component {
@@ -19,7 +16,28 @@ export default class Home extends Component {
     this.state = {
       isHovering: false,
     };
+
+  //   this.socket = this.props.socket;
+
+  //   this.socket.on("joined", function(result, lobbyId){
+  //     if (result){
+  //         lobbyId = lobbyId;
+  //         sessionStorage.setItem("lobbyId", lobbyId);
+  //     }    
+  //   });
   }
+
+/*
+  handleReady(){
+    this.socket.emit("ready", lobbyId);
+    // change something to indicate player is ready
+  };
+
+  handleLeave(){
+    lobbyId = null;
+            // remove player from list
+  }
+*/
 
   handleMouseHover() {
     this.setState(this.toggleHoverState);
@@ -30,6 +48,7 @@ export default class Home extends Component {
       isHovering: !state.isHovering,
     };
   }
+  
 
   Rooms = {
     items: [
@@ -48,7 +67,6 @@ export default class Home extends Component {
   render() {
     return (
       <div className="background">
-      <MovingLogo />
         <header>
           <a href="/"><Logo/></a>
           <Nav/>
@@ -71,7 +89,7 @@ export default class Home extends Component {
                             <li key={i} onMouseEnter={this.handleMouseHover}
                                 onMouseLeave={this.handleMouseHover}>
                                 {item.room_name}
-                                {this.state.isHovering && <RoomHovered />} 
+                                 <RoomHovered />
                             </li>
                         )
                     })}

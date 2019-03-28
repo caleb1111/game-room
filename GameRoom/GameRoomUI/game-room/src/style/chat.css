@@ -1,7 +1,7 @@
 
 .chat_box {
 	width: 280px;
-	height: 550px;
+  height: 580px;
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
 	position: relative;
@@ -19,7 +19,7 @@
   color: black;
   font-size: 120%;
   border-radius: 10px;
-  height: 420px;
+  height: 450px;
   width: 260px;
   overflow-y: scroll; 
 }
@@ -76,9 +76,12 @@ button[type="submit"]{
   font-weight: bold;
   background-color: #bbb;
   border-radius:10px;
-  height: 50px;
+  height: auto;
   padding: 5px 10px;
+  word-break: break-all;
+  font-size: 120%;
   cursor: pointer;
+  transform: scale(0.9);
 }
 
 #message li:nth-child(odd) {
@@ -87,15 +90,10 @@ button[type="submit"]{
 
 #message li:hover {
   opacity: 1;
-  transform: scale(1.03);
+  transform: scale(1);
 }
 
-cite {
-  font-size: 90%;
-  display: block;
-}
-
-cite img {
+.msg img {
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;

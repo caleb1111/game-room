@@ -1,7 +1,7 @@
 
 .friend_list {
     width: 250px;
-	height: 260px;
+	height: 280px;
 	padding: 10px 10px 10px 10px;
 	font-size: 11px;
     position: relative;
@@ -14,7 +14,7 @@
   color: black;
   font-size: 120%;
   border-radius: 10px;
-  height: 200px;
+  height: 220px;
   width: 230px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -26,7 +26,6 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  transform: scale(1);
   transition: transform 0.5s, opacity 0.5s;
 }
 
@@ -36,6 +35,7 @@
   border-radius:10px;
   height: 50px;
   padding: 5px 10px;
+  transform: scale(0.9);
   cursor: pointer;
 }
 
@@ -45,7 +45,7 @@
 
 #friends li:hover {
     opacity: 1;
-  transform: scale(1.03);
+  transform: scale(1);
 }
 
 cite {
