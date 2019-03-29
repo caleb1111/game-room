@@ -19,20 +19,13 @@ export default class Home extends Component {
 
     this.state = {
       isHovering: false,
-      user: {}
+      user: {},
+      playersOnline: [],
+      friend_list: []
     };
 
     this.socket = io.connect('http://localhost:5000');
-
-    // this.socket.on("joined", function(result, lobbyId){
-    //   if (result){
-    //       lobbyId = lobbyId;
-    //       sessionStorage.setItem("lobbyId", lobbyId);
-    //   }    
-    // });
   }
-
-
 
   handleUser(){
     const that = this;
@@ -47,7 +40,12 @@ export default class Home extends Component {
             that.setState({
               user: user
             })
-            console.log("user: ", user)
+            that.setState({
+              friend_list: user.friends
+            })
+            that.state.playersOnline.push(user._id);
+            console.log("friends : ", user.friends)
+            console.log("players : ", that.state.playersOnline)
             console.log("user name: ", user._id)
             fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/' + that.socket.id + '/', {
             credentials: 'include',
@@ -94,6 +92,8 @@ export default class Home extends Component {
 
   render() {
     const userName = this.state.user._id;
+    const friends = this.state.friend_list;
+    const players = this.state.playersOnline;
 
     return (
       <div className="background">
@@ -128,8 +128,8 @@ export default class Home extends Component {
         </div>
 
         <div id="lobby_sidebar">
-                <FriendList />
-                <PlayersOnline />
+                <FriendList friends={friends}/>
+                <PlayersOnline players={players}/>
             </div>
         </div>
         </div>

@@ -8,7 +8,6 @@ class Chat extends React.Component{
         super(props);
         
         this.state = {
-            username: '',
             message: '',
             messages: []
         }; 
@@ -60,7 +59,7 @@ class Chat extends React.Component{
                     </div>
                 <div>
                 <input type="text" placeholder="Enter Your Message" className="form_element" value={this.state.message}
-                    onChange={ev => this.setState({message: ev.target.value})}/>
+                    onChange={ev => this.setState({message: ev.target.value})} required/>
                 <br/>
                 <button onClick={this.sendMessage} className="btn_msg">Send</button>
                 </div>
