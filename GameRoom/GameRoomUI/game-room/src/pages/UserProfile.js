@@ -21,7 +21,6 @@ export default class UserProfile extends Component {
     this.handleUpload = this.handleUpload.bind(this);
     this.fileSelectHandler = this.fileSelectHandler.bind(this);
     this.fileUploadHandler = this.fileUploadHandler.bind(this);
-
 }
 
 fileSelectHandler(event) {

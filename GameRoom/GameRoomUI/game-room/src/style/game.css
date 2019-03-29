@@ -1,3 +1,7 @@
+.white{
+    color: white;
+}
+
 #playerBoard {
     background: #f1f1f1;
     border:  2px solid white
@@ -150,11 +154,10 @@
     margin: 0 auto;
 }
 
-/*
+
 #drawingTemplates{
-    visibility: hidden;
     padding-top: 1000px;
-} */
+}
 
 #destroyerPlace, #submarinePlace, #cruiserPlace {
     cursor: pointer;

@@ -6,7 +6,7 @@ class FriendList extends React.Component{
         super(props)
         this.state = {
             isClicked: false,
-            friends : ["11"]
+            friends : this.props.friends
         }
 
         this.handleMouseClicked = this.handleMouseClicked.bind(this);
@@ -34,7 +34,7 @@ class FriendList extends React.Component{
                         {this.state.friends.map((friend, i) => {
                             return (
                                 <li key={i}
-                                onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend}</cite>
+                                onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend.name}</cite>
                                 <div className={showDropDown}>
                                     Hello
                                 </div>

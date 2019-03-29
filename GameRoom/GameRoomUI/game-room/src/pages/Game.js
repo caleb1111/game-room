@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import io from "socket.io-client"; 
 import { Link } from "react-router-dom";
 import Logo from '../Components/Logo';
 import '../style/game.css';
 import Nav from '../Components/NavBar';
+// --------------------- Image Components -------------------------
 import destroyer from "../media/game/destroyer.png";
 import destroyerH from "../media/game/destroyerH.png";
 import submarine from "../media/game/submarine.png";
@@ -16,19 +18,20 @@ import carrierH from "../media/game/carrierH.png";
 import hit from "../media/game/hit.png";
 import miss from "../media/game/miss.png";
 import coin from "../media/items/coin.png";
+// -----------------------------------------------------------------
+import Canvas from '../Components/Canvas';
 
 
 export default class Game extends Component {
 
     render() {
       return (
-        <div className="background">
+        <div className="background white">
           <header>
-          <Link to="/home/"><Logo/></Link>
-            <Nav/>
+          <Logo />
+          <div className="empty" />
           </header>
-          <br />
-
+        
           <p id="gameTitle">BattleShip</p>
     <p id="error_box"></p>
 
@@ -47,11 +50,11 @@ export default class Game extends Component {
         <div className="board">
             <div id="player">
                 <p id="yFleet">Your Fleet</p>
-                <canvas width="400" height="400" id="playerBoard"></canvas>
+                <Canvas />
             </div>
             <div id="opponent">
                 <p id="oFleet">Opponent's Fleet</p>
-                <canvas width="400" height="400" id="opponentBoard"></canvas>
+                <Canvas />
             </div>
             <div id="turnText"></div>
 

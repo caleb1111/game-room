@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Logo from '../Components/Logo';
 import Nav from '../Components/NavBar';
-import Chat from '../Components/Chat';
-import FriendList from '../Components/FriendList';
 import io from "socket.io-client";
 import '../style/lobby.css';
-import PlayersOnline from '../Components/PlayersOnline';
+import '../style/friend_list.css';
+import '../style/players_online.css';
+import '../style/chat.css'
+import User_img from '../media/user.png';
+
+// import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
 
 
@@ -15,31 +18,49 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
+      isClicked: false,
       user: {},
       playersOnline: [],
-      friend_list: []
+      friend_list: [],
+      message: '',
+      messages: []
     };
 
     this.socket = io.connect('http://localhost:5000');
+
+    this.socket.on('receiveMessage', function(data){
+      console.log("receive data:", data)
+      addMessage(data);
+    });
+
+  this.sendMessage = ev => {
+      console.log("send: msg: ", this.state.message);
+      ev.preventDefault();
+      if (this.state.message !== ''){
+          this.socket.emit('sendMessage', {
+              username: this.state.user._id,
+              message: this.state.message,
+          });
+      }
+      else {
+          console.log("empty message cant be sent")
+      }
+      this.setState({message: ''});
+  }
+  
+  const addMessage = data => {
+      console.log("add data", data);
+      this.setState({messages: [...this.state.messages, data]});
+      console.log(this.state.messages);
+  };
+
+    this.handlePlayersOnline = this.handlePlayersOnline.bind(this);
+    this.handleMouseClicked = this.handleMouseClicked.bind(this);
+
   }
 
   componentDidMount(){
-    const that = this;
-    fetch('http://localhost:5000/api/user/loggedUsers/', {
-            credentials: 'include',
-            }).then(function(response){
-                return response.json(); 
-            })
-                .then(function(data) {
-                    const items = data;
-                    for (let i=0; i < items.length; i++){
-                      that.state.playersOnline.push(items[i]._id);
-                    }
-                })
-            .catch(function(error){
-                console.log(error);
-              })
-              
+    const that = this;              
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
       })
@@ -54,9 +75,10 @@ export default class Home extends Component {
             for(let i=0; i < user.friends.length; i++){
               that.state.friend_list.push(user.friends[i])
             }
-            fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/' + that.socket.id + '/', {
+            fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/socket/', {
             credentials: 'include',
-            method: 'PATCH'
+            method: 'PATCH',
+            body: that.socket
             }).then(function(response){
                 return response.json(); 
             })
@@ -87,10 +109,39 @@ export default class Home extends Component {
     ]
   }
 
+  handlePlayersOnline(){
+    const that = this;
+    console.log("load");
+    fetch('http://localhost:5000/api/user/loggedUsers/', {
+    credentials: 'include',
+    }).then(function(response){
+        return response.json(); 
+    })
+        .then(function(data) {
+            const items = data;
+            for (let i=0; i < items.length; i++){
+              that.state.playersOnline.push(items[i]._id);
+            }
+        })
+    .catch(function(error){
+        console.log(error);
+      })
+  }
+
+  handleMouseClicked() {
+    this.setState(this.clickState);
+    console.log("clicked ", this.state.isClicked);
+  }
+
+  clickState(state) {
+    return {
+        isClicked: !state.isClicked,
+    };
+  }
+
   render() {
-    const userName = this.state.user._id;
-    const friends = this.state.friend_list;
-    const players = this.state.playersOnline;
+    let showDropDown = this.state.isClicked ? "show" : "hide";
+
 
     return (
       <div className="background">
@@ -103,10 +154,30 @@ export default class Home extends Component {
         <div>
         <div id="lobby_wrapper">
         <div className="empty">
+          <h1>{this.state.user._id}</h1>
         </div>
 
         <div id="lobby_leftsidebar">
-            <Chat userName={userName}/>
+        <div className="chat_box">
+                <div className="menu_title">Chat</div>
+                <div className="chat_content">
+                    <div className="messages_box">
+                    <ul id="message">
+                    {this.state.messages.map((message, i) => {
+                        return (
+                            <li key={i}><div className="msg"><img src={User_img} alt='user_img'/>{message.username}: {message.message}</div></li>
+                        )
+                    })}
+                    </ul>
+                    </div>
+                <div>
+                <input type="text" placeholder="Enter Your Message" className="form_element" value={this.state.message}
+                    onChange={ev => this.setState({message: ev.target.value})} required/>
+                <br/>
+                <button onClick={this.sendMessage} className="btn_msg">Send</button>
+                </div>
+                </div>
+            </div>
         </div>
 
         <div id="lobby_main">
@@ -125,8 +196,38 @@ export default class Home extends Component {
         </div>
 
         <div id="lobby_sidebar">
-                <FriendList friends={friends}/>
-                <PlayersOnline players={players}/>
+            <div className="friend_list">
+                    <div className="menu_title">Friend List</div>
+                        <div className="friend_box">
+                        <ul id="friends">
+                            {this.state.friend_list.map((friend, i) => {
+                                return (
+                                    <li key={i}
+                                    onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend}</cite>
+                                    <div className={showDropDown}>
+                                        Hello
+                                    </div>
+                                    </li>
+                                )
+                            })}
+                            </ul>
+                        </div>
+                </div>
+                
+                
+                <div className="player_list" onLoad={this.handlePlayersOnline()}>
+                <div className="menu_title">Players Online</div>
+                    <div className="player_box">
+                    <ul id="players">
+                    {this.state.playersOnline.map((player, i) => {
+                            return (
+                                <li key={i}><cite style={{textAlign:"center"}}>{player}</cite></li>
+                            )
+                        })}
+                        </ul>
+                    </div>
+            </div>
+
             </div>
         </div>
         </div>
