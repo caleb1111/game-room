@@ -15,7 +15,8 @@ export default class SignUpIn extends Component {
 
     this.state = {
         username: '',
-        password: ''
+        password: '',
+        errorMsg: '',
     }
 
     this.formAction = {
@@ -58,13 +59,12 @@ export default class SignUpIn extends Component {
                     const items = data;
                     console.log(items);
                 })
-            .catch(function(error){
-                console.log(error);
-              })
         })
       .catch(function(error){
         console.log(error);
-        that.props.history.push("/");
+        that.setState({
+          errorMsg: 'Username already taken'
+        })
       })
     }
     if (this.formAction.action === 'signin'){
@@ -92,13 +92,12 @@ export default class SignUpIn extends Component {
                     const items = data;
                     console.log(items);
                 })
-            .catch(function(error){
-                console.log(error);
-              })
       })
       .catch(function(error){
         console.log(error);
-        that.props.history.push("/");
+        that.setState({
+          errorMsg: 'User already logged in Or Username not registered'
+        })
       })
       }
   }
@@ -107,6 +106,7 @@ export default class SignUpIn extends Component {
     return (
       <div className="background">
         <SignLogo/>
+        <div style={{color: "red", marginLeft:"150px", marginBottom:"50px"}}> {this.state.errorMsg}</div>
         <div id="sign_form">
           <form onSubmit={this.handleSubmit} className="signup_form" id="create_signup_form">
               <div className="form_title">𝕊𝕚𝕘𝕟 𝕌𝕡/𝕊𝕚𝕘𝕟 𝕀𝕟</div>
