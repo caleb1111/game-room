@@ -570,8 +570,8 @@ app.get('/signout/', function (req, res, next) {
 app.patch('/api/user/:userId/:socketId', (req, res) => {
     let userId = req.params.userId;
     let socketId = req.params.socketId;
-    myquery = { _id: userId };
-    newvalues = { $set: {socket: socketId} };
+    let myquery = { _id: userId };
+    let newvalues = { $set: {socket: socketId} };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
         res.json("suceesfully updated socket id");
@@ -588,7 +588,7 @@ app.get("/api/user/loggedUsers", (req, res) => {
 // return picture
 // return friends
 // return win loss/ items / rank
-app.patch('/api/user/:userId/picture', checkId, upload.single('picture'), (req, res) => {
+app.patch('/api/user/picture', checkId, upload.single('picture'), (req, res) => {
     
 })
 
@@ -603,20 +603,27 @@ app.get('/api/user/:userId/picture', checkId, (req, res) => {
         let file = user.picture;
         res.setHeader('Content-Type', file.mimetype);
         res.sendFile(path.join(__dirname, file.path));
-        db.close();
     });
 });
 
-app.get('/api/user/:userId/friends', checkId, (req, res) => {
-    db.collection("users").findOne({_id: req.params.userId}, function(err, user) {
-        if (err) return res.status(500).end(err);
-        if (!user) return res.status(404).end('Image id ' + req.params.imageid + ' does not exists');
-        let friends = user.friends;
-        res.json(friends);
-        db.close();
-    });
-      
+app.get('/api/user/friends', checkId, (req, res) => {
+    res.json(req.user.friends);
 });
+
+app.patch("/api/user/:friendId", checkId, (req, res) => {
+    let friendId = req.params.friendId;
+    let myquery = { _id: req.user._id };
+    let friendList = req.user.friends;
+    console.log("old friendlist: ", friendList);
+    friendList = friendList.push(friendId);
+    console.log("new friend list: ", req.user.friends);
+    let newvalues = { $set: {friends: friendList} };
+    db.collection('users').updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        req.session.user = req.user;
+        res.json("suceesfully updated friend list");
+    });
+})
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname = '/GameRoomUI/game-room/build/index.html'));
