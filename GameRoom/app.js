@@ -47,7 +47,7 @@ let Item = function(name, price, picture){
 };
 
 let multer  = require('multer');
-let upload = multer({ dest: '/GameRoomUI/game-room/build/media' });
+let upload = multer({ dest: 'uploads/' });
 let fs = require('file-system');
 
 const bodyParser = require('body-parser');
