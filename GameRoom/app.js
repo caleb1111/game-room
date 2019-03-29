@@ -37,6 +37,7 @@ let User = function(id, salt, hash, display){
     this.loss = 0;
     this.items = [];
     this.socket = 0;
+    this.roomId = 0;
 };
 
 let Item = function(name, price, picture){
@@ -46,7 +47,7 @@ let Item = function(name, price, picture){
 };
 
 let multer  = require('multer');
-let upload = multer({ dest: 'uploads/' });
+let upload = multer({ dest: '/GameRoomUI/game-room/build/media' });
 let fs = require('file-system');
 
 const bodyParser = require('body-parser');
@@ -333,7 +334,7 @@ class gameSession {
 
 let users = [];
 const gameSessions = Array(0);
-for(let i = 0; i < 9; i++) {
+for(let i = 1; i < 10; i++) {
     gameSessions.push(new gameSession(i))
 };
 
@@ -571,11 +572,11 @@ app.get('/signout/', function (req, res, next) {
     res.json("user successfully logged out")
 });
 
-app.patch('/api/user/:userId/:socketId', (req, res) => {
+app.patch('/api/user/:userId/socket', (req, res) => {
     let userId = req.params.userId;
-    let socketId = req.params.socketId;
+    let socket = req.body.socket;
     let myquery = { _id: userId };
-    let newvalues = { $set: {socket: socketId} };
+    let newvalues = { $set: { socket: socket} };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
         res.json("suceesfully updated socket id");
@@ -621,7 +622,7 @@ app.patch("/api/user/:friendId", checkId, (req, res) => {
     console.log("old friendlist: ", friendList);
     friendList = friendList.push(friendId);
     console.log("new friend list: ", req.user.friends);
-    let newvalues = { $set: {friends: friendList} };
+    let newvalues = { $set: { friends: friendList } };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
         req.session.user = req.user;
@@ -631,7 +632,37 @@ app.patch("/api/user/:friendId", checkId, (req, res) => {
 
 app.patch("/api/user/unfriend/:friendId", (req, res) =>{
     let friendId = req.params.friendId;
-    
+    let friendList = req.user.friends;
+    let index = friendList.indexOf(friendId);
+    friendList.splice(index, 1);
+    let myquery = { _id: req.user._id };
+    let newvalues = { $set: { friends: friendList } }
+    db.collection("users").updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        req.session.user = req.user;
+        res.json("successfully removed friend: " + friendId);
+    })
+})
+
+app.patch("/api/user/:roomId", (req, res) => {
+    let roomId = req.params.roomId;
+    let myquery = { _id: req.user._id };
+    let newvalues = { $set: {roomId: roomId} };
+    db.collection('users').updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        req.user.roomId = roomId;
+        req.session.user = req.user;
+        res.json("suceesfully updated friend list");
+    });
+})
+
+app.get("/api/user/getOpponent", (req, res) =>{
+    let roomId = req.user.roomId;
+    let myquery = { _id: { $ne: req.user._id }, roomId: roomId };
+    db.collection("users").findOne(myquery, function(err, user){
+        if (err) return res.status(500).end(err);
+        res.json(user);
+    })
 })
 
 app.get('/', (req, res) => {
