@@ -55,7 +55,7 @@ fileUploadHandler(){
   if (that.state.selectedFile !== null){
       fd.append('image', that.state.selectedFile, that.state.selectedFile.name);
       console.log("image: ",that.state.selectedFile);
-      fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/picture/', {
+      fetch('http://localhost:5000/api/user/picture/', {
           credentials: 'include',
           method: 'PATCH',
           body: fd
@@ -97,6 +97,7 @@ clickUploadState(state) {
             <Nav/>
           </header>
           <div>
+              <br />
                 <header>
                     <div className="welcome_msg">Welcome, {this.state.user._id}</div>
                     <div className="coin">

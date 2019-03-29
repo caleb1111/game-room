@@ -47,6 +47,20 @@ export default class SignUpIn extends Component {
             const items = data;
             console.log(items)
             that.props.history.push("/home/");
+            fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
+            credentials: 'include',
+            method: 'PATCH',
+            body: that.socket
+            }).then(function(response){
+                return response.json(); 
+            })
+                .then(function(data) {
+                    const items = data;
+                    console.log(items);
+                })
+            .catch(function(error){
+                console.log(error);
+              })
         })
       .catch(function(error){
         console.log(error);
@@ -67,6 +81,20 @@ export default class SignUpIn extends Component {
             const items = data;
             console.log(items)
             that.props.history.push("/home/");
+            fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
+            credentials: 'include',
+            method: 'PATCH',
+            body: that.socket
+            }).then(function(response){
+                return response.json(); 
+            })
+                .then(function(data) {
+                    const items = data;
+                    console.log(items);
+                })
+            .catch(function(error){
+                console.log(error);
+              })
       })
       .catch(function(error){
         console.log(error);

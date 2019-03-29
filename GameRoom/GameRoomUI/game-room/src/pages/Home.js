@@ -54,13 +54,12 @@ export default class Home extends Component {
       console.log(this.state.messages);
   };
 
-    this.handlePlayersOnline = this.handlePlayersOnline.bind(this);
     this.handleMouseClicked = this.handleMouseClicked.bind(this);
 
   }
 
   componentDidMount(){
-    const that = this;              
+    const that = this;     
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
       })
@@ -70,29 +69,29 @@ export default class Home extends Component {
         .then(function(data) {
             const user = data;
             that.setState({
-              user: user
+              user: user,
+              friend_list: user.friends
             })
-            for(let i=0; i < user.friends.length; i++){
-              that.state.friend_list.push(user.friends[i])
-            }
-            fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/socket/', {
-            credentials: 'include',
-            method: 'PATCH',
-            body: that.socket
-            }).then(function(response){
-                return response.json(); 
-            })
-                .then(function(data) {
-                    const items = data;
-                    console.log(items);
-                })
-            .catch(function(error){
-                console.log(error);
-              })
-            })
+            // console.log("f:" , that.state.friend_list)
+          })
       .catch(function(error){
         console.log(error);
       })
+      fetch('http://localhost:5000/api/user/loggedUsers/', {
+        credentials: 'include',
+        }).then(function(response){
+            return response.json(); 
+        })
+            .then(function(data) {
+                const items = data;
+                that.setState({
+                  playersOnline: items
+                })
+            })
+        .catch(function(error){
+            console.log(error);
+          })
+    
 }
   
   Rooms = {
@@ -107,25 +106,6 @@ export default class Home extends Component {
       {room_id:8, room_name: "Game Room 8", player1: null, player2: null},
       {room_id:9, room_name: "Game Room 9", player1: null, player2: null},
     ]
-  }
-
-  handlePlayersOnline(){
-    const that = this;
-    console.log("load");
-    fetch('http://localhost:5000/api/user/loggedUsers/', {
-    credentials: 'include',
-    }).then(function(response){
-        return response.json(); 
-    })
-        .then(function(data) {
-            const items = data;
-            for (let i=0; i < items.length; i++){
-              that.state.playersOnline.push(items[i]._id);
-            }
-        })
-    .catch(function(error){
-        console.log(error);
-      })
   }
 
   handleMouseClicked() {
@@ -215,13 +195,13 @@ export default class Home extends Component {
                 </div>
                 
                 
-                <div className="player_list" onLoad={this.handlePlayersOnline()}>
+                <div className="player_list">
                 <div className="menu_title">Players Online</div>
                     <div className="player_box">
                     <ul id="players">
                     {this.state.playersOnline.map((player, i) => {
                             return (
-                                <li key={i}><cite style={{textAlign:"center"}}>{player}</cite></li>
+                                <li key={i}><cite style={{textAlign:"center"}}>{player._id}</cite></li>
                             )
                         })}
                         </ul>
