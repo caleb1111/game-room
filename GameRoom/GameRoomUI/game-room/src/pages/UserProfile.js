@@ -21,7 +21,6 @@ export default class UserProfile extends Component {
     this.handleUpload = this.handleUpload.bind(this);
     this.fileSelectHandler = this.fileSelectHandler.bind(this);
     this.fileUploadHandler = this.fileUploadHandler.bind(this);
-    this.getUser = this.getUser.bind(this);
 
 }
 
@@ -32,7 +31,7 @@ fileSelectHandler(event) {
     console.log(event.target.files[0]);
 }
 
-getUser(){
+componentDidMount(){
   const that = this;
   fetch('http://localhost:5000/api/currUser/', {
       credentials: 'include',
@@ -94,7 +93,7 @@ clickUploadState(state) {
 
       return (
         <div className="background">
-          <header onLoad={this.getUser}>
+          <header>
           <Link to="/home/"><Logo/></Link>
             <Nav/>
           </header>
@@ -102,7 +101,7 @@ clickUploadState(state) {
                 <header>
                     <div className="welcome_msg">Welcome, {this.state.user._id}</div>
                     <div className="coin">
-                        <img src={coin} alt='coin'/> <p> {this.state.userCoins}  Coins </p>
+                        <img src={coin} alt='coin'/> <p> {this.state.user.coins}</p> <p> Coins </p>
                         <img className="plus_sign" src={plus_sign} alt='plus sign' />
                     </div>
                 </header>

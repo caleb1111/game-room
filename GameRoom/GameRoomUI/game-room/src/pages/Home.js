@@ -14,11 +14,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.handleMouseHover = this.handleMouseHover.bind(this);
-    this.handleUser = this.handleUser.bind(this);
-
     this.state = {
-      isHovering: false,
       user: {},
       playersOnline: [],
       friend_list: []
@@ -27,8 +23,23 @@ export default class Home extends Component {
     this.socket = io.connect('http://localhost:5000');
   }
 
-  handleUser(){
+  componentDidMount(){
     const that = this;
+    fetch('http://localhost:5000/api/user/loggedUsers/', {
+            credentials: 'include',
+            }).then(function(response){
+                return response.json(); 
+            })
+                .then(function(data) {
+                    const items = data;
+                    for (let i=0; i < items.length; i++){
+                      that.state.playersOnline.push(items[i]._id);
+                    }
+                })
+            .catch(function(error){
+                console.log(error);
+              })
+              
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
       })
@@ -40,13 +51,9 @@ export default class Home extends Component {
             that.setState({
               user: user
             })
-            that.setState({
-              friend_list: user.friends
-            })
-            that.state.playersOnline.push(user._id);
-            console.log("friends : ", user.friends)
-            console.log("players : ", that.state.playersOnline)
-            console.log("user name: ", user._id)
+            for(let i=0; i < user.friends.length; i++){
+              that.state.friend_list.push(user.friends[i])
+            }
             fetch('http://localhost:5000/api/user/'+ that.state.user._id +'/' + that.socket.id + '/', {
             credentials: 'include',
             method: 'PATCH'
@@ -64,17 +71,7 @@ export default class Home extends Component {
       .catch(function(error){
         console.log(error);
       })
-  }
-
-  handleMouseHover() {
-    this.setState(this.toggleHoverState);
-  }
-
-  toggleHoverState(state) {
-    return {
-      isHovering: !state.isHovering,
-    };
-  }
+}
   
   Rooms = {
     items: [
@@ -97,7 +94,7 @@ export default class Home extends Component {
 
     return (
       <div className="background">
-        <header onLoad={this.handleUser}>
+        <header>
           <a href="/"><Logo/></a>
           <Nav/>
         </header>
@@ -105,7 +102,8 @@ export default class Home extends Component {
 
         <div>
         <div id="lobby_wrapper">
-        <div className="empty"></div>
+        <div className="empty">
+        </div>
 
         <div id="lobby_leftsidebar">
             <Chat userName={userName}/>
@@ -116,8 +114,7 @@ export default class Home extends Component {
                     <ul id="game_room">
                     {this.Rooms.items.map((item, i) => {
                         return (
-                            <li key={i} onMouseEnter={this.handleMouseHover}
-                                onMouseLeave={this.handleMouseHover}>
+                            <li key={i}>
                                 {item.room_name}
                                  <RoomHovered />
                             </li>

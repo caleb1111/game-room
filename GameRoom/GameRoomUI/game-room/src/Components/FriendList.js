@@ -5,12 +5,26 @@ class FriendList extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            friends : this.props.friends
+            isClicked: false,
+            friends : ["11"]
         }
+
+        this.handleMouseClicked = this.handleMouseClicked.bind(this);
     }
 
+    handleMouseClicked() {
+        this.setState(this.clickState);
+        console.log("clicked ", this.state.isClicked);
+      }
+    
+      clickState(state) {
+        return {
+            isClicked: !state.isClicked,
+        };
+      }
 
     render(){
+        let showDropDown = this.state.isClicked ? "show" : "hide";
 
         return (
             <div className="friend_list">
@@ -19,7 +33,12 @@ class FriendList extends React.Component{
                     <ul id="friends">
                         {this.state.friends.map((friend, i) => {
                             return (
-                                <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite></li>
+                                <li key={i}
+                                onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend}</cite>
+                                <div className={showDropDown}>
+                                    Hello
+                                </div>
+                                </li>
                             )
                         })}
                         </ul>

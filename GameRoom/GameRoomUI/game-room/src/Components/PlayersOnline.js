@@ -17,7 +17,7 @@ class PlayersOnline extends React.Component{
                     <ul id="players">
                     {this.state.players.map((player, i) => {
                             return (
-                                <li key={i}><cite><img src={player.img} alt='user_img'/>{player}</cite></li>
+                                <li key={i}><cite style={{textAlign:"center"}}>{player}</cite></li>
                             )
                         })}
                         </ul>
