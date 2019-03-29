@@ -532,21 +532,25 @@ app.post('/signin/', checkUsername, (req, res) => {
     var password = req.body.password;
     // retrieve user from the database
     //res.setHeader('Access-Control-Allow-Credentials', 'true')
-    db.collection("users").findOne({_id: username}, function(err, user) {
+    db.collection("users").findOne({ _id: username }, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(404).end("username " + username + " does not exists");
         if (user.hash !== generateHash(password, user.salt)) return res.status(401).end("access denied"); // invalid password
-        db.collection("loggedUsers").insertOne(user, function(err, result) {
-            if (err) return res.status(500).end(err);
-            res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
-                path : '/', 
-                maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                sameSite: true,
-                secure: true
-            }));
-            req.session.user = user;
-            res.json(user);
-        });
+        db.collection("loggedUsers").findOne({ _id:username  }, function(err, loggedUser){
+            if (loggedUser) return res.status(409).end("username " + username + " already signed in");
+            db.collection("loggedUsers").insertOne(user, function(err, result) {
+                if (err) return res.status(500).end(err);
+                res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
+                    path : '/', 
+                    maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+                    sameSite: true,
+                    secure: true
+                }));
+                req.session.user = user;
+                res.json(user);
+            });
+        })
+        
     });
 });
 
@@ -623,6 +627,11 @@ app.patch("/api/user/:friendId", checkId, (req, res) => {
         req.session.user = req.user;
         res.json("suceesfully updated friend list");
     });
+})
+
+app.patch("/api/user/unfriend/:friendId", (req, res) =>{
+    let friendId = req.params.friendId;
+    
 })
 
 app.get('/', (req, res) => {
