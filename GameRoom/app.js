@@ -665,6 +665,15 @@ app.get("/api/user/getOpponent", (req, res) =>{
     })
 })
 
+app.patch("/api/user/chargeCoins", (req, res) => {
+    let myquery = { _id: req.user._id };
+    let newvalues = { $inc: {coins: 5000} };
+    db.collection("users").updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        res.json("You have successfully charged 5000 coins to your account");
+    })
+})
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname = '/GameRoomUI/game-room/build/index.html'));
 });
