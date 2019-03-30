@@ -4,8 +4,6 @@ import Logo from '../Components/Logo';
 import '../style/home.css';
 import Nav from '../Components/NavBar';
 import UserPhoto from '../media/user.png';
-import plus_sign from '../media/items/plus-sign.png';
-import coin from '../media/items/coin.png';
 
 export default class UserProfile extends Component {
 
@@ -100,10 +98,6 @@ clickUploadState(state) {
               <br />
                 <header>
                     <div className="welcome_msg">Welcome, {this.state.user._id}</div>
-                    <div className="coin">
-                        <img src={coin} alt='coin'/> <p> {this.state.user.coins}</p> <p> Coins </p>
-                        <img className="plus_sign" src={plus_sign} alt='plus sign' />
-                    </div>
                 </header>
             <div className="row" style={{marginTop:"15px"}}>
                 <div className="col span-1-of-3 user_photo">
