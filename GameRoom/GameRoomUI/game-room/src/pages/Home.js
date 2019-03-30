@@ -31,9 +31,27 @@ export default class Home extends Component {
     });
 
     const that = this;
-    this.socket.emit("login", 0,
-      function(){
-        fetch('http://localhost:5000/api/user/loggedUsers/', {
+    this.socket.on("login", function(data){
+      fetch('http://localhost:5000/api/user/loggedUsers/', {
+        credentials: 'include',
+        }).then(function(response){
+            return response.json(); 
+        })
+            .then(function(data) {
+                const items = data;
+                console.log("items: ", items);
+                that.setState({
+                  playersOnline: items
+                })
+            })
+        .catch(function(error){
+            console.log(error);
+          })
+      }
+    )
+
+    this.socket.on("logout", function(data){
+      fetch('http://localhost:5000/api/user/loggedUsers/', {
         credentials: 'include',
         }).then(function(response){
             return response.json(); 

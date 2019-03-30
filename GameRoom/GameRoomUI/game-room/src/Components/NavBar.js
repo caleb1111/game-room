@@ -23,6 +23,7 @@ class Nav extends React.Component {
       .then(function(response) {
         return response.json(); })
         .then(function() {
+            that.socket.emit("logout");
             that.socket.disconnect();
       })
       .catch(function(error){

@@ -11,7 +11,8 @@ const io = require('socket.io').listen(server);
 io.origins(['http://localhost:3000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
-const validator = require("validator");
+const validator = require('validator');
+
 
 var db;
 MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb", { useNewUrlParser: true }, function (err, client) {
@@ -79,7 +80,10 @@ function generateHash (password, salt){
     return hash.digest('base64');
 }
 
-
+var checkUsername = function(req, res, next) {
+    if (!validator.isAlphanumeric(req.body.username)) return res.status(400).end("bad input");
+    next();
+};
 
 let corsOptions = {
     origin: "http://localhost:3000",
@@ -109,15 +113,6 @@ app.use(function (req, res, next){
 });
 
 
-var checkUsername = function(req, res, next) {
-    if (!validator.isAlphanumeric(req.body.username)) return res.status(400).end("bad input");
-    next();
-};
-
-var checkId = function(req, res, next) {
-    if (!validator.isAlphanumeric(req.params.id)) return res.status(400).end("bad input");
-    next();
-};
 
 class player {
     constructor(socketId, lobbyId) {
@@ -347,6 +342,12 @@ io.on("connection", function (socket) {
     //     db.close();
     // });
 
+    io.emit("login");
+
+    socket.on("logout", function(data){
+        io.emit("logout");
+    })
+
     socket.on("updateCoins", function(coin){
         myquery = { socket: socket.id};
         newvalues = { $inc: {coins: coin}};
@@ -359,10 +360,7 @@ io.on("connection", function (socket) {
         io.emit('receiveMessage', data);
     });
 
-    socket.on("login", function(data, fn){
-        fn();
-    })
-
+    
     socket.on("disconnect", function(){
         let index = users.indexOf(socket);
         users.splice(index, 1);
@@ -564,7 +562,6 @@ app.get('/signout/', function (req, res, next) {
     let myquery = { _id: req.user._id };
     db.collection("loggedUsers").deleteOne(myquery, function(err, obj) {
         if (err) return res.status(500).end(err);
-        console.log("removed user: ", obj);
     });
     req.session.destroy();
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
@@ -597,7 +594,7 @@ app.get("/api/user/loggedUsers", (req, res) => {
 // return picture
 // return friends
 // return win loss/ items / rank
-app.patch('/api/user/picture', checkId, upload.single('picture'), (req, res) => {
+app.patch('/api/user/picture', upload.single('picture'), (req, res) => {
     
 })
 
@@ -605,7 +602,7 @@ app.get('/api/currUser/', (req, res) => {
     res.json(req.user);
 })
 
-app.get('/api/user/:userId/picture', checkId, (req, res) => {
+app.get('/api/user/:userId/picture', (req, res) => {
     db.collection("users").findOne({_id: req.params.userId}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(404).end('Image id ' + req.params.imageid + ' does not exists');
@@ -615,11 +612,11 @@ app.get('/api/user/:userId/picture', checkId, (req, res) => {
     });
 });
 
-app.get('/api/user/friends', checkId, (req, res) => {
+app.get('/api/user/friends', (req, res) => {
     res.json(req.user.friends);
 });
 
-app.patch("/api/user/:friendId", checkId, (req, res) => {
+app.patch("/api/user/addFriend/:friendId", (req, res) => {
     let friendId = req.params.friendId;
     let myquery = { _id: req.user._id };
     let friendList = req.user.friends;
@@ -634,7 +631,7 @@ app.patch("/api/user/:friendId", checkId, (req, res) => {
     });
 })
 
-app.patch("/api/user/unfriend/:friendId", (req, res) =>{
+app.patch("/api/user/unFriend/:friendId", (req, res) =>{
     let friendId = req.params.friendId;
     let friendList = req.user.friends;
     let index = friendList.indexOf(friendId);
@@ -672,10 +669,20 @@ app.get("/api/user/getOpponent", (req, res) =>{
 app.patch("/api/user/chargeCoins", (req, res) => {
     let myquery = { _id: req.user._id };
     let newvalues = { $inc: {coins: 5000} };
+    console.log("charge coin 1");
+    req.user.coins += 5000;
     db.collection("users").updateOne(myquery, newvalues, function(err, result){
+        console.log("charge coin 2");
         if (err) return res.status(500).end(err);
-        res.json("You have successfully charged 5000 coins to your account");
+        console.log(req.user);
+        req.session.user = req.user;
+        console.log("coins:", req.user.coins);
+        res.json(req.user.coins);
     })
+})
+
+app.patch("/api/user/item", (req, res) => {
+
 })
 
 app.get('/', (req, res) => {
