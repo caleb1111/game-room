@@ -62,11 +62,13 @@ cite img {
 
 .f_btn,
 .f_btn:visited {
+  margin-top: 6px;
     background-color: #111;
-    width: 30%;
+    width: auto;
+    font-size: 16px;
     text-align: center;
     text-decoration: none;
-    border-radius: 200px;
+    border-radius: 30px;
     transition: background-color 0.2s, border 0.2s, color 0.2s;
     border: 1px solid #808080;
     color: white;
