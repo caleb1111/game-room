@@ -39,12 +39,12 @@ let User = function(id, salt, hash, display){
     this.items = [];
     this.socket = 0;
     this.roomId = 0;
+    this.profile = id;
 };
 
-let Item = function(name, price, picture){
-    this.name = name;
+let Item = function(name, price){
+    this.id = name;
     this.price = price;
-    this.picture = picture;
 };
 
 let multer  = require('multer');
@@ -497,9 +497,7 @@ io.on("connection", function (socket) {
             returnResult(-1);
         }
     });
-
 });
-
 
 // curl -H "Content-Type: application/json" -X POST -d '{"username":"alice","password":"alice"}' -c cookie.txt localhost:3000/signup/
 app.post('/signup/', checkUsername, (req, res) => {
@@ -573,17 +571,6 @@ app.get('/signout/', function (req, res, next) {
     res.json("user successfully logged out")
 });
 
-app.patch('/api/user/:userId/socket', (req, res) => {
-    let userId = req.params.userId;
-    let socket = req.body.socket;
-    let myquery = { _id: userId };
-    let newvalues = { $set: { socket: socket} };
-    db.collection('users').updateOne(myquery, newvalues, function(err, result){
-        if (err) return res.status(500).end(err);
-        res.json("suceesfully updated socket id");
-    });
-})
-
 app.get("/api/user/loggedUsers", (req, res) => {
     db.collection("loggedUsers").find({}).toArray(function(err, result){
         if (err) return res.status(500).end(err);
@@ -591,12 +578,15 @@ app.get("/api/user/loggedUsers", (req, res) => {
     })
 })
 
+
+app.get('/api/user/friends', (req, res) => {
+    res.json(req.user.friends);
+});
+
 // return picture
 // return friends
 // return win loss/ items / rank
-app.patch('/api/user/picture', upload.single('picture'), (req, res) => {
-    
-})
+
 
 app.get('/api/currUser/', (req, res) => {
     res.json(req.user);
@@ -612,9 +602,32 @@ app.get('/api/user/:userId/picture', (req, res) => {
     });
 });
 
-app.get('/api/user/friends', (req, res) => {
-    res.json(req.user.friends);
-});
+app.get("/api/user/getOpponent", (req, res) =>{
+    let roomId = req.user.roomId;
+    let myquery = { _id: { $ne: req.user._id }, roomId: roomId };
+    db.collection("users").findOne(myquery, function(err, user){
+        if (err) return res.status(500).end(err);
+        res.json(user);
+    })
+})
+
+
+app.patch('/api/user/picture', upload.single('picture'), (req, res) => {
+    
+})
+
+app.patch('/api/usr/')
+
+app.patch('/api/user/:userId/socket', (req, res) => {
+    let userId = req.params.userId;
+    let socket = req.body.socket;
+    let myquery = { _id: userId };
+    let newvalues = { $set: { socket: socket} };
+    db.collection('users').updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        res.json("suceesfully updated socket id");
+    });
+})
 
 app.patch("/api/user/addFriend/:friendId", (req, res) => {
     let friendId = req.params.friendId;
@@ -627,7 +640,7 @@ app.patch("/api/user/addFriend/:friendId", (req, res) => {
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
         req.session.user = req.user;
-        res.json("suceesfully updated friend list");
+        res.json("successfully added friend");
     });
 })
 
@@ -645,7 +658,7 @@ app.patch("/api/user/unFriend/:friendId", (req, res) =>{
     })
 })
 
-app.patch("/api/user/chargeCoins", (req, res) => {
+app.patch("/api/pay/chargeCoins", (req, res) => {
     let myquery = { _id: req.user._id };
     let newvalues = { $inc: {coins: 5000} };
     console.log("charge coin 1");
@@ -660,7 +673,7 @@ app.patch("/api/user/chargeCoins", (req, res) => {
     })
 })
 
-app.patch("/api/user/:roomId", (req, res) => {
+app.patch("/api/user/updateRoom/:roomId", (req, res) => {
     let roomId = req.params.roomId;
     let myquery = { _id: req.user._id };
     let newvalues = { $set: {roomId: roomId} };
@@ -668,27 +681,28 @@ app.patch("/api/user/:roomId", (req, res) => {
         if (err) return res.status(500).end(err);
         req.user.roomId = roomId;
         req.session.user = req.user;
-        res.json("suceesfully updated room id");
+        res.json("successfully updated room id");
     });
 })
 
-app.get("/api/user/getOpponent", (req, res) =>{
-    let roomId = req.user.roomId;
-    let myquery = { _id: { $ne: req.user._id }, roomId: roomId };
-    db.collection("users").findOne(myquery, function(err, user){
-        if (err) return res.status(500).end(err);
-        res.json(user);
-    })
-})
 
-app.patch("/api/user/purchaseItem", (req, res) => {
+app.patch("/api/pay/purchaseItem", (req, res) => {
     let itemId = req.body.id;
     let price = req.body.price;
     if (price > req.user.coins){
         res.json("You do not have enough coins to purchase this item");
     } else{
         let myquery = {_id:req.user._id  };
-        let newvalues = { $inc: { coins: -price } };
+        let itemList = req.user.items;
+        let newItem = new Item (itemId, price);
+        itemList.push(newItem);
+        let newvalues = { $inc: { coins: -price }, $set: { items: itemList } };
+        req.user.coins = req.user.coins - price;
+        db.collection("user").updateOne(myquery, newvalues, function(err, result){
+            if (err) return res.status(500).end(err);
+            req.session.user = req.user;
+            res.json("successfully purchased item");
+        })
     }
 })
 

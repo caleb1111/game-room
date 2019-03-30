@@ -96,7 +96,6 @@ export default class Home extends Component {
     const that = this;     
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
-        
       })
       .then(function(response) {
         return response.json(); 
@@ -105,7 +104,7 @@ export default class Home extends Component {
             const user = data;
             that.setState({
               user: user,
-              friend_list: ['user.friends', "11"]
+              friend_list: user.friends
             })
             // console.log("f:" , that.state.friend_list)
           })
@@ -129,21 +128,30 @@ export default class Home extends Component {
   }
 
   handleAddfriend(playerId){
-    console.log("addplayer clicked ", playerId);
     const that = this;
-    fetch('http://localhost:5000/api/user/:friendId/', {
+    fetch('http://localhost:5000/api/user/addFriend/' + playerId + '/', {
         credentials: 'include',
+        method: 'PATCH'
       })
       .then(function(response) {
         return response.json(); 
       })
         .then(function(data) {
-            const user = data;
-            that.setState({
-              user: user,
-              friend_list: ['user.friends', "11"]
+            fetch('http://localhost:5000/api/currUser/', {
+              credentials: 'include',
             })
-            // console.log("f:" , that.state.friend_list)
+            .then(function(response) {
+              return response.json(); 
+            })
+              .then(function(data) {
+                  const user = data;
+                  that.setState({
+                    friend_list: user.friends
+                  })
+                })
+            .catch(function(error){
+              console.log(error);
+            })
           })
       .catch(function(error){
         console.log(error);
@@ -151,21 +159,32 @@ export default class Home extends Component {
   }
 
   handleUnfriend(friendId){
-    console.log("unfriend clicked ", friendId);
     const that = this;
-    fetch('http://localhost:5000/api/user/unfriend/:friendId/', {
+    fetch('http://localhost:5000/api/user/unfriend/'+ friendId + '/', {
         credentials: 'include',
+        method: 'PATCH',
+        body: friendId
       })
       .then(function(response) {
         return response.json(); 
       })
         .then(function(data) {
-            const user = data;
-            that.setState({
-              user: user,
-              friend_list: ['user.friends', "11"]
+            fetch('http://localhost:5000/api/currUser/', {
+              credentials: 'include',
             })
-            // console.log("f:" , that.state.friend_list)
+            .then(function(response) {
+              return response.json(); 
+            })
+              .then(function(data) {
+                  const user = data;
+                  that.setState({
+                    friend_list: user.friends
+                  })
+                  // console.log("f:" , that.state.friend_list)
+                })
+            .catch(function(error){
+              console.log(error);
+            })
           })
       .catch(function(error){
         console.log(error);
@@ -175,7 +194,6 @@ export default class Home extends Component {
 
   handleViewProfile(playerId){
     console.log("view player clicked ", playerId);
-    const that = this;
 
   }
 
