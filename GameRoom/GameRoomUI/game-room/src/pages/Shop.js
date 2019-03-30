@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
+import PaypalExpressBtn from 'react-paypal-express-checkout';
 import Logo from '../Components/Logo';
 import '../style/shop.css';
 import Nav from '../Components/NavBar';
@@ -25,6 +26,7 @@ export default class Shop extends Component {
 
     this.state = {
         user: {},
+        payment: {}
     }
 
     this.getUser = this.getUser.bind(this);
@@ -68,6 +70,35 @@ export default class Shop extends Component {
 
 
     render() {
+      let env = 'sandbox'; // you can set this string to 'production'
+		  let currency = 'CAD';
+      const client = {
+        sandbox:    'AV6-PJy_6A5xM2Z8O7j_JiGDS98TD4uq_LElms0Dae0fjZ_AhTL1M4N7lwuIzoq5JVpD4Pi7Zx5HPpD9',
+        production: 'EAQnc85cwwNiSc9nSGUdJglbjMG5L_NqZQN3wwhz2S41gK9cRxD3efiIGMPoLSxdiz_F0E7kz7WE16n3',
+      }   
+
+      const onSuccess = (payment) => {
+        // 1, 2, and ... Poof! You made it, everything's fine and dandy!
+                  console.log("Payment successful!", payment);
+                  this.setState({
+                    payment: payment
+                  })
+                  
+                  // You can bind the "payment" object's value to your state or props or whatever here, please see below for sample returned data
+      }
+
+      const onCancel = (data) => {
+        // The user pressed "cancel" or closed the PayPal popup
+        console.log('Payment cancelled!', data);
+        // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
+      }
+
+      const onError = (err) => {
+        // The main Paypal script could not be loaded or something blocked the script from loading
+        console.log("Error!", err);
+        // Because the Paypal's main script is loaded asynchronously from "https://www.paypalobjects.com/api/checkout.js"
+        // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
+      }
       return (
         <div className="background">
           <header onLoad={this.getUser}>
@@ -79,6 +110,9 @@ export default class Shop extends Component {
             <div className="coin">
              <img src={coin} alt='coin'/> <p> {this.state.user.coins}</p> <p> Coins </p>
              <img className="plus_sign" src={plus_sign} alt='plus sign' />
+             <div style={{marginTop:"7px"}}>
+             <PaypalExpressBtn env={env} client={client} currency={currency} total={1.00} onError={onError} onSuccess={onSuccess} onCancel={onCancel} />
+             </div>
             </div>
           </header>
           <div className="shop">

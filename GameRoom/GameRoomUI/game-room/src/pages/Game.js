@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import io from "socket.io-client"; 
-import { Link } from "react-router-dom";
 import Logo from '../Components/Logo';
 import '../style/game.css';
-import Nav from '../Components/NavBar';
 // --------------------- Image Components -------------------------
 import destroyer from "../media/game/destroyer.png";
 import destroyerH from "../media/game/destroyerH.png";

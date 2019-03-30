@@ -29,10 +29,6 @@ export default class SignUpIn extends Component {
   handleSubmit(e) {
     var that = this;
     e.preventDefault();
-    console.log("front end user", this.state);
-
-    console.log('The form was submitted with the following data: username: ', 
-    this.state.username, ' password: ', this.state.password, 'action: ', this.formAction.action);
     if (this.formAction.action === 'signup'){
       fetch('http://localhost:5000/signup/', {
         method: 'POST', // or 'PUT'
@@ -44,9 +40,7 @@ export default class SignUpIn extends Component {
       }).then(function(response){
         return response.json(); 
       })
-        .then(function(data) {
-            const items = data;
-            console.log(items)
+        .then(function() {
             that.props.history.push("/home/");
             fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
             credentials: 'include',
@@ -55,15 +49,13 @@ export default class SignUpIn extends Component {
             }).then(function(response){
                 return response.json(); 
             })
-                .then(function(data) {
-                    const items = data;
-                    console.log(items);
+                .then(function() {
+
                 })
         })
-      .catch(function(error){
-        console.log(error);
+      .catch(function(){
         that.setState({
-          errorMsg: 'Username already taken'
+          errorMsg: 'Username already taken',
         })
       })
     }
@@ -93,16 +85,16 @@ export default class SignUpIn extends Component {
                     console.log(items);
                 })
       })
-      .catch(function(error){
-        console.log(error);
+      .catch(function(){
         that.setState({
-          errorMsg: 'User already logged in Or Username not registered'
+          errorMsg: 'User already logged in Or Username not registered',
         })
       })
       }
   }
 
   render() {
+
     return (
       <div className="background">
         <SignLogo/>

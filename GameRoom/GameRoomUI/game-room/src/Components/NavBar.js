@@ -22,9 +22,7 @@ class Nav extends React.Component {
       })
       .then(function(response) {
         return response.json(); })
-        .then(function(data) {
-            const items = data;
-            console.log(items)
+        .then(function() {
             that.socket.disconnect();
       })
       .catch(function(error){
