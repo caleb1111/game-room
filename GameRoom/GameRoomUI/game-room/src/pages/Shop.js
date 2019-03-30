@@ -130,7 +130,7 @@ export default class Shop extends Component {
                   })
                   console.log("p:" , that.state.paid)
 
-                  fetch('http://localhost:5000/api/pay/chargeCoins', {
+                  fetch('http://localhost:5000/api/pay/chargeCoins/', {
                     credentials: 'include',
                     method: 'PATCH'
                   })
