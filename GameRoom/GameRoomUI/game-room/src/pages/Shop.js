@@ -54,10 +54,43 @@ export default class Shop extends Component {
       })
   }
 
-  handlePurchase(price){
-    console.log("item price:", price);
+  handlePurchase(item){
+    const that = this;
+    console.log("item:", item);
+    const fd = new FormData();
+    fd.append('item', item.itemId, item.item_name, item.item_img, item.price);
     // set the coins of the user
     // add the item to his purchased list
+    console.log("item detail:", item.itemId, item.item_name, item.price);
+    fetch('http://localhost:5000/api/user/', {
+      credentials: 'include',
+      method: 'PATCH',
+      body: fd
+    })
+    .then(function(response) {
+      return response.json(); 
+    })
+      .then(function(data) {
+
+        fetch('http://localhost:5000/api/currUser/', {
+          credentials: 'include',
+        })
+        .then(function(response) {
+          return response.json(); 
+        })
+          .then(function(data) {
+              const user = data;
+              that.setState({
+                coins: user.coins,
+              })
+          })
+        .catch(function(error){
+          console.log(error);
+        })
+        })
+    .catch(function(error){
+      console.log(error);
+    })
   }
 
   items_list = {
@@ -97,7 +130,7 @@ export default class Shop extends Component {
                   })
                   console.log("p:" , that.state.paid)
 
-                  fetch('http://localhost:5000/api/user/chargeCoins', {
+                  fetch('http://localhost:5000/api/user/chargeCoins/', {
                     credentials: 'include',
                     method: 'PATCH'
                   })
@@ -171,7 +204,7 @@ export default class Shop extends Component {
                         <h6> {item.price} coins </h6>
                         <img src={item.item_img} alt='item_img'/>
                         <button className="btn_purchase"
-                        onClick={() => this.handlePurchase(item.price)} 
+                        onClick={() => this.handlePurchase(item)} 
                         >Purchase</button>
                       </div>
                     </li>

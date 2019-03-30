@@ -4,6 +4,8 @@ import Logo from '../Components/Logo';
 import '../style/home.css';
 import Nav from '../Components/NavBar';
 import UserPhoto from '../media/user.png';
+import '../style/user_profile.css';
+
 
 export default class UserProfile extends Component {
 
@@ -14,6 +16,8 @@ export default class UserProfile extends Component {
         upload: true,
         selectedFile: null,
         user: {},
+        items: [],
+        friends: []
     }
 
     this.handleUpload = this.handleUpload.bind(this);
@@ -99,7 +103,7 @@ clickUploadState(state) {
                 <header>
                     <div className="welcome_msg">Welcome, {this.state.user._id}</div>
                 </header>
-            <div className="row" style={{marginTop:"15px"}}>
+            <div className="row" style={{marginTop:"120px"}}>
                 <div className="col span-1-of-3 user_photo">
                     <img src={UserPhoto} alt='user'/>
                     <br />
@@ -113,29 +117,48 @@ clickUploadState(state) {
                         <button className="btn_upload" onClick={() => this.fileUploadHandler()} >Upload</button>
                     </div>
                 </div>
-                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white"}}>
-                    <h3>Something here</h3>
-                </div>
-                <div className="col span-1-of-3 box random_box" style={{border: "1px solid white", margin: "150 0 0 0px"}}>
-                    <h3>Friends List can be here</h3>
-                </div>
-            </div>
 
-            <div className="row">
-                <div className="col box random_box2" style={{border: "1px solid white"}}>
-                    <h3>Your Rank here</h3>
+                <div className="col span-1-of-3">
+                <div className="friend_list">
+                    <div className="menu_title">Friend List</div>
+                        <div className="friend_box">
+                        <ul id="friends">
+                            {this.state.friends.map((friend, i) => {
+                                return (
+                                    <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
+                                        <div className="friend_clicked">
+                                            <button className="f_btn" style={{marginRight:"15px"}}
+                                            onClick={() => this.handleUnfriend(friend)}>Unfriend</button>
+                                            <button className="f_btn"
+                                            onClick={() => this.handleViewProfile(friend)}>View Profile</button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                            </ul>
+                        </div>
                 </div>
-                <div className="col box random_box2" style={{border: "1px solid white"}}>
-                    <h3>Items You purchased</h3>
                 </div>
-                <div className="col box random_box2" style={{border: "1px solid white"}}>
-                    <h3>Random thing here</h3>
+                <div className="col span-1-of-3 ">
+                <div className="friend_list">
+                    <div className="menu_title">Items You Purchased</div>
+                        <div className="friend_box">
+                        <ul id="friends">
+                            {this.state.friends.map((friend, i) => {
+                                return (
+                                    <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
+                                        <div className="friend_clicked">
+                                            <button className="f_btn" style={{marginRight:"15px"}}
+                                            onClick={() => this.handleUnfriend(friend)}>Unfriend</button>
+                                            <button className="f_btn"
+                                            onClick={() => this.handleViewProfile(friend)}>View Profile</button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                            </ul>
+                        </div>
                 </div>
-                <div className="col box random_box2" style={{border: "1px solid white"}}>
-                    <h3>Random thing here</h3>
-                </div>
-                <div className="col box random_box2" style={{border: "1px solid white"}}>
-                    <h3>Random thing here</h3>
                 </div>
             </div>
             </div>
