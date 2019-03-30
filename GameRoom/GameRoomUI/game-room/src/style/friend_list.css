@@ -60,3 +60,23 @@ cite img {
   vertical-align: middle;
 }
 
+.f_btn,
+.f_btn:visited {
+    background-color: #111;
+    width: 30%;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.f_btn:hover,
+.f_btn:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+
+}

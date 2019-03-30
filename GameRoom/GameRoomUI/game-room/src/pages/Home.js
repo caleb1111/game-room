@@ -33,6 +33,28 @@ export default class Home extends Component {
       addMessage(data);
     });
 
+    // this.socket.on('refreshPlayers', function(data){
+    //   console.log("refreshPlayers:", data)
+    //   refresh(data);
+    //   fetch('http://localhost:5000/api/user/loggedUsers/', {
+    //     credentials: 'include',
+    //     }).then(function(response){
+    //         return response.json(); 
+    //     })
+    //         .then(function(data) {
+    //             const items = data;
+    //             that.setState({
+    //               playersOnline: items
+    //             })
+    //         })
+    //     .catch(function(error){
+    //         console.log(error);
+    //       })
+    // });
+
+    // this.socket.emit('login', function() {
+    // });
+
   this.sendMessage = ev => {
       console.log("send: msg: ", this.state.message);
       ev.preventDefault();
@@ -41,9 +63,6 @@ export default class Home extends Component {
               username: this.state.user._id,
               message: this.state.message,
           });
-      }
-      else {
-          console.log("empty message cant be sent")
       }
       this.setState({message: ''});
   }
@@ -70,7 +89,7 @@ export default class Home extends Component {
             const user = data;
             that.setState({
               user: user,
-              friend_list: user.friends
+              friend_list: ['user.friends']
             })
             // console.log("f:" , that.state.friend_list)
           })
@@ -91,7 +110,6 @@ export default class Home extends Component {
         .catch(function(error){
             console.log(error);
           })
-    
 }
   
   Rooms = {
@@ -120,7 +138,7 @@ export default class Home extends Component {
   }
 
   render() {
-    let showDropDown = this.state.isClicked ? "show" : "hide";
+    let showAddedFriendBtn = this.state.isClicked ? "show" : "hide";
 
 
     return (
@@ -183,8 +201,11 @@ export default class Home extends Component {
                                 return (
                                     <li key={i}
                                     onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend}</cite>
-                                    <div className={showDropDown}>
-                                        Hello
+                                    <div className={showAddedFriendBtn}>
+                                        <div className="friend_clicked">
+                                            <button className="f_btn">Add Friend</button>
+                                            <button className="f_btn">View Profile</button>
+                                        </div>
                                     </div>
                                     </li>
                                 )
