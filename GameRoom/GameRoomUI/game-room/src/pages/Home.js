@@ -7,8 +7,6 @@ import '../style/friend_list.css';
 import '../style/players_online.css';
 import '../style/chat.css'
 import User_img from '../media/user.png';
-
-// import PlayersOnline from '../Components/PlayersOnline';
 import RoomHovered from '../Components/RoomHovered';
 
 
@@ -18,7 +16,6 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      isClicked: false,
       user: {},
       playersOnline: [],
       friend_list: [],
@@ -33,25 +30,25 @@ export default class Home extends Component {
       addMessage(data);
     });
 
-    this.socket.emit("login",
-                    0,
-                    function(){
-                      fetch('http://localhost:5000/api/user/loggedUsers/', {
-                      credentials: 'include',
-                      }).then(function(response){
-                          return response.json(); 
-                      })
-                          .then(function(data) {
-                              const items = data;
-                              console.log("items: ", items);
-                              this.setState({
-                                playersOnline: items
-                              })
-                          })
-                      .catch(function(error){
-                          console.log(error);
-                        })
-                    }
+    const that = this;
+    this.socket.emit("login", 0,
+      function(){
+        fetch('http://localhost:5000/api/user/loggedUsers/', {
+        credentials: 'include',
+        }).then(function(response){
+            return response.json(); 
+        })
+            .then(function(data) {
+                const items = data;
+                console.log("items: ", items);
+                that.setState({
+                  playersOnline: items
+                })
+            })
+        .catch(function(error){
+            console.log(error);
+          })
+      }
     )
 
   this.sendMessage = ev => {
@@ -72,14 +69,16 @@ export default class Home extends Component {
       console.log(this.state.messages);
   };
 
-    this.handleMouseClicked = this.handleMouseClicked.bind(this);
-
+    this.handleUnfriend = this.handleUnfriend.bind(this);
+    this.handleAddfriend = this.handleAddfriend.bind(this);
+    this.handleViewProfile = this.handleViewProfile.bind(this);
   }
 
   componentDidMount(){
     const that = this;     
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
+        
       })
       .then(function(response) {
         return response.json(); 
@@ -88,14 +87,13 @@ export default class Home extends Component {
             const user = data;
             that.setState({
               user: user,
-              friend_list: ['user.friends']
+              friend_list: ['user.friends', "11"]
             })
             // console.log("f:" , that.state.friend_list)
           })
       .catch(function(error){
         console.log(error);
       })
-      
 }
   
   Rooms = {
@@ -112,21 +110,58 @@ export default class Home extends Component {
     ]
   }
 
-  handleMouseClicked() {
-    this.setState(this.clickState);
-    console.log("clicked ", this.state.isClicked);
+  handleAddfriend(playerId){
+    console.log("addplayer clicked ", playerId);
+    const that = this;
+    fetch('http://localhost:5000/api/user/:friendId/', {
+        credentials: 'include',
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+            const user = data;
+            that.setState({
+              user: user,
+              friend_list: ['user.friends', "11"]
+            })
+            // console.log("f:" , that.state.friend_list)
+          })
+      .catch(function(error){
+        console.log(error);
+      })
   }
 
-  clickState(state) {
-    return {
-        isClicked: !state.isClicked,
-    };
+  handleUnfriend(friendId){
+    console.log("unfriend clicked ", friendId);
+    const that = this;
+    fetch('http://localhost:5000/api/user/unfriend/:friendId/', {
+        credentials: 'include',
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+            const user = data;
+            that.setState({
+              user: user,
+              friend_list: ['user.friends', "11"]
+            })
+            // console.log("f:" , that.state.friend_list)
+          })
+      .catch(function(error){
+        console.log(error);
+      })
+
+  }
+
+  handleViewProfile(playerId){
+    console.log("view player clicked ", playerId);
+    const that = this;
+
   }
 
   render() {
-    let showAddedFriendBtn = this.state.isClicked ? "show" : "hide";
-
-
     return (
       <div className="background">
         <header>
@@ -185,14 +220,13 @@ export default class Home extends Component {
                         <ul id="friends">
                             {this.state.friend_list.map((friend, i) => {
                                 return (
-                                    <li key={i}
-                                    onClick={this.handleMouseClicked}><cite style={{textAlign:"center"}}>{friend}</cite>
-                                    <div className={showAddedFriendBtn}>
+                                    <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
                                         <div className="friend_clicked">
-                                            <button className="f_btn">Add Friend</button>
-                                            <button className="f_btn">View Profile</button>
+                                            <button className="f_btn" style={{marginRight:"15px"}}
+                                            onClick={() => this.handleUnfriend(friend)}>Unfriend</button>
+                                            <button className="f_btn"
+                                            onClick={() => this.handleViewProfile(friend)}>View Profile</button>
                                         </div>
-                                    </div>
                                     </li>
                                 )
                             })}
@@ -207,7 +241,14 @@ export default class Home extends Component {
                     <ul id="players">
                     {this.state.playersOnline.map((player, i) => {
                             return (
-                                <li key={i}><cite style={{textAlign:"center"}}>{player._id}</cite></li>
+                                <li key={i}><cite style={{textAlign:"center"}}>{player._id}</cite>
+                                <div className="friend_clicked">
+                                    <button className="f_btn" style={{marginRight:"15px"}}
+                                    onClick={() => this.handleAddfriend(player._id)} >Add Friend</button>
+                                    <button className="f_btn"
+                                    onClick={() => this.handleViewProfile(player._id)} >View Profile</button>
+                                </div>
+                                </li>
                             )
                         })}
                         </ul>
