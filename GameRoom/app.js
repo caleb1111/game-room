@@ -359,6 +359,10 @@ io.on("connection", function (socket) {
         io.emit('receiveMessage', data);
     });
 
+    socket.on("login", function(data, fn){
+        fn();
+    })
+
     socket.on("disconnect", function(){
         let index = users.indexOf(socket);
         users.splice(index, 1);

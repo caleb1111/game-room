@@ -33,27 +33,26 @@ export default class Home extends Component {
       addMessage(data);
     });
 
-    // this.socket.on('refreshPlayers', function(data){
-    //   console.log("refreshPlayers:", data)
-    //   refresh(data);
-    //   fetch('http://localhost:5000/api/user/loggedUsers/', {
-    //     credentials: 'include',
-    //     }).then(function(response){
-    //         return response.json(); 
-    //     })
-    //         .then(function(data) {
-    //             const items = data;
-    //             that.setState({
-    //               playersOnline: items
-    //             })
-    //         })
-    //     .catch(function(error){
-    //         console.log(error);
-    //       })
-    // });
-
-    // this.socket.emit('login', function() {
-    // });
+    this.socket.emit("login",
+                    0,
+                    function(){
+                      fetch('http://localhost:5000/api/user/loggedUsers/', {
+                      credentials: 'include',
+                      }).then(function(response){
+                          return response.json(); 
+                      })
+                          .then(function(data) {
+                              const items = data;
+                              console.log("items: ", items);
+                              this.setState({
+                                playersOnline: items
+                              })
+                          })
+                      .catch(function(error){
+                          console.log(error);
+                        })
+                    }
+    )
 
   this.sendMessage = ev => {
       console.log("send: msg: ", this.state.message);
@@ -96,20 +95,7 @@ export default class Home extends Component {
       .catch(function(error){
         console.log(error);
       })
-      fetch('http://localhost:5000/api/user/loggedUsers/', {
-        credentials: 'include',
-        }).then(function(response){
-            return response.json(); 
-        })
-            .then(function(data) {
-                const items = data;
-                that.setState({
-                  playersOnline: items
-                })
-            })
-        .catch(function(error){
-            console.log(error);
-          })
+      
 }
   
   Rooms = {
