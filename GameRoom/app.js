@@ -645,27 +645,6 @@ app.patch("/api/user/unFriend/:friendId", (req, res) =>{
     })
 })
 
-app.patch("/api/user/:roomId", (req, res) => {
-    let roomId = req.params.roomId;
-    let myquery = { _id: req.user._id };
-    let newvalues = { $set: {roomId: roomId} };
-    db.collection('users').updateOne(myquery, newvalues, function(err, result){
-        if (err) return res.status(500).end(err);
-        req.user.roomId = roomId;
-        req.session.user = req.user;
-        res.json("suceesfully updated friend list");
-    });
-})
-
-app.get("/api/user/getOpponent", (req, res) =>{
-    let roomId = req.user.roomId;
-    let myquery = { _id: { $ne: req.user._id }, roomId: roomId };
-    db.collection("users").findOne(myquery, function(err, user){
-        if (err) return res.status(500).end(err);
-        res.json(user);
-    })
-})
-
 app.patch("/api/user/chargeCoins", (req, res) => {
     let myquery = { _id: req.user._id };
     let newvalues = { $inc: {coins: 5000} };
@@ -681,8 +660,36 @@ app.patch("/api/user/chargeCoins", (req, res) => {
     })
 })
 
-app.patch("/api/user/item", (req, res) => {
+app.patch("/api/user/:roomId", (req, res) => {
+    let roomId = req.params.roomId;
+    let myquery = { _id: req.user._id };
+    let newvalues = { $set: {roomId: roomId} };
+    db.collection('users').updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        req.user.roomId = roomId;
+        req.session.user = req.user;
+        res.json("suceesfully updated room id");
+    });
+})
 
+app.get("/api/user/getOpponent", (req, res) =>{
+    let roomId = req.user.roomId;
+    let myquery = { _id: { $ne: req.user._id }, roomId: roomId };
+    db.collection("users").findOne(myquery, function(err, user){
+        if (err) return res.status(500).end(err);
+        res.json(user);
+    })
+})
+
+app.patch("/api/user/purchaseItem", (req, res) => {
+    let itemId = req.body.id;
+    let price = req.body.price;
+    if (price > req.user.coins){
+        res.json("You do not have enough coins to purchase this item");
+    } else{
+        let myquery = {_id:req.user._id  };
+        let newvalues = { $inc: { coins: -price } };
+    }
 })
 
 app.get('/', (req, res) => {
