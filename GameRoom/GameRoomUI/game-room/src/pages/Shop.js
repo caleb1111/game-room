@@ -56,6 +56,8 @@ export default class Shop extends Component {
 
   handlePurchase(price){
     console.log("item price:", price);
+    // set the coins of the user
+    // add the item to his purchased list
   }
 
   items_list = {

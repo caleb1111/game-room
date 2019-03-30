@@ -134,7 +134,6 @@ export default class Home extends Component {
         <div>
         <div id="lobby_wrapper">
         <div className="empty">
-          <h1>{this.state.user._id}</h1>
         </div>
 
         <div id="lobby_leftsidebar">
