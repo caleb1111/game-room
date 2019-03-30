@@ -16,7 +16,6 @@ import bubbles from '../media/items/bubbles.png';
 import catBG from '../media/items/catBG.png';
 import cloudsBG from '../media/items/cloudsBG.png';
 import chocolateBG from '../media/items/chocolateBG.png';
-import plus_sign from '../media/items/plus-sign.png';
 import circlesBG from '../media/items/circlesBG.png';
 
 export default class Shop extends Component {
@@ -25,15 +24,17 @@ export default class Shop extends Component {
     super();
 
     this.state = {
+        coins: 0,
         user: {},
-        payment: {}
+        anyMsgs: false,
+        prompt: "",
+        errorMsg: "",
+        hasError: false,
+        hasPrompt: false
     }
-
-    this.getUser = this.getUser.bind(this);
-
 }
 
-  getUser(){
+  componentDidMount(){
     const that = this;
     fetch('http://localhost:5000/api/currUser/', {
         credentials: 'include',
@@ -44,12 +45,17 @@ export default class Shop extends Component {
         .then(function(data) {
             const user = data;
             that.setState({
-              user: user
+              user: user,
+              coins: user.coins,
             })
         })
       .catch(function(error){
         console.log(error);
       })
+  }
+
+  handlePurchase(price){
+    console.log("item price:", price);
   }
 
   items_list = {
@@ -78,43 +84,80 @@ export default class Shop extends Component {
       }   
 
       const onSuccess = (payment) => {
+        const that = this;
         // 1, 2, and ... Poof! You made it, everything's fine and dandy!
                   console.log("Payment successful!", payment);
                   this.setState({
-                    payment: payment
+                    paid: true,
+                    hasPrompt: true,
+                    hasError: false,
+                    prompt: 'We have added 5000 coins to your account. Thank You!'
                   })
-                  
+                  console.log("p:" , that.state.paid)
+
+                  fetch('http://localhost:5000/api/user/chargeCoins', {
+                    credentials: 'include',
+                    method: 'PATCH'
+                  })
+                  .then(function(response) {
+                    return response.json(); 
+                  })
+                    .then(function(data) {
+                        const coins = data;
+                        that.setState({
+                          coins: coins                        
+                        })
+                         console.log("c:" , that.state.coins)
+                      })
+                  .catch(function(error){
+                    console.log(error);
+                  })
                   // You can bind the "payment" object's value to your state or props or whatever here, please see below for sample returned data
       }
 
       const onCancel = (data) => {
         // The user pressed "cancel" or closed the PayPal popup
         console.log('Payment cancelled!', data);
+        this.setState({
+          hasPrompt: false,
+          hasError: true,
+          errorMsg: 'Payment Cancelled!'
+        })
         // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
       }
 
       const onError = (err) => {
         // The main Paypal script could not be loaded or something blocked the script from loading
         console.log("Error!", err);
+        this.setState({
+          hasPrompt: false,
+          hasError: true,
+          errorMsg: 'An error has occurred! Please try again!'
+        })
         // Because the Paypal's main script is loaded asynchronously from "https://www.paypalobjects.com/api/checkout.js"
         // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
       }
+
+      const showError = this.state.hasError ? "show" : "hide";
+      const showPrompt = this.state.hasPrompt ? "show" : "hide"
+
       return (
         <div className="background">
-          <header onLoad={this.getUser}>
+          <header>
             <Link to="/home/"><Logo/></Link>
             <Nav/>
             <br />
             <hr />
             <br />
             <div className="coin">
-             <img src={coin} alt='coin'/> <p> {this.state.user.coins}</p> <p> Coins </p>
-             <img className="plus_sign" src={plus_sign} alt='plus sign' />
+             <img src={coin} alt='coin'/> <p> Welcome</p> <p> {this.state.user._id},</p> <p>You</p> <p> have</p>   <p> {this.state.coins}</p> <p> Coins </p>
              <div style={{marginTop:"7px"}}>
              <PaypalExpressBtn env={env} client={client} currency={currency} total={1.00} onError={onError} onSuccess={onSuccess} onCancel={onCancel} />
              </div>
             </div>
           </header>
+          <div className={showPrompt} style={{color: "green", marginLeft:"150px", marginTop:"30px"}}> {this.state.prompt}</div>
+          <div className={showError} style={{color: "red", marginLeft:"150px", marginTop:"30px"}}> {this.state.errorMsg}</div>
           <div className="shop">
           <div className="row">
             <ul className="item_list_1">
@@ -125,7 +168,9 @@ export default class Shop extends Component {
                         <h4> {item.item_name} </h4>
                         <h6> {item.price} coins </h6>
                         <img src={item.item_img} alt='item_img'/>
-                        <button className="btn_purchase">Purchase</button>
+                        <button className="btn_purchase"
+                        onClick={() => this.handlePurchase(item.price)} 
+                        >Purchase</button>
                       </div>
                     </li>
                       )
