@@ -289,3 +289,10 @@
     transform: scale(1.01);
   }
   
+.green {
+    color: lightgreen
+}
+
+.red {
+    color: lightcoral
+}

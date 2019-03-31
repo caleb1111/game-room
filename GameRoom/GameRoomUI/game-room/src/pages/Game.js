@@ -43,6 +43,7 @@ export default class Game extends Component {
             turnStatus: false, // true players turn. false opponent turn
             isOver: false,
             currPlayer: {},
+            isHit: "",
         }
 
         const that = this;
@@ -188,20 +189,18 @@ export default class Game extends Component {
         })
     }
 
-    handleYFleetClick(){
-        console.log("yFleet clicked: ")
-        const group = new Konva.Group({
-            x: 50,
-            rotation: 10,
-            scaleX: 2
-        })
-        console.log("g", group)
+    handleYFleetClick(x, y){
+        console.log("yFleet clicked coordinates: ", x, y);
     }
 
-    handleOFleetClick(){
-        console.log("oFleet clicked: ")
+    handleOFleetClick(x, y){
+        console.log("oFleet clicked coordinates: ", x, y);
+        // check if opponent placed ships at the coordinate
+        // show hit
+        // else
+        // show miss
     }
-
+    
       render() {
         let showEnding = this.state.isOver ? "show" : "hide";
         let showCarrierSelected = this.state.selectedShip.carrier ? "show" : "hide";
@@ -209,7 +208,7 @@ export default class Game extends Component {
         let showSubmarineSelected = this.state.selectedShip.submarine ? "show" : "hide";
         let showDreadnoughtSelected = this.state.selectedShip.dreadnought ? "show" : "hide";
         let showCruiserSelected = this.state.selectedShip.cruiser ? "show" : "hide";
-
+        const Ocolor = this.state.isHit ;
 
         return (
             <div className="background white">
@@ -235,24 +234,141 @@ export default class Game extends Component {
             <div className="board"> 
             <div id="player">
                 <p id="yFleet">{this.state.currPlayer._id}'s Fleet</p>
-            <div style={{border:"1px solid white"}}>
-                <Stage width={400} height={400}
-                >
+            <div>
+                <Stage width={400} height={400}>
                     <Layer>
-                    <Rect
-                    sceneFunc={(context, shape) => {
-                        context.beginPath();
-                        for (let i = 0; i < 10; i++){
-                            context.rect(i * 400 / 10, 0, 400 / 10, 400);
-                            context.rect(0, i * 400 / 10, 400, 400 / 10);
-                        }
-                        context.closePath();
-                        context.fillStrokeShape(shape);
-                    }}
+                    <Rect x={0} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,0)} />
+                    <Rect x={0} y={40} width={40} height={40} stroke="white"  strokeWidth={1} onClick={() => this.handleYFleetClick(0,40)}  />
+                    <Rect x={0} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,80)} />
+                    <Rect x={0} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,120)} />
+                    <Rect x={0} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,160)} />
+                    <Rect x={0} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,200)} />
+                    <Rect x={0} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,240)} />
+                    <Rect x={0} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,280)}/>
+                    <Rect x={0} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,320)} />
+                    <Rect x={0} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,360)} />
+                    <Rect x={0} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(0,400)} />
 
-                        stroke="white"
-                        strokeWidth={1}
-                    />
+                    <Rect x={40} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,0)}/>
+                    <Rect x={40} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,40)}/>
+                    <Rect x={40} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,80)}/>
+                    <Rect x={40} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,120)}/>
+                    <Rect x={40} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,160)}/>
+                    <Rect x={40} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,200)}/>
+                    <Rect x={40} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,240)}/>
+                    <Rect x={40} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,280)}/>
+                    <Rect x={40} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,320)}/>
+                    <Rect x={40} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,360)}/>
+                    <Rect x={40} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(40,400)}/>
+
+                    <Rect x={80} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,0)}/>
+                    <Rect x={80} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,40)}/>
+                    <Rect x={80} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,80)}/>
+                    <Rect x={80} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,120)}/>
+                    <Rect x={80} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,160)}/>
+                    <Rect x={80} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,200)}/>
+                    <Rect x={80} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,240)}/>
+                    <Rect x={80} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,280)}/>
+                    <Rect x={80} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,320)}/>
+                    <Rect x={80} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,360)}/>
+                    <Rect x={80} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(80,400)}/>
+
+                    <Rect x={120} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,0)}/>
+                    <Rect x={120} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,40)}/>
+                    <Rect x={120} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,80)}/>
+                    <Rect x={120} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,120)}/>
+                    <Rect x={120} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,160)}/>
+                    <Rect x={120} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,200)}/>
+                    <Rect x={120} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,240)}/>
+                    <Rect x={120} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,280)}/>
+                    <Rect x={120} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,320)}/>
+                    <Rect x={120} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,360)}/>
+                    <Rect x={120} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(120,400)}/>
+
+                    <Rect x={160} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,0)}/>
+                    <Rect x={160} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,40)}/>
+                    <Rect x={160} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,80)}/>
+                    <Rect x={160} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,120)}/>
+                    <Rect x={160} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,160)}/>
+                    <Rect x={160} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,200)}/>
+                    <Rect x={1620} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,240)}/>
+                    <Rect x={160} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,280)}/>
+                    <Rect x={160} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,320)}/>
+                    <Rect x={160} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,360)}/>
+                    <Rect x={160} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(160,400)}/>
+
+                    <Rect x={200} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,0)}/>
+                    <Rect x={200} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,40)}/>
+                    <Rect x={200} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,80)}/>
+                    <Rect x={200} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,120)}/>
+                    <Rect x={200} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,160)}/>
+                    <Rect x={200} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,200)}/>
+                    <Rect x={200} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,240)}/>
+                    <Rect x={200} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,280)}/>
+                    <Rect x={200} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,320)}/>
+                    <Rect x={200} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,360)}/>
+                    <Rect x={200} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(200,400)}/>
+
+                    <Rect x={240} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,0)}/>
+                    <Rect x={240} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,40)}/>
+                    <Rect x={240} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,80)}/>
+                    <Rect x={240} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,120)}/>
+                    <Rect x={240} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,160)}/>
+                    <Rect x={240} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,200)}/>
+                    <Rect x={240} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,240)}/>
+                    <Rect x={240} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,280)}/>
+                    <Rect x={240} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,320)}/>
+                    <Rect x={240} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,360)}/>
+                    <Rect x={240} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(240,400)}/>
+
+                    <Rect x={280} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,0)}/>
+                    <Rect x={280} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,40)}/>
+                    <Rect x={280} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,80)}/>
+                    <Rect x={280} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,120)}/>
+                    <Rect x={280} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,160)}/>
+                    <Rect x={280} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,200)}/>
+                    <Rect x={280} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,240)}/>
+                    <Rect x={280} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,280)}/>
+                    <Rect x={280} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,320)}/>
+                    <Rect x={280} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,360)}/>
+                    <Rect x={280} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(280,400)}/>
+
+                    <Rect x={320} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,0)}/>
+                    <Rect x={320} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,40)}/>
+                    <Rect x={320} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,80)}/>
+                    <Rect x={320} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,120)}/>
+                    <Rect x={320} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,160)}/>
+                    <Rect x={320} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,200)}/>
+                    <Rect x={320} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,240)}/>
+                    <Rect x={320} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,280)}/>
+                    <Rect x={320} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,320)}/>
+                    <Rect x={320} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,360)}/>
+                    <Rect x={320} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(320,400)}/>
+
+                    <Rect x={360} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,0)}/>
+                    <Rect x={360} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,40)}/>
+                    <Rect x={360} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,80)}/>
+                    <Rect x={360} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,120)}/>
+                    <Rect x={360} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,160)}/>
+                    <Rect x={360} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,200)}/>
+                    <Rect x={360} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,240)}/>
+                    <Rect x={360} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,280)}/>
+                    <Rect x={360} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,320)}/>
+                    <Rect x={360} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,360)}/>
+                    <Rect x={360} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(360,400)}/>
+
+                    <Rect x={400} y={0} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,0)}/>
+                    <Rect x={400} y={40} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,40)}/>
+                    <Rect x={400} y={80} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,80)}/>
+                    <Rect x={400} y={120} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,120)}/>
+                    <Rect x={400} y={160} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,160)}/>
+                    <Rect x={400} y={200} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,200)}/>
+                    <Rect x={400} y={240} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,240)}/>
+                    <Rect x={400} y={280} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,280)}/>
+                    <Rect x={400} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,320)}/>
+                    <Rect x={400} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,360)}/>
+                    <Rect x={400} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,400)}/>
+
                     </Layer>
                 </Stage>
                 </div>
@@ -261,28 +377,144 @@ export default class Game extends Component {
 
             <div id="opponent">
                 <p id="oFleet">Opponent's Fleet</p>
-                <div style={{border:"1px solid white"}}>
+                <div>
                 <Stage width={400} height={400}>
                 <Layer>
-                    <Rect
-                    sceneFunc={(context, shape) => {
-                        context.beginPath();
-                        for (let i = 0; i < 10; i++){
-                            context.rect(i * 400 / 10, 0, 400 / 10, 400);
-                            context.rect(0, i * 400 / 10, 400, 400 / 10);
-                        }
-                        context.closePath();
-                        context.fillStrokeShape(shape);
-                    }}
-                        stroke="white"
-                        strokeWidth={1}
-                        onClick={this.handleOFleetClick}
-                    />
+                    <Rect x={0} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,0)}/>
+                    <Rect x={0} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,40)}/>
+                    <Rect x={0} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,80)}/>
+                    <Rect x={0} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,120)}/>
+                    <Rect x={0} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,160)}/>
+                    <Rect x={0} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,200)}/>
+                    <Rect x={0} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,240)}/>
+                    <Rect x={0} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,280)}/>
+                    <Rect x={0} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,320)}/>
+                    <Rect x={0} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,360)}/>
+                    <Rect x={0} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,400)}/>
+
+                    <Rect x={40} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,0)}/>
+                    <Rect x={40} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,40)}/>
+                    <Rect x={40} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,80)}/>
+                    <Rect x={40} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,120)}/>
+                    <Rect x={40} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,160)}/>
+                    <Rect x={40} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,200)}/>
+                    <Rect x={40} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,240)}/>
+                    <Rect x={40} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,280)}/>
+                    <Rect x={40} y={320} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,320)}/>
+                    <Rect x={40} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,360)}/>
+                    <Rect x={40} y={400} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(40,400)}/>
+
+                    <Rect x={80} y={0} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,0)}/>
+                    <Rect x={80} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,40)}/>
+                    <Rect x={80} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,80)}/>
+                    <Rect x={80} y={120} width={40} height={40} stroke="white" fill={Ocolor}  strokeWidth={1} onClick={() => this.handleOFleetClick(80,120)}/>
+                    <Rect x={80} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,160)}/>
+                    <Rect x={80} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,200)}/>
+                    <Rect x={80} y={240} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,240)}/>
+                    <Rect x={80} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,280)}/>
+                    <Rect x={80} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,320)}/>
+                    <Rect x={80} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,360)}/>
+                    <Rect x={80} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(80,400)}/>
+
+                    <Rect x={120} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,0)}/>
+                    <Rect x={120} y={40} width={40} height={40} stroke="white" fill={Ocolor}  strokeWidth={1} onClick={() => this.handleOFleetClick(120,40)}/>
+                    <Rect x={120} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,80)}/>
+                    <Rect x={120} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,120)}/>
+                    <Rect x={120} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,160)}/>
+                    <Rect x={120} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,200)}/>
+                    <Rect x={120} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,240)}/>
+                    <Rect x={120} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,280)}/>
+                    <Rect x={120} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,320)}/>
+                    <Rect x={120} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,360)}/>
+                    <Rect x={120} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(120,400)}/>
+
+                    <Rect x={160} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,0)}/>
+                    <Rect x={160} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,40)}/>
+                    <Rect x={160} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,80)}/>
+                    <Rect x={160} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,120)}/>
+                    <Rect x={160} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,160)}/>
+                    <Rect x={160} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,200)}/>
+                    <Rect x={160} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,240)}/>
+                    <Rect x={160} y={280} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,280)}/>
+                    <Rect x={160} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,320)}/>
+                    <Rect x={160} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,360)}/>
+                    <Rect x={160} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(160,400)}/>
+
+                    <Rect x={200} y={0} width={40} height={40} stroke="white"  fill={Ocolor}strokeWidth={1} onClick={() => this.handleOFleetClick(200,0)}/>
+                    <Rect x={200} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,40)}/>
+                    <Rect x={200} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,80)}/>
+                    <Rect x={200} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,120)}/>
+                    <Rect x={200} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,160)}/>
+                    <Rect x={200} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,200)}/>
+                    <Rect x={200} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,240)}/>
+                    <Rect x={200} y={280} width={40} height={40} stroke="white"  fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,280)}/>
+                    <Rect x={200} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,320)}/>
+                    <Rect x={200} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,360)}/>
+                    <Rect x={200} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(200,400)}/>
+
+                    <Rect x={240} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,0)}/>
+                    <Rect x={240} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,40)}/>
+                    <Rect x={240} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,80)}/>
+                    <Rect x={240} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,120)}/>
+                    <Rect x={240} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,160)}/>
+                    <Rect x={240} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,200)}/>
+                    <Rect x={240} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,240)}/>
+                    <Rect x={240} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,280)}/>
+                    <Rect x={240} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,320)}/>
+                    <Rect x={240} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,360)}/>
+                    <Rect x={240} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(240,400)}/>
+
+                    <Rect x={280} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,0)}/>
+                    <Rect x={280} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,40)}/>
+                    <Rect x={280} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,80)}/>
+                    <Rect x={280} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,120)}/>
+                    <Rect x={280} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,160)}/>
+                    <Rect x={280} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,200)}/>
+                    <Rect x={280} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,240)}/>
+                    <Rect x={280} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,280)}/>
+                    <Rect x={280} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,320)}/>
+                    <Rect x={280} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(280,360)}/>
+                    <Rect x={280} y={400} width={40} height={40} stroke="white"fill={Ocolor}  strokeWidth={1} onClick={() => this.handleOFleetClick(280,400)}/>
+
+                    <Rect x={320} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,0)}/>
+                    <Rect x={320} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,40)}/>
+                    <Rect x={320} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,80)}/>
+                    <Rect x={320} y={120} width={40} height={40} stroke="white"fill={Ocolor}  strokeWidth={1} onClick={() => this.handleOFleetClick(320,120)}/>
+                    <Rect x={320} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,160)}/>
+                    <Rect x={320} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,200)}/>
+                    <Rect x={320} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,240)}/>
+                    <Rect x={320} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,280)}/>
+                    <Rect x={320} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,320)}/>
+                    <Rect x={320} y={360} width={40} height={40} stroke="white" fill={Ocolor}strokeWidth={1} onClick={() => this.handleOFleetClick(320,360)}/>
+                    <Rect x={320} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(320,400)}/>
+
+                    <Rect x={360} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,0)}/>
+                    <Rect x={360} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,40)}/>
+                    <Rect x={360} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,80)}/>
+                    <Rect x={360} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,120)}/>
+                    <Rect x={360} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,160)}/>
+                    <Rect x={360} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,200)}/>
+                    <Rect x={360} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,240)}/>
+                    <Rect x={360} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,280)}/>
+                    <Rect x={360} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,320)}/>
+                    <Rect x={360} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,360)}/>
+                    <Rect x={360} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(360,400)}/>
+
+                    <Rect x={400} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,0)}/>
+                    <Rect x={400} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,40)}/>
+                    <Rect x={400} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,80)}/>
+                    <Rect x={400} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,120)}/>
+                    <Rect x={400} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,160)}/>
+                    <Rect x={400} y={200} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,200)}/>
+                    <Rect x={400} y={240} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,240)}/>
+                    <Rect x={400} y={280} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,280)}/>
+                    <Rect x={400} y={320} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,320)}/>
+                    <Rect x={400} y={360} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,360)}/>
+                    <Rect x={400} y={400} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(400,400)}/>
                 </Layer>
             </Stage>
             </div>
             </div>
-
 
             <div id="turnText"></div>
             <div id="logs">
