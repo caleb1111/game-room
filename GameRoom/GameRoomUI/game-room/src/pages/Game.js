@@ -43,7 +43,28 @@ export default class Game extends Component {
             turnStatus: false, // true players turn. false opponent turn
             isOver: false,
             currPlayer: {},
-            isHit: "",
+            isOHit: {// O0_0:false, O40_0:false, O80_0:false, O120_0:false, O160_0:false, O200_0:false, O240_0:false, O280_0:false, O320_0:false, O360_0:false, 
+                    //  O0_40:false, O40_40:false, O80_40:false, O120_40:false, O160_40:false, O200_40:false, O240_40:false, O280_40:false, O320_40:false, O360_40:false,
+                    //  O0_80:false, O40_80:false, O80_80:false, O120_80:false, O160_80:false, O200_80:false, O240_80:false, O280_80:false, O320_80:false, O360_80:false,
+                    //  O0_120:false, O40_120:false, O80_120:false, O120_120:false, O160_120:false, O200_120:false, O240_120:false, O280_120:false, O320_120:false, O360_120:false,
+                    //  O0_160:false, O40_160:false, O80_160:false, O120_160:false, O160_160:false, O200_160:false, O240_160:false, O280_160:false, O320_160:false, O360_160:false,
+                    //  O0_200:false, O40_200:false, O80_200:false, O120_200:false, O160_200:false, O200_200:false, O240_200:false, O280_200:false, O320_200:false, O360_200:false,
+                    //  O00_240:false, O40_240:false, O80_240:false, O120_240:false, O160_240:false, O200_240:false, O240_240:false, O280_240:false, O320_240:false, O360_240:false,
+                    //  O0_280:false, O40_280:false, O80_280:false, O120_280:false, O160_280:false, O200_280:false, O240_280:false, O280_280:false, O320_280:false, O360_280:false,
+                    //  O0_320:false, O40_320:false, O80_320:false, O120_320:false, O160_320:false, O200_320:false, O240_320:false, O280_320:false, O320_320:false, O360_320:false,
+                    //  O0_360:false, O40_360:false, O80_360:false, O120_360:false, O160_360:false, O200_360:false, O240_360:false, O280_360:false, O320_360:false, O360_360:false,
+                    // --------------
+                    O0_0c:"", O40_0c:"", O80_0c:"", O120_0c:"", O160_0c:"", O200_0c:"", O240_0c:"", O280_0c:"", O320_0c:"", O360_0c:"", 
+                     O0_40c:"", O40_40c:"", O80_40c:"", O120_40c:"", O160_40c:"", O200_40c:"", O240_40c:"", O280_40c:"", O320_40c:"", O360_40c:"",
+                     O0_80c:"", O40_80c:"", O80_80c:"", O120_80c:"", O160_80c:"", O200_80c:"", O240_80c:"", O280_80c:"", O320_80c:"", O360_80c:"",
+                     O0_120c:"", O40_120c:"", O80_120c:"", O120_120c:"", O160_120c:"", O200_120c:"", O240_120c:"", O280_120c:"", O320_120c:"", O360_120c:"",
+                     O0_160c:"", O40_160c:"", O80_160c:"", O120_160c:"", O160_160c:"", O200_160c:"", O240_160c:"", O280_160c:"", O320_160c:"", O360_160c:"",
+                     O0_200c:"", O40_200c:"", O80_200c:"", O120_200c:"", O160_200c:"", O200_200c:"", O240_200c:"", O280_200c:"", O320_200c:"", O360_200c:"",
+                     O00_240c:"", O40_240c:"", O80_240c:"", O120_240c:"", O160_240c:"", O200_240c:"", O240_240c:"", O280_240c:"", O320_240c:"", O360_240c:"",
+                     O0_280c:"", O40_280c:"", O80_280c:"", O120_280c:"", O160_280c:"", O200_280c:"", O240_280c:"", O280_280c:"", O320_280c:"", O360_280c:"",
+                     O0_320c:"", O40_320c:"", O80_320c:"", O120_320c:"", O160_320c:"", O200_320c:"", O240_320c:"", O280_320c:"", O320_320c:"", O360_320c:"",
+                     O0_360c:"", O40_360c:"", O80_360c:"", O120_360c:"", O160_360c:"", O200_360c:"", O240_360c:"", O280_360c:"", O320_360c:"", O360_360c:"",
+                    },
         }
 
         const that = this;
@@ -90,7 +111,9 @@ export default class Game extends Component {
     }
 
     handleRotate(){
-        this.setState(this.clickRotateState);
+        this.setState({
+            rotated: !this.state.rotated
+        });
         if(this.state.rotated === false){
             this.setState({
                 ships: {
@@ -112,12 +135,6 @@ export default class Game extends Component {
                     carrier:carrier
                 }
             })
-        }
-    }
-
-    clickRotateState(state){
-        return{
-            rotated: !state.rotated,
         }
     }
 
@@ -199,16 +216,37 @@ export default class Game extends Component {
         // show hit
         // else
         // show miss
+        if (coordinate_0_0_IsHit){
+            this.setState({isOHit:{O0_0c: 'red'} })
+        }
+        else if (coordinate_0_40_IsHit){
+            this.setState({isOHit:{O0_40c: 'red'}})
+        }
+        else if (coordinate_0_80_IsHit){
+            this.setState({isOHit:{O0_80c: 'red'}})
+        }
+        else if (coordinate_0_120_IsHit){
+            this.setState({isOHit:{O0_120c: 'red'}})
+        }
+        else if (coordinate_0_160_IsHit){
+            this.setState({isOHit:{O0_160c: 'red'}})
+        }
+        else if (coordinate_0_200_IsHit){
+            this.setState({isOHit:{O0_200c: 'red'}})
+        }
+        else if (coordinate_0_240_IsHit){
+            this.setState({isOHit:{O0_240c: 'red'}})
+        }
     }
     
       render() {
         let showEnding = this.state.isOver ? "show" : "hide";
+        let showEnd = this.state.isOver ? "hide" : "show";
         let showCarrierSelected = this.state.selectedShip.carrier ? "show" : "hide";
         let showDestroyerSelected = this.state.selectedShip.destroyer ? "show" : "hide";
         let showSubmarineSelected = this.state.selectedShip.submarine ? "show" : "hide";
         let showDreadnoughtSelected = this.state.selectedShip.dreadnought ? "show" : "hide";
         let showCruiserSelected = this.state.selectedShip.cruiser ? "show" : "hide";
-        const Ocolor = this.state.isHit ;
 
         return (
             <div className="background white">
@@ -221,7 +259,7 @@ export default class Game extends Component {
                 <p id="error_box"></p>
 
             <div id="ending" className={showEnding}>
-                <p id="result" style={{color:'white', marginLeft:"-20px"}}>{this.state.winner}</p>
+                <p id="result" style={{color:'white', marginLeft:"-20px"}}>{this.state.winner} Wins!</p>
                 <div className="board">
                 <p style={{color:'white', marginLeft:"200px"}}>Gained</p> <p> {this.state.gainedCoins} </p><img className="coinImg" src={coin} alt="coin"></img>
                 </div>
@@ -230,6 +268,7 @@ export default class Game extends Component {
             </div>
             <br />
 
+            <div  className={showEnd}>
             <div id="gameContent">
             <div className="board"> 
             <div id="player">
@@ -368,7 +407,6 @@ export default class Game extends Component {
                     <Rect x={400} y={320} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,320)}/>
                     <Rect x={400} y={360} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,360)}/>
                     <Rect x={400} y={400} width={40} height={40} stroke="white" strokeWidth={1} onClick={() => this.handleYFleetClick(400,400)}/>
-
                     </Layer>
                 </Stage>
                 </div>
@@ -380,8 +418,8 @@ export default class Game extends Component {
                 <div>
                 <Stage width={400} height={400}>
                 <Layer>
-                    <Rect x={0} y={0} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,0)}/>
-                    <Rect x={0} y={40} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,40)}/>
+                    <Rect x={0} y={0} width={40} height={40} stroke="white" fill={this.state.isOHit.O0_0c} strokeWidth={1} onClick={() => this.handleOFleetClick(0,0)}/>
+                    <Rect x={0} y={40} width={40} height={40} stroke="white" fill={this.state.isOHit.O0_40c} strokeWidth={1} onClick={() => this.handleOFleetClick(0,40)}/>
                     <Rect x={0} y={80} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,80)}/>
                     <Rect x={0} y={120} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,120)}/>
                     <Rect x={0} y={160} width={40} height={40} stroke="white" fill={Ocolor} strokeWidth={1} onClick={() => this.handleOFleetClick(0,160)}/>
@@ -581,7 +619,7 @@ export default class Game extends Component {
                 <button className="btn_rotate" id="rotateShips"
                 onClick={() => this.handleRotate()}>ROTATE SHIPS</button>
             </div>
-
+            </div>
             <div style={{marginBottom:"100px"}}></div>
         </div>
     </div>
