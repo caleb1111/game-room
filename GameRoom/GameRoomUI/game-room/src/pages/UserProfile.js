@@ -119,7 +119,7 @@ clickUploadState(state) {
                 <header>
                     <div className="welcome_msg">Welcome, {this.state.user._id}</div>
                 </header>
-            <div className="row" style={{marginTop:"120px"}}>
+            <div className="row" style={{marginTop:"50px"}}>
                 <div className="col span-1-of-3 user_photo">
                     <img src={UserPhoto} alt='user'/>
                     <br />
@@ -135,10 +135,10 @@ clickUploadState(state) {
                 </div>
 
                 <div className="col span-1-of-3">
-                <div className="friend_list">
-                    <div className="menu_title">Friend List</div>
-                        <div className="friend_box">
-                        <ul id="friends">
+                <div className="friend_list2">
+                    <div className="menu_title2">Friend List</div>
+                        <div className="friend_box2">
+                        <ul id="friends2">
                             {this.state.friends.map((friend, i) => {
                                 return (
                                     <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
