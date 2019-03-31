@@ -129,7 +129,6 @@ export default class Shop extends Component {
                     prompt: 'We have added 5000 coins to your account. Thank You!'
                   })
                   console.log("p:" , that.state.paid)
-
                   fetch('http://localhost:5000/api/pay/chargeCoins', {
                     credentials: 'include',
                     method: 'PATCH'

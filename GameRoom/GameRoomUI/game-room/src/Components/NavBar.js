@@ -36,7 +36,7 @@ class Nav extends React.Component {
         <div className="row">
             <ul className="main-nav">
                 <li style={{visibility:"hidden"}}><Link to='/game/'>Game</Link></li>
-                <li><Link to='/home/'>Lobby</Link></li>
+                <li><Link to='/home/' >Lobby</Link></li>
                 <li><Link to='/shop/'>Shop</Link></li>
                 <li><Link to='/userprofile/'>User Profile</Link></li>
                 <li><Link to='/signin/' 

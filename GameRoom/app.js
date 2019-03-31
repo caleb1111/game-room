@@ -8,7 +8,7 @@ var server = http.listen(5000, function () {
     console.log("App now running on port", port);
 });
 const io = require('socket.io').listen(server);
-io.origins(['http://localhost:3000']);
+io.origins(['http://localhost:3000'], ['http://localhost:5000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
 const validator = require('validator');
@@ -86,7 +86,7 @@ var checkUsername = function(req, res, next) {
 };
 
 let corsOptions = {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:5000"],
     optionsSuccessStatus: 200,
     credentials: true
 }
@@ -587,6 +587,14 @@ app.get('/api/user/friends', (req, res) => {
 // return friends
 // return win loss/ items / rank
 
+app.get('/api/user/:userId', (req, res) => {
+    let userId = req.params.userId;
+    let myquery = { _id:userId }
+    db.collection("users").findOne(myquery, function(err, result){
+        if (err) return res.status(500).end(err);
+        res.json(result);
+    })
+})
 
 app.get('/api/currUser/', (req, res) => {
     res.json(req.user);
@@ -616,7 +624,18 @@ app.patch('/api/user/picture', upload.single('picture'), (req, res) => {
     
 })
 
-app.patch('/api/usr/')
+app.patch('/api/user/profile', (req, res) => {
+    let profileId = req.body.profileId;
+    let myquery = { _id: req.user._id };
+    let newvalues = { $set:{ profile: profileId } };
+    db.collection("users").updateOne(myquery, newvalues, function(err, result){
+        console.log("profile5");
+        if (err) return res.status(500).end(err);
+        req.user.profile = profileId;
+        req.session.user = req.user;
+        res.json("successfully set profile id");
+    })
+})
 
 app.patch('/api/user/:userId/socket', (req, res) => {
     let userId = req.params.userId;
@@ -629,8 +648,9 @@ app.patch('/api/user/:userId/socket', (req, res) => {
     });
 })
 
-app.patch("/api/user/addFriend/:friendId", (req, res) => {
-    let friendId = req.params.friendId;
+app.patch("/api/user/addFriend/", (req, res) => {
+    let friendId = req.body.playerId;
+    console.log("friendId:", friendId);
     let myquery = { _id: req.user._id };
     let friendList = req.user.friends;
     console.log("old friendlist: ", friendList);
@@ -644,8 +664,8 @@ app.patch("/api/user/addFriend/:friendId", (req, res) => {
     });
 })
 
-app.patch("/api/user/unFriend/:friendId", (req, res) =>{
-    let friendId = req.params.friendId;
+app.patch("/api/user/unFriend/", (req, res) =>{
+    let friendId = req.body.playerId;
     let friendList = req.user.friends;
     let index = friendList.indexOf(friendId);
     friendList.splice(index, 1);
@@ -666,15 +686,13 @@ app.patch("/api/pay/chargeCoins", (req, res) => {
     db.collection("users").updateOne(myquery, newvalues, function(err, result){
         console.log("charge coin 2");
         if (err) return res.status(500).end(err);
-        console.log(req.user);
         req.session.user = req.user;
-        console.log("coins:", req.user.coins);
         res.json(req.user.coins);
     })
 })
 
-app.patch("/api/user/updateRoom/:roomId", (req, res) => {
-    let roomId = req.params.roomId;
+app.patch("/api/user/updateRoom/", (req, res) => {
+    let roomId = req.body.roomId;
     let myquery = { _id: req.user._id };
     let newvalues = { $set: {roomId: roomId} };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
