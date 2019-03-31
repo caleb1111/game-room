@@ -42,14 +42,30 @@ componentDidMount(){
     })
       .then(function(data) {
           const user = data;
-          that.setState({
-            user: user
-          })
-      })
+          let profileId = user.profile;
+          fetch('http://localhost:5000/api/user/' + profileId + '/', {
+                credentials: 'include',
+            })
+            .then(function(response) {
+              return response.json(); 
+            })
+              .then(function(data) {
+                  const user = data;
+                  that.setState({
+                    user: user,
+                    friends: user.friends,
+                    items: user.items
+                  })
+                })
+            .catch(function(error){
+                console.log(error);
+            })
+        })
     .catch(function(error){
       console.log(error);
     })
 }
+
 
 fileUploadHandler(){
   const that = this;
@@ -110,7 +126,7 @@ clickUploadState(state) {
                     <br />
                     <div className={showUploadbtn}>
                         <button className="btn btn_profile" style={{margin: "0 0 0 30px"}}
-                        onClick={() => this.clickUploadState && this.handleUpload()}>Edite Your Profile</button>
+                        onClick={() => this.clickUploadState && this.handleUpload()}>Edit Your Profile</button>
                     </div>
                     <div className={showUploadbtn2}>
                         <input className="upload_img" id="upload_image" type="file" onChange={this.fileSelectHandler} />

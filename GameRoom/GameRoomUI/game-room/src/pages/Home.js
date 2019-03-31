@@ -129,9 +129,13 @@ export default class Home extends Component {
 
   handleAddfriend(playerId){
     const that = this;
-    fetch('http://localhost:5000/api/user/addFriend/' + playerId + '/', {
+    fetch('http://localhost:5000/api/user/addFriend/', {
+        method: 'PATCH',
+        body: JSON.stringify({ playerId: playerId }),
         credentials: 'include',
-        method: 'PATCH'
+        headers:{
+          'Content-Type': 'application/json'
+        }
       })
       .then(function(response) {
         return response.json(); 
@@ -160,10 +164,13 @@ export default class Home extends Component {
 
   handleUnfriend(friendId){
     const that = this;
-    fetch('http://localhost:5000/api/user/unfriend/'+ friendId + '/', {
-        credentials: 'include',
+    fetch('http://localhost:5000/api/user/unfriend/', {
         method: 'PATCH',
-        body: friendId
+        credentials: 'include',
+        body: JSON.stringify({ playerId: friendId }),
+        headers:{
+          'Content-Type': 'application/json'
+        }
       })
       .then(function(response) {
         return response.json(); 
@@ -193,8 +200,26 @@ export default class Home extends Component {
   }
 
   handleViewProfile(playerId){
+    let that = this;
     console.log("view player clicked ", playerId);
-
+    fetch('http://localhost:5000/api/user/profile/', {
+        method: 'PATCH',
+        credentials: 'include',
+        body: JSON.stringify({ profileId: playerId }),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+            that.props.history.push("/userprofile/");
+            // console.log("f:" , that.state.friend_list)
+          })
+      .catch(function(error){
+        console.log(error);
+      })
   }
 
   render() {
@@ -269,8 +294,6 @@ export default class Home extends Component {
                             </ul>
                         </div>
                 </div>
-                
-                
                 <div className="player_list">
                 <div className="menu_title">Players Online</div>
                     <div className="player_box">
