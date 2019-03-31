@@ -20,17 +20,17 @@ export default class Home extends Component {
       playersOnline: [],
       friend_list: [],
       message: '',
-      messages: []
+      messages: [],
     };
 
-    this.socket = io.connect('http://localhost:5000');
+    this.socket = io.connect("http://localhost:5000");
+    let that = this;
 
     this.socket.on('receiveMessage', function(data){
       console.log("receive data:", data)
       addMessage(data);
     });
-
-    const that = this;
+  
     this.socket.on("login", function(data){
       fetch('http://localhost:5000/api/user/loggedUsers/', {
         credentials: 'include',
@@ -104,7 +104,7 @@ export default class Home extends Component {
             const user = data;
             that.setState({
               user: user,
-              friend_list: user.friends
+              friend_list: user.friends,
             })
             // console.log("f:" , that.state.friend_list)
           })

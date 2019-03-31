@@ -8,11 +8,10 @@ var server = http.listen(5000, function () {
     console.log("App now running on port", port);
 });
 const io = require('socket.io').listen(server);
-io.origins(['http://localhost:3000'], ['http://localhost:5000']);
+io.origins(['http://localhost:3000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
-const validator = require('validator');
-
+const validator = require("validator");
 
 var db;
 MongoClient.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/mydb", { useNewUrlParser: true }, function (err, client) {
@@ -37,7 +36,6 @@ let User = function(id, salt, hash, display){
     this.win = 0;
     this.loss = 0;
     this.items = [];
-    this.socket = 0;
     this.roomId = 0;
     this.profile = id;
 };
@@ -86,7 +84,7 @@ var checkUsername = function(req, res, next) {
 };
 
 let corsOptions = {
-    origin: ["http://localhost:3000", "http://localhost:5000"],
+    origin: "http://localhost:3000",
     optionsSuccessStatus: 200,
     credentials: true
 }
@@ -327,20 +325,12 @@ class gameSession {
     }
 }
 
-let users = [];
 const gameSessions = Array(0);
 for(let i = 1; i < 10; i++) {
     gameSessions.push(new gameSession(i))
 };
 
 io.on("connection", function (socket) {
-    // users.push(socket);
-    // var myquery = { _id: req.user._id };
-    // var newvalues = { $set: {socket: socket} };
-    // db.getCollection("users").updateOne(myquery, newvalues, function(err, res) {
-    //     if (err) throw err;
-    //     db.close();
-    // });
 
     io.emit("login");
 
@@ -361,9 +351,7 @@ io.on("connection", function (socket) {
     });
 
     
-    socket.on("disconnect", function(){
-        let index = users.indexOf(socket);
-        users.splice(index, 1);
+    socket.on("disconnect", function(data){
     });
 
     socket.on("joinSession", function(lobbyId) {
@@ -373,7 +361,7 @@ io.on("connection", function (socket) {
             socket.join("lobby"+lobbyId);
         }
         
-        socket.emit("joined", joidned, lobbyId); // is joined a boolean or an int?
+        socket.emit("joined", joined, lobbyId); // is joined a boolean or an int?
     });
 
     /*
@@ -503,7 +491,6 @@ io.on("connection", function (socket) {
 app.post('/signup/', checkUsername, (req, res) => {
     var username = req.body.username;
     var password = req.body.password;
-    res.setHeader('Access-Control-Allow-Credentials', 'true')
     db.collection("users").findOne({_id: username}, function(err, user) {
         if (err) return res.status(500).end(err);
         if (user) return res.status(409).end("username " + username + " already exists");
@@ -517,7 +504,6 @@ app.post('/signup/', checkUsername, (req, res) => {
                 res.setHeader('Set-Cookie', cookie.serialize('username', newUser._id, {
                     path : '/', 
                     maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                    sameSite: true,
                     secure: true
                 }));
                 req.session.user = newUser;
@@ -544,7 +530,6 @@ app.post('/signin/', checkUsername, (req, res) => {
                 res.setHeader('Set-Cookie', cookie.serialize('username', user._id, {
                     path : '/', 
                     maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-                    sameSite: true,
                     secure: true
                 }));
                 req.session.user = user;
@@ -565,15 +550,16 @@ app.get('/signout/', function (req, res, next) {
     res.setHeader('Set-Cookie', cookie.serialize('username', '', {
           path : '/', 
           maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-          sameSite: true,
           secure: true
     }));
     res.json("user successfully logged out")
 });
 
 app.get("/api/user/loggedUsers", (req, res) => {
-    db.collection("loggedUsers").find({}).toArray(function(err, result){
+    myquery = { _id: { $ne: req.user._id  } };
+    db.collection("loggedUsers").find(myquery).toArray(function(err, result){
         if (err) return res.status(500).end(err);
+        console.log("result:", result);
         res.json(result);
     })
 })
@@ -619,7 +605,6 @@ app.get("/api/user/getOpponent", (req, res) =>{
     })
 })
 
-
 app.patch('/api/user/picture', upload.single('picture'), (req, res) => {
     
 })
@@ -637,25 +622,14 @@ app.patch('/api/user/profile', (req, res) => {
     })
 })
 
-app.patch('/api/user/:userId/socket', (req, res) => {
-    let userId = req.params.userId;
-    let socket = req.body.socket;
-    let myquery = { _id: userId };
-    let newvalues = { $set: { socket: socket} };
-    db.collection('users').updateOne(myquery, newvalues, function(err, result){
-        if (err) return res.status(500).end(err);
-        res.json("suceesfully updated socket id");
-    });
-})
-
 app.patch("/api/user/addFriend/", (req, res) => {
     let friendId = req.body.playerId;
-    console.log("friendId:", friendId);
     let myquery = { _id: req.user._id };
     let friendList = req.user.friends;
-    console.log("old friendlist: ", friendList);
+    if (friendList.includes(friendId)){
+        return res.status(409).end("You can not add the same person more than once");
+    }
     friendList = friendList.push(friendId);
-    console.log("new friend list: ", req.user.friends);
     let newvalues = { $set: { friends: friendList } };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);

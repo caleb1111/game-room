@@ -42,16 +42,6 @@ export default class SignUpIn extends Component {
       })
         .then(function() {
             that.props.history.push("/home/");
-            fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
-            credentials: 'include',
-            method: 'PATCH',
-            body: that.socket
-            }).then(function(response){
-                return response.json(); 
-            })
-                .then(function() {
-
-                })
         })
       .catch(function(){
         that.setState({
@@ -70,20 +60,7 @@ export default class SignUpIn extends Component {
       }).then(function(response) {
         return response.json(); })
         .then(function(data) {
-            const items = data;
-            console.log(items)
-            that.props.history.push("/home/");
-            fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
-            credentials: 'include',
-            method: 'PATCH',
-            body: that.socket
-            }).then(function(response){
-                return response.json(); 
-            })
-                .then(function(data) {
-                    const items = data;
-                    console.log(items);
-                })
+          that.props.history.push("/home/");
       })
       .catch(function(){
         that.setState({
