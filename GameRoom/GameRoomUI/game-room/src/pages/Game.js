@@ -25,22 +25,21 @@ export default class Game extends Component {
         super(props);
 
         this.state ={
-            log: '',
-            logs : [],
-            setupMode: false,
+            errorMsg:"",
+            hasError: false,
+            setupMode: true,
             remainingShips :  {destroyer: 3, submarine: 2, cruiser: 2, dreadnought: 1, carrier: 1},
             rotated: false,
             selectedShip: {destroyer: false, submarine:false, cruiser:false, dreadnought:false, carrier:false},
             ships:{destroyer: destroyer, submarine:submarine, cruiser:cruiser, dreadnought:dreadnought, carrier:carrier},
-            playerBoard: [],
-            opponentBoard: [],
             readyToPlay: false,
             winner: '',
-            gainedCoins: 100,
-            shipArray: [],
-            turnStatus: false, // true players turn. false opponent turn
+            lobbyId: '',
+            gainedCoins: 0,
+            turnStatus: '', 
             isOver: false,
             currPlayer: {},
+            opponent:{},
             isOHit: {O0_0c:"", O40_0c:"", O80_0c:"", O120_0c:"", O160_0c:"", O200_0c:"", O240_0c:"", O280_0c:"", O320_0c:"", O360_0c:"",  O400_0c:"",
                      O0_40c:"", O40_40c:"", O80_40c:"", O120_40c:"", O160_40c:"", O200_40c:"", O240_40c:"", O280_40c:"", O320_40c:"", O360_40c:"",  O400_40c:"",
                      O0_80c:"", O40_80c:"", O80_80c:"", O120_80c:"", O160_80c:"", O200_80c:"", O240_80c:"", O280_80c:"", O320_80c:"", O360_80c:"",  O400_80c:"",
@@ -71,20 +70,46 @@ export default class Game extends Component {
         // https://blog.cloudboost.io/creating-a-chat-web-app-using-express-js-react-js-socket-io-1b01100a8ea5 
         this.socket = io.connect('http://localhost:5000');
 
+        const d = new Date().toLocaleTimeString();
+
         this.socket.on("setup", function (e){
-            let d = new Date().toLocaleTimeString();
+            const d = new Date().toLocaleTimeString();
             that.setState({
                 setupMode: true,
                 log: "Set up your boards" + d
             })
         });
-        console.log("setup mode: ", this.state.setupMode)
-        console.log("log: ", this.state.log)
+
+        this.socket.on("gameOver", function (e, int){
+            if (e === true ){
+                that.setState({
+                    winner: that.state.currPlayer._id,
+                    isOver: true,
+                    gainedCoins: 100
+                })
+                that.socket.emit("updateCoins", 100);
+            }
+            else {
+                that.setState({
+                    winner: that.state.opponent._id,
+                    isOver: true,
+                    gainedCoins: 0
+                })
+                that.socket.emit("updateCoins", 0);
+            }
+        });
+
+        console.log("setup mode: ", this.state.setupMode, d)
 
         this.handleReturnToLobby = this.handleReturnToLobby.bind(this);
         this.handleRotate = this.handleRotate.bind(this);
         this.handleYFleetClick = this.handleYFleetClick.bind(this);
         this.handleOFleetClick = this.handleOFleetClick.bind(this);
+        this.carrierSelect = this.carrierSelect.bind(this);
+        this.cruiserSelect = this.cruiserSelect.bind(this);
+        this.submarineSelect = this.submarineSelect.bind(this);
+        this.destroyerSelect = this.destroyerSelect.bind(this);
+        this.dreadnoughtSelect = this.dreadnoughtSelect.bind(this);
     }
 
     componentDidMount(){
@@ -99,6 +124,23 @@ export default class Game extends Component {
                 const user = data;
                 that.setState({
                 currPlayer: user,
+                lobbyId: user.lobbyId
+                })
+            })
+        .catch(function(error){
+            console.log(error);
+        })
+
+        fetch('http://localhost:5000/api/user/getOpponent/', {
+            credentials: 'include',
+        })
+        .then(function(response) {
+            return response.json(); 
+        })
+            .then(function(data) {
+                const user = data;
+                that.setState({
+                opponent: user
                 })
             })
         .catch(function(error){
@@ -139,7 +181,6 @@ export default class Game extends Component {
     }
 
     carrierSelect(){
-        console.log("carrier selected");
         this.setState({
             selectedShip : {
                 destroyer: false, 
@@ -152,7 +193,6 @@ export default class Game extends Component {
     }
 
     destroyerSelect(){
-        console.log("destroyer selected");
         this.setState({
             selectedShip : {
                 destroyer: true, 
@@ -165,7 +205,6 @@ export default class Game extends Component {
     }
 
     submarineSelect(){
-        console.log("submarine selected");
         this.setState({
             selectedShip : {
                 destroyer: false, 
@@ -179,7 +218,6 @@ export default class Game extends Component {
     }
 
     cruiserSelect(){
-        console.log("cruiser selected");
         this.setState({
             selectedShip : {
                 destroyer: false, 
@@ -193,7 +231,6 @@ export default class Game extends Component {
     }
 
     dreadnoughtSelect(){
-        console.log("dreadnought selected");
         this.setState({
             selectedShip : {
                 destroyer: false, 
@@ -209,7 +246,7 @@ export default class Game extends Component {
         const that = this;
         console.log("yFleet clicked coordinates: ", x, y);
         if (this.state.selectedShip.carrier){
-            this.socket.emit("place", 1, x, y, "carrier", function(result){
+            this.socket.emit("place", that.state.lobbyId, "carrier", x, y, that.state.rotated, function(result){
                 console.log("carrier placed: ", result)
                 that.setState({
                     remainingShips:{
@@ -219,7 +256,7 @@ export default class Game extends Component {
             })
         }
         else if (this.state.selectedShip.cruiser){
-            this.socket.emit("place", 1, x, y, "cruiser", function(result){
+            this.socket.emit("place", that.state.lobbyId, "cruiser", x, y, that.state.rotated, function(result){
                 console.log("cruiser placed: ", result)
                 that.setState({
                     remainingShips:{
@@ -229,7 +266,7 @@ export default class Game extends Component {
             })
         }
         else if (this.state.selectedShip.submarine){
-            this.socket.emit("place", 1, x, y, "submarine", function(result){
+            this.socket.emit("place", that.state.lobbyId, "submarine", x, y,  that.state.rotated, function(result){
                 console.log("submarine placed: ", result)
                 that.setState({
                     remainingShips:{
@@ -239,7 +276,7 @@ export default class Game extends Component {
             })
         }
         else if (this.state.selectedShip.destroyer){
-            this.socket.emit("place", 1, x, y, "destroyer", function(result){
+            this.socket.emit("place", that.state.lobbyId, "destroyer", x, y,  that.state.rotated, function(result){
                 console.log("destroyer placed: ", result)
                 that.setState({
                     remainingShips:{
@@ -249,7 +286,7 @@ export default class Game extends Component {
             })
         }
         else if (this.state.selectedShip.dreadnought){
-            this.socket.emit("place", 1, x, y, "dreadnought", function(result){
+            this.socket.emit("place", that.state.lobbyId, "dreadnought", x, y, that.state.rotated, function(result){
                 console.log("dreadnought placed: ", result)
                 that.setState({
                     remainingShips:{
@@ -273,371 +310,548 @@ export default class Game extends Component {
 
     handleOFleetClick(x, y){
         console.log("oFleet clicked coordinates: ", x, y);
-       
+        const that = this;
         this.socket.emit("shot", 1, x, y, function(result, xy){
              if (result === 1){
                 // success shot was a hit
                 let d = new Date().toLocaleTimeString();
                 console.log("The Shot Hit", d);
-
                 if (xy === "00"){
-                    this.setState({isOHit:{O0_0c: 'red'} })
+                    that.setState({isOHit:{O0_0c: 'red'},
+                    isYHit:{Y0_0c: 'red'} 
+                })
                 }
                 else if (xy === "040"){
-                    this.setState({isOHit:{O0_40c: 'red'}})
+                    that.setState({isOHit:{O0_40c: 'red'},
+                    isYHit:{Y0_40c: 'red'}
+                })
                 }
                 else if (xy === "080"){
-                    this.setState({isOHit:{O0_80c: 'red'}})
+                    that.setState({isOHit:{O0_80c: 'red'},
+                    isYHit:{Y0_80c: 'red'},
+                })
                 }
                 else if (xy === "0120"){
-                    this.setState({isOHit:{O0_120c: 'red'}})
+                    that.setState({isOHit:{O0_120c: 'red'},
+                    isYHit:{Y0_120c: 'red'},
+                })
                 }
                 else if (xy === "0160"){
-                    this.setState({isOHit:{O0_160c: 'red'}})
+                    that.setState({isOHit:{O0_160c: 'red'},
+                    isYHit:{Y0_160c: 'red'},
+                })
                 }
                 else if (xy === "0200"){
-                    this.setState({isOHit:{O0_200c: 'red'}})
+                    that.setState({isOHit:{O0_200c: 'red'},
+                    isYHit:{Y0_200c: 'red'}
+                })
                 }
                 else if (xy === "0240"){
-                    this.setState({isOHit:{O0_240c: 'red'}})
+                    that.setState({isOHit:{O0_240c: 'red'},
+                    isYHit:{Y0_240c: 'red'}
+                })
                 }
                 else if (xy === "0280"){
-                    this.setState({isOHit:{O0_280c: 'red'}})
+                    that.setState({isOHit:{O0_280c: 'red'},
+                    isYHit:{Y0_280c: 'red'}
+                })
                 }
                 else if (xy === "0320"){
-                    this.setState({isOHit:{O0_320c: 'red'}})
+                    that.setState({isOHit:{O0_320c: 'red'},
+                    isYHit:{Y0_320c: 'red'}
+                })
                 }
                 else if (xy === "0360"){
-                    this.setState({isOHit:{O0_360c: 'red'}})
+                    that.setState({isOHit:{O0_360c: 'red'},
+                    isYHit:{Y0_360c: 'red'}})
                 }
                 else if (xy === "0400"){
-                    this.setState({isOHit:{O0_400c: 'red'}})
+                    that.setState({isOHit:{O0_400c: 'red'},
+                    isYHit:{Y0_400c: 'red'},
+                })
                 }
 
                 else if (xy === "400"){
-                    this.setState({isOHit:{O40_0c: 'red'} })
+                    that.setState({isOHit:{O40_0c: 'red'},
+                    isYHit:{Y40_0c: 'red'},
+                 })
                 }
                 else if (xy === "4040"){
-                    this.setState({isOHit:{O40_40c: 'red'}})
+                    that.setState({isOHit:{O40_40c: 'red'},
+                    isYHit:{Y40_40c: 'red'},})
                 }
                 else if (xy === "4080"){
-                    this.setState({isOHit:{O40_80c: 'red'}})
+                    that.setState({isOHit:{O40_80c: 'red'},
+                    isYHit:{Y40_80c: 'red'},})
                 }
                 else if (xy === "40120"){
-                    this.setState({isOHit:{O40_120c: 'red'}})
+                    that.setState({isOHit:{O40_120c: 'red'},
+                    isYHit:{Y40_120c: 'red'},})
                 }
                 else if (xy === "40160"){
-                    this.setState({isOHit:{O40_160c: 'red'}})
+                    that.setState({isOHit:{O40_160c: 'red'},
+                    isYHit:{Y40_160c: 'red'},})
                 }
                 else if (xy === "40200"){
-                    this.setState({isOHit:{O40_200c: 'red'}})
+                    that.setState({isOHit:{O40_200c: 'red'},
+                    isYHit:{Y40_200c: 'red'},})
                 }
                 else if (xy === "40240"){
-                    this.setState({isOHit:{O40_240c: 'red'}})
+                    that.setState({isOHit:{O40_240c: 'red'},
+                    isYHit:{Y40_240c: 'red'},})
                 }
                 else if (xy === "40280"){
-                    this.setState({isOHit:{O40_280c: 'red'}})
+                    that.setState({isOHit:{O40_280c: 'red'},
+                    isYHit:{Y40_280c: 'red'},})
                 }
                 else if (xy === "40320"){
-                    this.setState({isOHit:{O40_320c: 'red'}})
+                    that.setState({isOHit:{O40_320c: 'red'},
+                    isYHit:{Y40_320c: 'red'},})
                 }
                 else if (xy === "40360"){
-                    this.setState({isOHit:{O40_360c: 'red'}})
+                    that.setState({isOHit:{O40_360c: 'red'},
+                    isYHit:{Y40_360c: 'red'},})
                 }
                 else if (xy === "40400"){
-                    this.setState({isOHit:{O40_400c: 'red'}})
+                    that.setState({isOHit:{O40_400c: 'red'},
+                    isYHit:{Y40_400c: 'red'},})
                 }
 
                 else if (xy === "800"){
-                    this.setState({isOHit:{O80_0c: 'red'} })
+                    that.setState({isOHit:{O80_0c: 'red'},
+                    isYHit:{Y80_0c: 'red'}, })
                 }
                 else if (xy === "8040"){
-                    this.setState({isOHit:{O80_40c: 'red'}})
+                    that.setState({isOHit:{O80_40c: 'red'},
+                    isYHit:{Y80_40c: 'red'}, })
                 }
                 else if (xy === "8080"){
-                    this.setState({isOHit:{O80_80c: 'red'}})
+                    that.setState({isOHit:{O80_80c: 'red'},
+                    isYHit:{Y80_80c: 'red'}, })
                 }
                 else if (xy === "80120"){
-                    this.setState({isOHit:{O40_120c: 'red'}})
+                    that.setState({isOHit:{O40_120c: 'red'},
+                    isYHit:{Y80_120c: 'red'}, })
                 }
                 else if (xy === "80160"){
-                    this.setState({isOHit:{O80_160c: 'red'}})
+                    that.setState({isOHit:{O80_160c: 'red'},
+                    isYHit:{Y80_160c: 'red'}, })
                 }
                 else if (xy === "80200"){
-                    this.setState({isOHit:{O80_200c: 'red'}})
+                    that.setState({isOHit:{O80_200c: 'red'},
+                    isYHit:{Y80_200c: 'red'}, })
                 }
                 else if (xy === "80240"){
-                    this.setState({isOHit:{O80_240c: 'red'}})
+                    that.setState({isOHit:{O80_240c: 'red'},
+                    isYHit:{Y80_240c: 'red'}, })
                 }
                 else if (xy === "80280"){
-                    this.setState({isOHit:{O80_280c: 'red'}})
+                    that.setState({isOHit:{O80_280c: 'red'},
+                    isYHit:{Y80_280c: 'red'}, })
                 }
                 else if (xy === "80320"){
-                    this.setState({isOHit:{O80_320c: 'red'}})
+                    that.setState({isOHit:{O80_320c: 'red'},
+                    isYHit:{Y80_320c: 'red'}, })
                 }
                 else if (xy === "80360"){
-                    this.setState({isOHit:{O80_360c: 'red'}})
+                    that.setState({isOHit:{O80_360c: 'red'},
+                    isYHit:{Y80_360c: 'red'}, })
                 }
                 else if (xy === "80400"){
-                    this.setState({isOHit:{O80_400c: 'red'}})
+                    that.setState({isOHit:{O80_400c: 'red'},
+                    isYHit:{Y80_400c: 'red'}, })
                 }
 
                 else if (xy === "1200"){
-                    this.setState({isOHit:{O120_0c: 'red'} })
+                    that.setState({isOHit:{O120_0c: 'red'},
+                    isYHit:{Y120_0c: 'red'},  })
                 }
                 else if (xy === "12040"){
-                    this.setState({isOHit:{O120_40c: 'red'}})
+                    that.setState({isOHit:{O120_40c: 'red'},
+                    isYHit:{Y120_40c: 'red'}, })
                 }
                 else if (xy === "12080"){
-                    this.setState({isOHit:{O120_80c: 'red'}})
+                    that.setState({isOHit:{O120_80c: 'red'},
+                    isYHit:{Y120_80c: 'red'}, })
                 }
                 else if (xy === "120120"){
-                    this.setState({isOHit:{O120_120c: 'red'}})
+                    that.setState({isOHit:{O120_120c: 'red'},
+                    isYHit:{Y120_120c: 'red'}, })
                 }
                 else if (xy === "120160"){
-                    this.setState({isOHit:{O120_160c: 'red'}})
+                    that.setState({isOHit:{O120_160c: 'red'},
+                    isYHit:{Y120_160c: 'red'}, })
                 }
                 else if (xy === "120200"){
-                    this.setState({isOHit:{O120_200c: 'red'}})
+                    that.setState({isOHit:{O120_200c: 'red'},
+                    isYHit:{Y120_200c: 'red'}, })
                 }
                 else if (xy === "120240"){
-                    this.setState({isOHit:{O120_240c: 'red'}})
+                    that.setState({isOHit:{O120_240c: 'red'},
+                    isYHit:{Y120_240c: 'red'}, })
                 }
                 else if (xy === "120280"){
-                    this.setState({isOHit:{O120_280c: 'red'}})
+                    that.setState({isOHit:{O120_280c: 'red'},
+                    isYHit:{Y120_280c: 'red'}, })
                 }
                 else if (xy === "120320"){
-                    this.setState({isOHit:{O120_320c: 'red'}})
+                    that.setState({isOHit:{O120_320c: 'red'},
+                    isYHit:{Y120_320c: 'red'}, })
                 }
                 else if (xy === "120360"){
-                    this.setState({isOHit:{O120_360c: 'red'}})
+                    that.setState({isOHit:{O120_360c: 'red'},
+                    isYHit:{Y120_360c: 'red'}, })
                 }
                 else if (xy === "120400"){
-                    this.setState({isOHit:{O120_400c: 'red'}})
+                    that.setState({isOHit:{O120_400c: 'red'},
+                    isYHit:{Y120_400c: 'red'}, })
                 }
 
                 else if (xy === "1600"){
-                    this.setState({isOHit:{O160_0c: 'red'} })
+                    that.setState({isOHit:{O160_0c: 'red'},
+                    isYHit:{Y160_0c: 'red'},  })
                 }
                 else if (xy === "16040"){
-                    this.setState({isOHit:{O160_40c: 'red'}})
+                    that.setState({isOHit:{O160_40c: 'red'},
+                    isYHit:{Y160_40c: 'red'}, })
                 }
                 else if (xy === "16080"){
-                    this.setState({isOHit:{O0_80c: 'red'}})
+                    that.setState({isOHit:{O0_80c: 'red'},
+                    isYHit:{Y160_80c: 'red'}, })
                 }
                 else if (xy === "160120"){
-                    this.setState({isOHit:{O160_120c: 'red'}})
+                    that.setState({isOHit:{O160_120c: 'red'},
+                    isYHit:{Y160_120c: 'red'}, })
                 }
                 else if (xy === "160160"){
-                    this.setState({isOHit:{O160_160c: 'red'}})
+                    that.setState({isOHit:{O160_160c: 'red'},
+                    isYHit:{Y160_160c: 'red'}, })
                 }
                 else if (xy === "160200"){
-                    this.setState({isOHit:{O160_200c: 'red'}})
+                    that.setState({isOHit:{O160_200c: 'red'},
+                    isYHit:{Y160_200c: 'red'}, })
                 }
                 else if (xy === "160240"){
-                    this.setState({isOHit:{O160_240c: 'red'}})
+                    that.setState({isOHit:{O160_240c: 'red'},
+                    isYHit:{Y160_240c: 'red'}, })
                 }
                 else if (xy === "160280"){
-                    this.setState({isOHit:{O160_280c: 'red'}})
+                    that.setState({isOHit:{O160_280c: 'red'},
+                    isYHit:{Y160_280c: 'red'}, })
                 }
                 else if (xy === "160320"){
-                    this.setState({isOHit:{O160_320c: 'red'}})
+                    that.setState({isOHit:{O160_320c: 'red'},
+                    isYHit:{Y160_320c: 'red'}, })
                 }
                 else if (xy === "160360"){
-                    this.setState({isOHit:{O160_360c: 'red'}})
+                    that.setState({isOHit:{O160_360c: 'red'},
+                    isYHit:{Y160_360c: 'red'}, })
                 }
                 else if (xy === "160400"){
-                    this.setState({isOHit:{O160_400c: 'red'}})
+                    that.setState({isOHit:{O160_400c: 'red'},
+                    isYHit:{Y160_400c: 'red'}, })
                 }
 
                 else if (xy === "2000"){
-                    this.setState({isOHit:{O200_0c: 'red'} })
+                    that.setState({isOHit:{O200_0c: 'red'},
+                    isYHit:{Y200_0c: 'red'},  })
                 }
                 else if (xy === "20040"){
-                    this.setState({isOHit:{O200_40c: 'red'}})
+                    that.setState({isOHit:{O200_40c: 'red'},
+                    isYHit:{Y200_40c: 'red'},})
                 }
                 else if (xy === "20080"){
-                    this.setState({isOHit:{O200_80c: 'red'}})
+                    that.setState({isOHit:{O200_80c: 'red'},
+                    isYHit:{Y200_80c: 'red'},})
                 }
                 else if (xy === "200120"){
-                    this.setState({isOHit:{O200_120c: 'red'}})
+                    that.setState({isOHit:{O200_120c: 'red'},
+                    isYHit:{Y200_120c: 'red'},})
                 }
                 else if (xy === "200160"){
-                    this.setState({isOHit:{O200_160c: 'red'}})
+                    that.setState({isOHit:{O200_160c: 'red'},
+                    isYHit:{Y200_160c: 'red'},})
                 }
                 else if (xy === "200200"){
-                    this.setState({isOHit:{O200_200c: 'red'}})
+                    that.setState({isOHit:{O200_200c: 'red'},
+                    isYHit:{Y200_200c: 'red'},})
                 }
                 else if (xy === "200240"){
-                    this.setState({isOHit:{O200_240c: 'red'}})
+                    that.setState({isOHit:{O200_240c: 'red'},
+                    isYHit:{Y200_240c: 'red'},})
                 }
                 else if (xy === "200280"){
-                    this.setState({isOHit:{O200_280c: 'red'}})
+                    that.setState({isOHit:{O200_280c: 'red'},
+                    isYHit:{Y200_280c: 'red'},})
                 }
                 else if (xy === "200320"){
-                    this.setState({isOHit:{O200_320c: 'red'}})
+                    that.setState({isOHit:{O200_320c: 'red'},
+                    isYHit:{Y200_320c: 'red'},})
                 }
                 else if (xy === "200360"){
-                    this.setState({isOHit:{O200_360c: 'red'}})
+                    that.setState({isOHit:{O200_360c: 'red'},
+                    isYHit:{Y200_360c: 'red'},})
                 }
                 else if (xy === "200400"){
-                    this.setState({isOHit:{O200_400c: 'red'}})
+                    that.setState({isOHit:{O200_400c: 'red'},
+                    isYHit:{Y200_400c: 'red'},})
                 }
 
                 else if (xy === "2400"){
-                    this.setState({isOHit:{O240_0c: 'red'} })
+                    that.setState({isOHit:{O240_0c: 'red'},
+                    isYHit:{Y240_0c: 'red'}, })
                 }
                 else if (xy === "24040"){
-                    this.setState({isOHit:{O240_40c: 'red'}})
+                    that.setState({isOHit:{O240_40c: 'red'},
+                    isYHit:{Y240_40c: 'red'},})
                 }
                 else if (xy === "24080"){
-                    this.setState({isOHit:{O240_80c: 'red'}})
+                    that.setState({isOHit:{O240_80c: 'red'},
+                    isYHit:{Y240_80c: 'red'},})
                 }
                 else if (xy === "240120"){
-                    this.setState({isOHit:{O240_120c: 'red'}})
+                    that.setState({isOHit:{O240_120c: 'red'},
+                    isYHit:{Y240_120c: 'red'},})
                 }
                 else if (xy === "240160"){
-                    this.setState({isOHit:{O240_160c: 'red'}})
+                    that.setState({isOHit:{O240_160c: 'red'},
+                    isYHit:{Y240_160c: 'red'},})
                 }
                 else if (xy === "240200"){
-                    this.setState({isOHit:{O240_200c: 'red'}})
+                    that.setState({isOHit:{O240_200c: 'red'},
+                    isYHit:{Y240_200c: 'red'},})
                 }
                 else if (xy === "240240"){
-                    this.setState({isOHit:{O240_240c: 'red'}})
+                    that.setState({isOHit:{O240_240c: 'red'},
+                    isYHit:{Y240_240c: 'red'},})
                 }
                 else if (xy === "240280"){
-                    this.setState({isOHit:{O240_280c: 'red'}})
+                    that.setState({isOHit:{O240_280c: 'red'},
+                    isYHit:{Y240_280c: 'red'},})
                 }
                 else if (xy === "240320"){
-                    this.setState({isOHit:{O240_320c: 'red'}})
+                    that.setState({isOHit:{O240_320c: 'red'},
+                    isYHit:{Y240_320c: 'red'},})
                 }
                 else if (xy === "240360"){
-                    this.setState({isOHit:{O240_360c: 'red'}})
+                    that.setState({isOHit:{O240_360c: 'red'},
+                    isYHit:{Y240_360c: 'red'},})
                 }
                 else if (xy === "240400"){
-                    this.setState({isOHit:{O240_400c: 'red'}})
+                    that.setState({isOHit:{O240_400c: 'red'},
+                    isYHit:{Y240_400c: 'red'},})
+                }
+
+                else if (xy === "2800"){
+                    that.setState({isOHit:{O280_0c: 'red'},
+                    isYHit:{Y280_0c: 'red'}, })
+                }
+                else if (xy === "28040"){
+                    that.setState({isOHit:{O280_40c: 'red'},
+                    isYHit:{Y280_40c: 'red'},})
+                }
+                else if (xy === "28080"){
+                    that.setState({isOHit:{O280_80c: 'red'},
+                    isYHit:{Y280_80c: 'red'},})
+                }
+                else if (xy === "280120"){
+                    that.setState({isOHit:{O280_120c: 'red'},
+                    isYHit:{Y280_120c: 'red'},})
+                }
+                else if (xy === "280160"){
+                    that.setState({isOHit:{O280_160c: 'red'},
+                    isYHit:{Y280_160c: 'red'},})
+                }
+                else if (xy === "280200"){
+                    that.setState({isOHit:{O280_200c: 'red'},
+                    isYHit:{Y280_200c: 'red'},})
+                }
+                else if (xy === "280240"){
+                    that.setState({isOHit:{O280_240c: 'red'},
+                    isYHit:{Y280_240c: 'red'},})
+                }
+                else if (xy === "280280"){
+                    that.setState({isOHit:{O280_280c: 'red'},
+                    isYHit:{Y280_280c: 'red'},})
+                }
+                else if (xy === "280320"){
+                    that.setState({isOHit:{O280_320c: 'red'},
+                    isYHit:{Y280_320c: 'red'},})
+                }
+                else if (xy === "280360"){
+                    that.setState({isOHit:{O280_360c: 'red'},
+                    isYHit:{Y280_360c: 'red'},})
+                }
+                else if (xy === "280400"){
+                    that.setState({isOHit:{O280_400c: 'red'},
+                    isYHit:{Y280_400c: 'red'},})
                 }
 
                 else if (xy === "3200"){
-                    this.setState({isOHit:{O320_0c: 'red'} })
+                    that.setState({isOHit:{O320_0c: 'red'},
+                    isYHit:{Y320_0c: 'red'}, })
                 }
                 else if (xy === "32040"){
-                    this.setState({isOHit:{O320_40c: 'red'}})
+                    that.setState({isOHit:{O320_40c: 'red'},
+                    isYHit:{Y320_40c: 'red'},})
                 }
                 else if (xy === "32080"){
-                    this.setState({isOHit:{O320_80c: 'red'}})
+                    that.setState({isOHit:{O320_80c: 'red'},
+                    isYHit:{Y320_80c: 'red'},})
                 }
                 else if (xy === "320120"){
-                    this.setState({isOHit:{O320_120c: 'red'}})
+                    that.setState({isOHit:{O320_120c: 'red'},
+                    isYHit:{Y320_120c: 'red'},})
                 }
                 else if (xy === "320160"){
-                    this.setState({isOHit:{O320_160c: 'red'}})
+                    that.setState({isOHit:{O320_160c: 'red'},
+                    isYHit:{Y320_160c: 'red'},})
                 }
                 else if (xy === "320200"){
-                    this.setState({isOHit:{O320_200c: 'red'}})
+                    that.setState({isOHit:{O320_200c: 'red'},
+                    isYHit:{Y320_200c: 'red'},})
                 }
                 else if (xy === "320240"){
-                    this.setState({isOHit:{O320_240c: 'red'}})
+                    that.setState({isOHit:{O320_240c: 'red'},
+                    isYHit:{Y320_240c: 'red'},})
                 }
                 else if (xy === "3240280"){
-                    this.setState({isOHit:{O320_280c: 'red'}})
+                    that.setState({isOHit:{O320_280c: 'red'},
+                    isYHit:{Y320_280c: 'red'},})
                 }
                 else if (xy === "320320"){
-                    this.setState({isOHit:{O320_320c: 'red'}})
+                    that.setState({isOHit:{O320_320c: 'red'},
+                    isYHit:{Y320_320c: 'red'},})
                 }
                 else if (xy === "320360"){
-                    this.setState({isOHit:{O320_360c: 'red'}})
+                    that.setState({isOHit:{O320_360c: 'red'},
+                    isYHit:{Y320_360c: 'red'},})
                 }
                 else if (xy === "320400"){
-                    this.setState({isOHit:{O320_400c: 'red'}})
+                    that.setState({isOHit:{O320_400c: 'red'},
+                    isYHit:{Y320_400c: 'red'},})
                 }
 
                 else if (xy === "3600"){
-                    this.setState({isOHit:{O360_0c: 'red'} })
+                    that.setState({isOHit:{O360_0c: 'red'},
+                    isYHit:{Y360_0c: 'red'}, })
                 }
                 else if (xy === "36040"){
-                    this.setState({isOHit:{O360_40c: 'red'}})
+                    that.setState({isOHit:{O360_40c: 'red'},
+                    isYHit:{Y360_40c: 'red'},})
                 }
                 else if (xy === "36080"){
-                    this.setState({isOHit:{O360_80c: 'red'}})
+                    that.setState({isOHit:{O360_80c: 'red'},
+                    isYHit:{Y360_80c: 'red'},})
                 }
                 else if (xy === "360120"){
-                    this.setState({isOHit:{O360_120c: 'red'}})
+                    that.setState({isOHit:{O360_120c: 'red'},
+                    isYHit:{Y360_120c: 'red'},})
                 }
                 else if (xy === "360160"){
-                    this.setState({isOHit:{O360_160c: 'red'}})
+                    that.setState({isOHit:{O360_160c: 'red'},
+                    isYHit:{Y360_160c: 'red'},})
                 }
                 else if (xy === "360200"){
-                    this.setState({isOHit:{O360_200c: 'red'}})
+                    that.setState({isOHit:{O360_200c: 'red'},
+                    isYHit:{Y360_200c: 'red'},})
                 }
                 else if (xy === "360240"){
-                    this.setState({isOHit:{O360_240c: 'red'}})
+                    that.setState({isOHit:{O360_240c: 'red'},
+                    isYHit:{Y360_240c: 'red'},})
                 }
                 else if (xy === "3640280"){
-                    this.setState({isOHit:{O360_280c: 'red'}})
+                    that.setState({isOHit:{O360_280c: 'red'},
+                    isYHit:{Y360_280c: 'red'},})
                 }
                 else if (xy === "360320"){
-                    this.setState({isOHit:{O360_320c: 'red'}})
+                    that.setState({isOHit:{O360_320c: 'red'},
+                    isYHit:{Y360_320c: 'red'},})
                 }
                 else if (xy === "360360"){
-                    this.setState({isOHit:{O360_360c: 'red'}})
+                    that.setState({isOHit:{O360_360c: 'red'},
+                    isYHit:{Y360_360c: 'red'},})
                 }
                 else if (xy === "360400"){
-                    this.setState({isOHit:{O360_400c: 'red'}})
+                    that.setState({isOHit:{O360_400c: 'red'},
+                    isYHit:{Y360_400c: 'red'},})
                 }
 
                 else if (xy === "4000"){
-                    this.setState({isOHit:{O400_0c: 'red'} })
+                    that.setState({isOHit:{O400_0c: 'red'},
+                    isYHit:{Y400_0c: 'red'}, })
                 }
                 else if (xy === "40040"){
-                    this.setState({isOHit:{O400_40c: 'red'}})
+                    that.setState({isOHit:{O400_40c: 'red'},
+                    isYHit:{Y400_40c: 'red'},})
                 }
                 else if (xy === "40080"){
-                    this.setState({isOHit:{O400_80c: 'red'}})
+                    that.setState({isOHit:{O400_80c: 'red'},
+                    isYHit:{Y400_80c: 'red'},})
                 }
                 else if (xy === "400120"){
-                    this.setState({isOHit:{O400_120c: 'red'}})
+                    that.setState({isOHit:{O400_120c: 'red'},
+                    isYHit:{Y400_120c: 'red'},})
                 }
                 else if (xy === "400160"){
-                    this.setState({isOHit:{O400_160c: 'red'}})
+                    that.setState({isOHit:{O400_160c: 'red'},
+                    isYHit:{Y400_160c: 'red'},})
                 }
                 else if (xy === "400200"){
-                    this.setState({isOHit:{O400_200c: 'red'}})
+                    that.setState({isOHit:{O400_200c: 'red'},
+                    isYHit:{Y400_200c: 'red'},})
                 }
                 else if (xy === "400240"){
-                    this.setState({isOHit:{O400_240c: 'red'}})
+                    that.setState({isOHit:{O400_240c: 'red'},
+                    isYHit:{Y400_240c: 'red'},})
                 }
                 else if (xy === "4040280"){
-                    this.setState({isOHit:{O400_280c: 'red'}})
+                    that.setState({isOHit:{O400_280c: 'red'},
+                    isYHit:{Y400_280c: 'red'},})
                 }
                 else if (xy === "400320"){
-                    this.setState({isOHit:{O400_320c: 'red'}})
+                    that.setState({isOHit:{O400_320c: 'red'},
+                    isYHit:{Y400_320c: 'red'},})
                 }
                 else if (xy === "400360"){
-                    this.setState({isOHit:{O400_360c: 'red'}})
+                    that.setState({isOHit:{O400_360c: 'red'},
+                    isYHit:{Y400_360c: 'red'},})
                 }
                 else if (xy === "4004000"){
-                    this.setState({isOHit:{O400_400c: 'red'}})
+                    that.setState({isOHit:{O400_400c: 'red'},
+                    isYHit:{Y400_400c: 'red'},
+                })
                 }
-
             }
             else if (result === 2){
                 // miss shot
-                let d = new Date().toLocaleTimeString();
-                console.log("2")
+                const d = new Date().toLocaleTimeString();
+                console.log("2 ", d)
+                that.setState({
+                    errorMsg: "Missed shot! " + d
+                })
             }
             else if (result === 3){
                 // already shot there
+                const d = new Date().toLocaleTimeString();
                 console.log("3")
+                that.setState({
+                    errorMsg: "Already shot here! " + d
+                })
             }
             else if (result === 4){
                 // not your turn
+                const d = new Date().toLocaleTimeString();
                 console.log("4")
+                that.setState({
+                    errorMsg: "Not your turn! " + d
+                })
             }
         });
     }
     
       render() {
+        const showError = this.state.hasError ? "show" : "hide";
         let showEnding = this.state.isOver ? "show" : "hide";
         let showEnd = this.state.isOver ? "hide" : "show";
         let showCarrierSelected = this.state.selectedShip.carrier ? "show" : "hide";
@@ -645,6 +859,9 @@ export default class Game extends Component {
         let showSubmarineSelected = this.state.selectedShip.submarine ? "show" : "hide";
         let showDreadnoughtSelected = this.state.selectedShip.dreadnought ? "show" : "hide";
         let showCruiserSelected = this.state.selectedShip.cruiser ? "show" : "hide";
+        console.log("selected ships: ",this.state.selectedShip)
+        console.log("rotated: ",this.state.rotated)
+
 
         return (
             <div className="background white">
@@ -654,7 +871,7 @@ export default class Game extends Component {
                 </header>
                 
                 <p id="gameTitle" style={{marginBottom:"20px"}}>BattleShip</p>
-                <p id="error_box"></p>
+                <div className={showError} style={{color: "red", marginLeft:"150px", marginTop:"30px"}}> {this.state.errorMsg}</div>
 
             <div id="ending" className={showEnding}>
                 <p id="result" style={{color:'white', marginLeft:"-20px"}}>{this.state.winner} Wins!</p>
@@ -670,7 +887,7 @@ export default class Game extends Component {
             <div id="gameContent">
             <div className="board"> 
             <div id="player">
-                <p id="yFleet">{this.state.currPlayer._id}'s Fleet</p>
+                <p id="yFleet">Your Fleet</p>
             <div>
                 <Stage width={400} height={400}>
                     <Layer>
@@ -951,24 +1168,11 @@ export default class Game extends Component {
             </Stage>
             </div>
             </div>
-
-            <div id="turnText"></div>
-            <div id="logs">
-                <p id="logTitle">Log</p>
-                <div className="log_box" style={{border:"1px solid white"}}>
-                    <ul id="log">
-                    {this.state.logs.map((log, i) => {
-                        return (
-                            <li key={i}>{log}</li>
-                        )
-                    })}
-                    </ul>
-                    </div>
-            </div>
             </div>
             </div>
 
         <h3 className="statusMsg" id="status">Waiting For Both Players To Set Up</h3>
+        <div className="turnText"><h3>{this.state.turnStatus}'s turn</h3></div>
 
         <div className="fleetTitle"> Fleet </div>
         <div id="fl" className="fleets">
@@ -976,7 +1180,7 @@ export default class Game extends Component {
                 <div id="carrierSelect" className="entry">
                     
                     <img id="carrierImg" className="shipName" src={this.state.ships.carrier} alt="ship"
-                    onClick={() => this.carrierSelect()}></img>
+                    onClick={this.carrierSelect}></img>
                     <div id ="carrierBar" className={showCarrierSelected} ></div>
                     <p className="shipName">Carrier</p>
                     <p className="shipName" id="carrierRemaining">Remaining: {this.state.remainingShips.carrier}</p>
@@ -984,7 +1188,7 @@ export default class Game extends Component {
 
                 <div id="dreadnoughtSelect" className="entry">
                     <img id="dreadnoughtImg" className="shipName" src={this.state.ships.dreadnought} alt="ship"
-                    onClick={() => this.dreadnoughtSelect()}></img>
+                    onClick={this.dreadnoughtSelect}></img>
                     <div id="dreadnoughtBar" className={showDreadnoughtSelected}></div>
                     <p className="shipName">Dreadnought</p>
                     <p className="shipName" id="dreadnoughtRemaining">Remaining: {this.state.remainingShips.dreadnought}</p>
@@ -992,7 +1196,7 @@ export default class Game extends Component {
 
                 <div id="cruiserSelect" className="entry">
                     <img id="cruiserImg" className="shipName" src={this.state.ships.cruiser} alt="ship"
-                    onClick={() => this.cruiserSelect()}></img>
+                    onClick={this.cruiserSelect}></img>
                     <div id="cruiserBar" className={showCruiserSelected}></div>
                     <p className="shipName">Cruiser</p>
                     <p className="shipName" id="cruiserRemaining">Remaining: {this.state.remainingShips.cruiser}</p>
@@ -1000,7 +1204,7 @@ export default class Game extends Component {
 
                 <div id="submarineSelect" className="entry">
                     <img id="submarineImg" className="shipName" src={this.state.ships.submarine} alt="ship"
-                    onClick={() => this.submarineSelect()}></img>
+                    onClick={this.submarineSelect}></img>
                     <div id="submarineBar" className={showSubmarineSelected}></div>
                     <p className="shipName">Submarine</p>
                     <p className="shipName" id="submarineRemaining">Remaining: {this.state.remainingShips.submarine}</p>
@@ -1008,7 +1212,7 @@ export default class Game extends Component {
 
                 <div id="destroyerSelect" className="entry">
                     <img id="destroyerImg" className="shipName" src={this.state.ships.destroyer} alt="ship"
-                    onClick={() => this.destroyerSelect()}></img>
+                    onClick={this.destroyerSelect}></img>
                     <div id="destroyerBar" className={showDestroyerSelected}></div>
                     <p className="shipName">Destroyer</p>
                     <p className="shipName" id="destroyerRemaining">Remaining: {this.state.remainingShips.destroyer}</p>

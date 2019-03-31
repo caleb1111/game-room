@@ -296,3 +296,17 @@
 .red {
     color: lightcoral
 }
+
+.show{
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+.turnText {
+    margin: 20 auto;
+    font-size: 140%;
+
+}
