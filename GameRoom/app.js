@@ -5,7 +5,7 @@ const app = express();
 const http = require('http').createServer(app);
 
 const io = require('socket.io').listen(http);
-io.origins(['http://localhost:3000', 'http://localhost:5000']);
+io.origins(['http://localhost:3000', 'http://localhost:5000', 'http://cscc09gameroom.herokuapp.com/']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
 const validator = require("validator");
@@ -81,7 +81,7 @@ var checkUsername = function(req, res, next) {
 };
 
 let corsOptions = {
-    origin: ["http://localhost:3000", "http://localhost:5000"],
+    origin: ["http://localhost:3000", "http://localhost:5000", 'http://cscc09gameroom.herokuapp.com/'],
     optionsSuccessStatus: 200,
     credentials: true
 }
