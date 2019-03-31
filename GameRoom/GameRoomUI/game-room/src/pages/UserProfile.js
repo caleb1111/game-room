@@ -51,6 +51,8 @@ componentDidMount(){
             })
               .then(function(data) {
                   const user = data;
+                  console.log("usr object:", user);
+                  console.log("user:", user.friends);
                   that.setState({
                     user: user,
                     friends: user.friends,

@@ -10,9 +10,9 @@ class Nav extends React.Component {
         super();
     
         this.handleSignout = this.handleSignout.bind(this);
+        this.handleProfileReset = this.handleProfileReset.bind(this);
 
         this.socket = io.connect('http://localhost:5000');
-
     }
 
     handleSignout() {
@@ -31,12 +31,22 @@ class Nav extends React.Component {
       })
     }
 
+    handleProfileReset() {
+      fetch('http://localhost:5000/api/user/profile/reset', {
+        method: "PATCH",
+        credentials: 'include'
+      })
+      .catch(function(error){
+        console.log(error);
+      })
+    }
+  
     render(){
       return(
         <div className="row">
             <ul className="main-nav">
                 <li style={{visibility:"hidden"}}><Link to='/game/'>Game</Link></li>
-                <li><Link to='/home/' >Lobby</Link></li>
+                <li><Link to='/home/' onClick={()=> this.handleProfileReset()}>Lobby</Link></li>
                 <li><Link to='/shop/'>Shop</Link></li>
                 <li><Link to='/userprofile/'>User Profile</Link></li>
                 <li><Link to='/signin/' 

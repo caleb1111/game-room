@@ -7,8 +7,6 @@ import '../style/friend_list.css';
 import '../style/players_online.css';
 import '../style/chat.css'
 import User_img from '../media/user.png';
-import RoomHovered from '../Components/RoomHovered';
-
 
 export default class Home extends Component {
 
@@ -22,6 +20,11 @@ export default class Home extends Component {
       message: '',
       messages: [],
     };
+
+    this.handleUnfriend = this.handleUnfriend.bind(this);
+    this.handleAddfriend = this.handleAddfriend.bind(this);
+    this.handleViewProfile = this.handleViewProfile.bind(this);
+    this.handleJoin = this.handleJoin.bind(this);
 
     this.socket = io.connect("http://localhost:5000");
     let that = this;
@@ -87,9 +90,7 @@ export default class Home extends Component {
       console.log(this.state.messages);
   };
 
-    this.handleUnfriend = this.handleUnfriend.bind(this);
-    this.handleAddfriend = this.handleAddfriend.bind(this);
-    this.handleViewProfile = this.handleViewProfile.bind(this);
+    
   }
 
   componentDidMount(){
@@ -199,6 +200,10 @@ export default class Home extends Component {
 
   }
 
+  handleJoin(){
+    this.props.history.push('/game/');
+}
+
   handleViewProfile(playerId){
     let that = this;
     console.log("view player clicked ", playerId);
@@ -267,7 +272,10 @@ export default class Home extends Component {
                         return (
                             <li key={i}>
                                 {item.room_name}
-                                 <RoomHovered />
+                                <div>
+                                    <button className="join_btn" 
+                                        onClick={() => this.handleJoin()} >Join Game</button>
+                                </div>
                             </li>
                         )
                     })}

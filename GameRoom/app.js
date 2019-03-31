@@ -3,12 +3,9 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-var server = http.listen(5000, function () {
-    var port = server.address().port;
-    console.log("App now running on port", port);
-});
-const io = require('socket.io').listen(server);
-io.origins(['http://localhost:3000']);
+
+const io = require('socket.io').listen(http);
+io.origins(['http://localhost:3000', 'http://localhost:5000']);
 const cors = require('cors');
 let MongoClient = require('mongodb').MongoClient;
 const validator = require("validator");
@@ -84,7 +81,7 @@ var checkUsername = function(req, res, next) {
 };
 
 let corsOptions = {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:5000"],
     optionsSuccessStatus: 200,
     credentials: true
 }
@@ -350,7 +347,6 @@ io.on("connection", function (socket) {
         io.emit('receiveMessage', data);
     });
 
-    
     socket.on("disconnect", function(data){
     });
 
@@ -437,7 +433,6 @@ io.on("connection", function (socket) {
     socket.on("shot", (lobbyId, x, y, returnResult) => {
         let player;
         const session = gameSessions[lobbyId];
-        let errored = false;
         if(session) {
             if(session.player1.socketId === socket.id) {
                 player = session.player1.socketId
@@ -452,34 +447,22 @@ io.on("connection", function (socket) {
             if(player.turn) {
                 hit = player.opponent.Hit(x, y);
                 if(hit === -1) { //return [-1, "Already shot there."] 
-                    returnResult(3);
-                    errored = true;
+                    returnResult(3, "q");
                 }
                 socket.emit("displayShots", player.board, player.opponent.board);
                 io.to(player.opponent.socketId).emit("displayShots", player.opponent.board, player.board);
                 
                 if(hit === 9)  {
                     socket.emit("gameOver", true, 50);
-                    myquery = { socket: socket.id};
-                    newvalues = { $inc: {win: 1}};
-                    db.collection('users').updateOne(myquery, newvalues, function(err, res){
-                        if (err) throw err;
-                    });
                     io.to(player.opponent.socketId).emit("gameOver", false, 25);
-                    myquery = { socket: player.opponent.socketId};
-                    newvalues = { $inc: {loss: 1}};
-                    db.collection('users').updateOne(myquery, newvalues, function(err, res){
-                        if (err) throw err;
-                    });
                     gameList[lobby].reset();
+        
                 }
-                hit ? returnResult(1) : returnResult(2);
-                if (!errored){
-                    io.to(player.socketId).emit("changeTurn", false);
-                    io.to(player.opponent.socketId).emit("changeTurn", true);
-                }  
+                hit ? returnResult(1, "" + x + y) : returnResult(2,"");
+                io.to(player.socketId).emit("changeTurn", false);
+                io.to(player.opponent.socketId).emit("changeTurn", true);
             } else {
-                returnResult(4);
+                returnResult(4, "");
             }
         } else {
             returnResult(-1);
@@ -559,7 +542,6 @@ app.get("/api/user/loggedUsers", (req, res) => {
     myquery = { _id: { $ne: req.user._id  } };
     db.collection("loggedUsers").find(myquery).toArray(function(err, result){
         if (err) return res.status(500).end(err);
-        console.log("result:", result);
         res.json(result);
     })
 })
@@ -614,8 +596,21 @@ app.patch('/api/user/profile', (req, res) => {
     let myquery = { _id: req.user._id };
     let newvalues = { $set:{ profile: profileId } };
     db.collection("users").updateOne(myquery, newvalues, function(err, result){
-        console.log("profile5");
         if (err) return res.status(500).end(err);
+        console.log("profile4");
+        req.user.profile = profileId;
+        req.session.user = req.user;
+        res.json("successfully set profile id");
+    })
+})
+
+app.patch('/api/user/profile/reset', (req, res) => {
+    let profileId = req.user._id;
+    let myquery = { _id: req.user._id };
+    let newvalues = { $set:{ profile: profileId } };
+    db.collection("users").updateOne(myquery, newvalues, function(err, result){
+        if (err) return res.status(500).end(err);
+        console.log("profile5");
         req.user.profile = profileId;
         req.session.user = req.user;
         res.json("successfully set profile id");
@@ -629,7 +624,10 @@ app.patch("/api/user/addFriend/", (req, res) => {
     if (friendList.includes(friendId)){
         return res.status(409).end("You can not add the same person more than once");
     }
-    friendList = friendList.push(friendId);
+    console.log("friendId", friendId);
+    console.log("old list:", friendList);
+    friendList.push(friendId);
+    console.log("friendlist:", friendList);
     let newvalues = { $set: { friends: friendList } };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
         if (err) return res.status(500).end(err);
@@ -700,4 +698,9 @@ app.patch("/api/pay/purchaseItem", (req, res) => {
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname = '/GameRoomUI/game-room/build/index.html'));
+});
+
+
+http.listen(5000, function () {
+    console.log("App now running on port 5000");
 });
