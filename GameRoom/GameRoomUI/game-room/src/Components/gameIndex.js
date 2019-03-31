@@ -3,38 +3,50 @@
 
 export default (function () {
 
-    let socket = io();
-    let setupMode = false;
-    let rotate = document.getElementById("rotateShips");
+    //let socket = io();
+    //let setupMode = false;
+    //let rotate = document.getElementById("rotateShips");
+
     let playerGrid = document.getElementById("playerBoard");
     let opponentGrid = document.getElementById("opponentBoard");
-    let playerBoard = null;
-    let opponentBoard = null;
-    let destroyerSelect = document.getElementById("destroyerSelect");
-    let submarineSelect = document.getElementById("submarineSelect");
-    let cruiserSelect = document.getElementById("cruiserSelect");
-    let dreadnoughtSelect = document.getElementById("dreadnoughtSelect");
-    let carrierSelect = document.getElementById("carrierSelect");
-    let status = document.getElementById("status");
-    let playerDraw = playerGrid.getContext('2d');
-    let shipArray = null;
+
+    //let playerBoard = null;
+    //let opponentBoard = null;
+
+
+    //let destroyerSelect = document.getElementById("destroyerSelect");
+    //let submarineSelect = document.getElementById("submarineSelect");
+    //let cruiserSelect = document.getElementById("cruiserSelect");
+    //let dreadnoughtSelect = document.getElementById("dreadnoughtSelect");
+    //let carrierSelect = document.getElementById("carrierSelect");
+
+
+    //let status = document.getElementById("status");
+
+
+    //let playerDraw = playerGrid.getContext('2d');
+
+
+    // let shipArray = null;
     let ending = document.getElementById("ending");
-    let returnButton = document.getElementById("returnButton");
-    let ready = false;
-    let winner = document.getElementById("result");
+    //let returnButton = document.getElementById("returnButton");
+
+    
+    //let ready = false;
+    //let winner = document.getElementById("result");
     let opponentDraw = opponentGrid.getContext('2d');
-    let logs = document.getElementById("textLog");
-    let drawHeight = playerGrid.height;
-    let drawWidth = playerGrid.width;
-    let selectedShip = "";
-    let gained = document.getElementById("earned");
-    let rotated = 1;
+    //let logs = document.getElementById("textLog");
+    //let drawHeight = playerGrid.height;
+    //let drawWidth = playerGrid.width;
+    //let selectedShip = "";
+    // let gained = document.getElementById("earned");
+    //let rotated = 1;
     let prevX = 0;
     let prevY = 0;
     let xOpp = 0;
     let yOpp = 0;
     let line = null;
-    let remainingDeployment = [1,1,2,2,3]; //5,4,3,3,2
+    //let remainingDeployment = [1,1,2,2,3]; //5,4,3,3,2
     let lobbyId = sessionStorage.getItem("lobbyId");
     playerDraw.fillStyle = "#d4d4d4";
 
@@ -55,24 +67,6 @@ export default (function () {
         destroyerRemaining.innerHTML = "Remaining: " + remainingDeployment[4]; 
     }
 
-    let createGrid = function () {
-        for (let i = 0; i < 10; i++) {
-            // draw rectangles with size - vertical: 40x400 and horizontal: 400x40
-            //vertical
-            playerDraw.rect(i * drawWidth / 10, 0, drawWidth / 10, drawHeight);
-            opponentDraw.rect(i * drawWidth / 10, 0, drawWidth / 10, drawHeight);
-            playerDraw.stroke();
-            opponentDraw.stroke();
-
-            //horizontal
-            playerDraw.rect(0, i * drawHeight / 10, drawWidth, drawHeight / 10);
-            opponentDraw.rect(0, i * drawHeight / 10, drawWidth, drawHeight / 10);
-
-            playerDraw.stroke();
-            opponentDraw.stroke();
-
-        }
-    }
 
     let writeLog = function (msg, date, type = 0){
         let newMessage = document.createElement("div");
@@ -182,84 +176,6 @@ export default (function () {
     }
 
 
-    /*Back up for draw ships 
-    
-    
-    let displayShips = function (ships){
-
-        shipArray = ships;
-        let img = null;
-        let yOffset = 0;
-        for (let key in ships){
-            if (ships.hasOwnProperty(key)){
-                ships[key].forEach(function (ship){
-                    switch (ship.shipType) {
-                        case "destroyer":
-                            img = document.getElementById("destroyerImg");
-                            if (ship.rotated){
-                                yOffset = 0;
-                            }
-                            else{
-                                yOffset = 40;
-                            }
-                            playerDraw.drawImage(img, ship.y*40, (ship.x*40-yOffset));
-                            break;
-            
-                        case "cruiser":
-                            img = document.getElementById("cruiserImg");
-                            if (ship.rotated){
-                                yOffset = 0;
-                            }
-                            else{
-                                yOffset = 80;
-                            }
-                            playerDraw.drawImage(img, ship.y*40, (ship.x*40-yOffset));
-                            break;
-            
-                        case "submarine":
-                            img = document.getElementById("submarineImg");
-                            if (ship.rotated){
-                                yOffset = 0;
-                            }
-                            else{
-                                yOffset = 80;
-                            }
-                            playerDraw.drawImage(img, ship.y*40, (ship.x*40-yOffset));
-                            break;
-            
-                        case "dreadnought":
-                            img = document.getElementById("dreadnoughtImg");
-                            if (ship.rotated){
-                                yOffset = 0;
-                            }
-                            else{
-                                yOffset = 120;
-                            }
-                            playerDraw.drawImage(img, ship.y*40, (ship.x*40-yOffset));
-                            break;
-            
-                        case "carrier":
-                            img = document.getElementById("carrierImg");
-                            if (ship.rotated){
-                                yOffset = 0;
-                            }
-                            else{
-                                yOffset = 160;
-                            }
-                            playerDraw.drawImage(img, ship.y*40, (ship.x*40-yOffset));
-                            break;
-            
-                        default:
-                            //this.size = 0;
-                            //notify error listeners TODO
-                            break;
-                    }
-                });
-            }
-        }
-        
-    }
-*/
     let redrawBoard = function (){
         displayShips(shipArray);
         if (playerBoard != null && opponentBoard != null){
@@ -447,90 +363,6 @@ export default (function () {
         playerDraw.fillRect(x+1, y+1, 38, 38);
     }
 
-    
-
-    let selectorDisplay = function(){
-        switch(selectedShip){
-            case "destroyer":
-                line = document.getElementById("destroyerBar");
-                line.style.display = "table";
-                line = document.getElementById("carrierBar");
-                line.style.display = "none";  
-                line = document.getElementById("cruiserBar");
-                line.style.display = "none";
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "none";  
-                line = document.getElementById("submarineBar");
-                line.style.display = "none";  
-                break;
-
-            case "cruiser":
-                line = document.getElementById("cruiserBar");
-                line.style.display = "table";
-                line = document.getElementById("carrierBar");
-                line.style.display = "none";
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "none";  
-                line = document.getElementById("submarineBar");
-                line.style.display = "none";  
-                line = document.getElementById("destroyerBar");
-                line.style.display = "none"; 
-                break;
-        
-            
-            case "submarine":
-                line = document.getElementById("submarineBar");
-                line.style.display = "table"
-                line = document.getElementById("carrierBar");
-                line.style.display = "none";  
-                line = document.getElementById("cruiserBar");
-                line.style.display = "none";
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "none";  
-                line = document.getElementById("destroyerBar");
-                line.style.display = "none";  
-                break;
-
-            case "dreadnought":
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "table";
-                line = document.getElementById("carrierBar");
-                line.style.display = "none";  
-                line = document.getElementById("cruiserBar");
-                line.style.display = "none";
-                line = document.getElementById("submarineBar");
-                line.style.display = "none";  
-                line = document.getElementById("destroyerBar");
-                line.style.display = "none";  
-                break;
-
-            case "carrier":
-                line = document.getElementById("carrierBar");
-                line.style.display = "table";
-                line = document.getElementById("cruiserBar");
-                line.style.display = "none";
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "none";  
-                line = document.getElementById("submarineBar");
-                line.style.display = "none";  
-                line = document.getElementById("destroyerBar");
-                line.style.display = "none";  
-                break;
-
-             default:
-                line = document.getElementById("carrierBar");
-                line.style.display = "none";  
-                line = document.getElementById("cruiserBar");
-                line.style.display = "none";
-                line = document.getElementById("dreadnoughtBar");
-                line.style.display = "none";  
-                line = document.getElementById("submarineBar");
-                line.style.display = "none";  
-                line = document.getElementById("destroyerBar");
-                line.style.display = "none";  
-            }
-    }
-
 
 
 
@@ -645,38 +477,7 @@ export default (function () {
             if (setupMode && ready){
                 shoot(yIndex, xIndex);
             }
-            
-        });
 
-        rotate.addEventListener("click", function (e){
-            let img = null;
-            if (rotated){
-                rotated = 0;
-                img = document.getElementById("carrierImg");
-                img.src = "assets/carrierH.png"
-                img = document.getElementById("dreadnoughtImg");
-                img.src = "assets/dreadnoughtH.png"
-                img = document.getElementById("cruiserImg");
-                img.src = "assets/cruiserH.png"
-                img = document.getElementById("submarineImg");
-                img.src = "assets/submarineH.png"
-                img = document.getElementById("destroyerImg");
-                img.src = "assets/destroyerH.png"
-            }
-            else{
-                rotated = 1;
-                img = document.getElementById("carrierImg");
-                img.src = "assets/carrier.png"
-                img = document.getElementById("dreadnoughtImg");
-                img.src = "assets/dreadnought.png"
-                img = document.getElementById("cruiserImg");
-                img.src = "assets/cruiser.png"
-                img = document.getElementById("submarineImg");
-                img.src = "assets/submarine.png"
-                img = document.getElementById("destroyerImg");
-                img.src = "assets/destroyer.png"
-            }
-            
         });
 
         socket.on("setup", function (e){

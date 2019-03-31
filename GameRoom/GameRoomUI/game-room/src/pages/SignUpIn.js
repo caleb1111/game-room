@@ -22,7 +22,6 @@ export default class SignUpIn extends Component {
     this.formAction = {
       action: '',
     };
-
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
