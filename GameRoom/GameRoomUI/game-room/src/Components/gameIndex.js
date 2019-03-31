@@ -3,13 +3,13 @@
 
 export default (function () {
 
-    let socket = io();
-    let setupMode = false;
-    let rotate = document.getElementById("rotateShips");
+    //let socket = io();
+    //let setupMode = false;
+    //let rotate = document.getElementById("rotateShips");
     let playerGrid = document.getElementById("playerBoard");
     let opponentGrid = document.getElementById("opponentBoard");
-    let playerBoard = null;
-    let opponentBoard = null;
+    //let playerBoard = null;
+    //let opponentBoard = null;
     let destroyerSelect = document.getElementById("destroyerSelect");
     let submarineSelect = document.getElementById("submarineSelect");
     let cruiserSelect = document.getElementById("cruiserSelect");
@@ -20,21 +20,21 @@ export default (function () {
     let shipArray = null;
     let ending = document.getElementById("ending");
     let returnButton = document.getElementById("returnButton");
-    let ready = false;
-    let winner = document.getElementById("result");
+    //let ready = false;
+    //let winner = document.getElementById("result");
     let opponentDraw = opponentGrid.getContext('2d');
-    let logs = document.getElementById("textLog");
-    let drawHeight = playerGrid.height;
-    let drawWidth = playerGrid.width;
-    let selectedShip = "";
-    let gained = document.getElementById("earned");
-    let rotated = 1;
+    //let logs = document.getElementById("textLog");
+    //let drawHeight = playerGrid.height;
+    //let drawWidth = playerGrid.width;
+    //let selectedShip = "";
+    // let gained = document.getElementById("earned");
+    //let rotated = 1;
     let prevX = 0;
     let prevY = 0;
     let xOpp = 0;
     let yOpp = 0;
     let line = null;
-    let remainingDeployment = [1,1,2,2,3]; //5,4,3,3,2
+    //let remainingDeployment = [1,1,2,2,3]; //5,4,3,3,2
     let lobbyId = sessionStorage.getItem("lobbyId");
     playerDraw.fillStyle = "#d4d4d4";
 

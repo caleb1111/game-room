@@ -3,6 +3,8 @@ import Logo from '../media/title.png';
 import '../style/sign_form.css';
 import '../style/vendors/grid.css';
 import '../style/vendors/normalize.css';
+import io from "socket.io-client";
+
 
 const SignLogo = () => (
     <img src={Logo} className="sign_logo" alt="logo"></img>
@@ -22,7 +24,6 @@ export default class SignUpIn extends Component {
     this.formAction = {
       action: '',
     };
-
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -41,16 +42,21 @@ export default class SignUpIn extends Component {
         return response.json(); 
       })
         .then(function() {
-            that.props.history.push("/home/");
+          that.socket = io.connect('http://localhost:5000');
+          console.log("s: ", that.socket)
             fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
             credentials: 'include',
             method: 'PATCH',
-            body: that.socket
+            body: JSON.stringify({socket:that.socket}),
+            headers:{
+              'Content-Type': 'application/json'
+            }
             }).then(function(response){
                 return response.json(); 
             })
-                .then(function() {
-
+                .then(function(data) {
+                  console.log("socket ",data)
+                  that.props.history.push("/home/");
                 })
         })
       .catch(function(){
@@ -69,20 +75,21 @@ export default class SignUpIn extends Component {
         }
       }).then(function(response) {
         return response.json(); })
-        .then(function(data) {
-            const items = data;
-            console.log(items)
-            that.props.history.push("/home/");
+        .then(function() {
+          that.socket = io.connect('http://localhost:5000');
             fetch('http://localhost:5000/api/user/'+ that.state.username +'/socket/', {
             credentials: 'include',
             method: 'PATCH',
-            body: that.socket
+            body: JSON.stringify({socket:that.socket}),
+            headers:{
+              'Content-Type': 'application/json'
+            }
             }).then(function(response){
                 return response.json(); 
             })
                 .then(function(data) {
-                    const items = data;
-                    console.log(items);
+                  console.log("socket ",data)
+                  that.props.history.push("/home/");
                 })
       })
       .catch(function(){
