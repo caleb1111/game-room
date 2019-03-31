@@ -19,6 +19,8 @@ export default class Home extends Component {
       friend_list: [],
       message: '',
       messages: [],
+      hasError: false,
+      errorMsg: ""
     };
 
     this.handleUnfriend = this.handleUnfriend.bind(this);
@@ -200,8 +202,27 @@ export default class Home extends Component {
 
   }
 
-  handleJoin(){
-    this.props.history.push('/game/');
+  handleJoin(roomId){
+    console.log(roomId);
+    const that = this;
+    sessionStorage.setItem("lobbyId", roomId);
+    fetch('http://localhost:5000/api/user/updateRoom/', {
+        method: 'PATCH',
+        credentials: 'include',
+        body: JSON.stringify({ roomId: roomId }),
+        headers:{
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(function(response) {
+        return response.json(); 
+      })
+        .then(function(data) {
+          that.props.history.push('/game/');
+        })
+      .catch(function(error){
+        console.log(error);
+      })
 }
 
   handleViewProfile(playerId){
@@ -228,6 +249,8 @@ export default class Home extends Component {
   }
 
   render() {
+    const showError = this.state.hasError ? "show" : "hide";
+
     return (
       <div className="background">
         <header>
@@ -239,7 +262,8 @@ export default class Home extends Component {
         <div>
         <div id="lobby_wrapper">
         <div className="empty">
-          <h1>{this.state.user._id}</h1>
+          <h1>Welcome, {this.state.user._id}</h1>
+          <div className={showError} style={{color: "red", marginLeft:"150px", marginTop:"30px"}}> Error: {this.state.errorMsg}</div>
         </div>
 
         <div id="lobby_leftsidebar">
@@ -274,7 +298,7 @@ export default class Home extends Component {
                                 {item.room_name}
                                 <div>
                                     <button className="join_btn" 
-                                        onClick={() => this.handleJoin()} >Join Game</button>
+                                        onClick={() => this.handleJoin(item.room_id)} >Join Game</button>
                                 </div>
                             </li>
                         )

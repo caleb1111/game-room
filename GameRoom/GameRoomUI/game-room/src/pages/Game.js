@@ -126,6 +126,8 @@ export default class Game extends Component {
                 currPlayer: user,
                 lobbyId: user.lobbyId
                 })
+                that.socket.emit("joinSession", that.state.lobbyId);
+                that.socket.emit("ready", that.state.lobbyId);
             })
         .catch(function(error){
             console.log(error);
