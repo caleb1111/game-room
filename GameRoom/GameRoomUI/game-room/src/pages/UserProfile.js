@@ -5,6 +5,18 @@ import '../style/home.css';
 import Nav from '../Components/NavBar';
 import UserPhoto from '../media/user.png';
 import '../style/user_profile.css';
+import bronzeMedal from '../media/items/bronzeMedal.png';
+import silverMedal from '../media/items/silverMedal.png';
+import goldMedal from '../media/items/goldMedal.png';
+import platnumMedal from '../media/items/platnumMedal.png';
+import diamondMedal from '../media/items/diamondMedal.png';
+import masterMedal from '../media/items/masterMedal.png';
+import arrowsBG from '../media/items/arrowsBG.png';
+import bubbles from '../media/items/bubbles.png';
+import catBG from '../media/items/catBG.png';
+import cloudsBG from '../media/items/cloudsBG.png';
+import chocolateBG from '../media/items/chocolateBG.png';
+import circlesBG from '../media/items/circlesBG.png';
 
 
 export default class UserProfile extends Component {
@@ -16,14 +28,30 @@ export default class UserProfile extends Component {
         upload: true,
         selectedFile: null,
         user: {},
-        items: [],
-        friends: []
+        friends: [],
+        userItems: []
     }
 
     this.handleUpload = this.handleUpload.bind(this);
     this.fileSelectHandler = this.fileSelectHandler.bind(this);
     this.fileUploadHandler = this.fileUploadHandler.bind(this);
 }
+
+items_list = {
+    items : [
+    {itemId: 1, item_name:"Bronze Medal", item_img: bronzeMedal, price: 100},
+    {itemId: 2, item_name:"Silver Medal", item_img: silverMedal, price: 200},
+    {itemId: 3, item_name:"Gold Medal", item_img: goldMedal, price: 300},
+    {itemId: 4, item_name:"Platnum Medal", item_img: platnumMedal, price: 400},
+    {itemId: 5, item_name:"Diamond Medal", item_img: diamondMedal, price: 500},
+    {itemId: 6, item_name:"Master Medal", item_img: masterMedal, price: 800},
+    {itemId: 7, item_name:"Bubbles", item_img: bubbles, price: 100},
+    {itemId: 8, item_name:"Arrows Background", item_img: arrowsBG, price: 500},
+    {itemId: 9, item_name:"Cat Background", item_img: catBG, price: 500},
+    {itemId: 10, item_name:"Clouds Background", item_img: cloudsBG, price: 500},
+    {itemId: 11, item_name:"Chocolate Backgroundbbles", item_img: chocolateBG, price: 500},
+    {itemId: 12, item_name:"Circles Backgroundbbles", item_img: circlesBG, price: 500},
+  ]}
 
 fileSelectHandler(event) {
     this.setState({
@@ -59,6 +87,9 @@ componentDidMount(){
                     items: user.items
                   })
                 })
+            that.setState({
+                items: user.items
+            })
             .catch(function(error){
                 console.log(error);
             })
@@ -144,12 +175,6 @@ clickUploadState(state) {
                             {this.state.friends.map((friend, i) => {
                                 return (
                                     <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
-                                        <div className="friend_clicked">
-                                            <button className="f_btn" style={{marginRight:"15px"}}
-                                            onClick={() => this.handleUnfriend(friend)}>Unfriend</button>
-                                            <button className="f_btn"
-                                            onClick={() => this.handleViewProfile(friend)}>View Profile</button>
-                                        </div>
                                     </li>
                                 )
                             })}
@@ -158,19 +183,14 @@ clickUploadState(state) {
                 </div>
                 </div>
                 <div className="col span-1-of-3 ">
-                <div className="friend_list">
-                    <div className="menu_title">Items You Purchased</div>
-                        <div className="friend_box">
-                        <ul id="friends">
-                            {this.state.friends.map((friend, i) => {
+                <div className="item2_list">
+                    <div className="menu_title3">Items You Purchased</div>
+                        <div className="item2_box">
+                        <ul id="items2">
+                            {this.items_list.items.map((item, i) => {
                                 return (
-                                    <li key={i}><cite style={{textAlign:"center"}}>{friend}</cite>
-                                        <div className="friend_clicked">
-                                            <button className="f_btn" style={{marginRight:"15px"}}
-                                            onClick={() => this.handleUnfriend(friend)}>Unfriend</button>
-                                            <button className="f_btn"
-                                            onClick={() => this.handleViewProfile(friend)}>View Profile</button>
-                                        </div>
+                                    <li key={i}><div className="item6"><img src={item.item_img} alt='user_img'/>{item.item_name}</div>
+                                        
                                     </li>
                                 )
                             })}

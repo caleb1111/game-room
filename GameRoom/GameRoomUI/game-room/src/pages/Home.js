@@ -20,7 +20,9 @@ export default class Home extends Component {
       message: '',
       messages: [],
       hasError: false,
-      errorMsg: ""
+      errorMsg: "",
+      prompt: "",
+      hasPrompt: false
     };
 
     this.handleUnfriend = this.handleUnfriend.bind(this);
@@ -44,7 +46,6 @@ export default class Home extends Component {
         })
             .then(function(data) {
                 const items = data;
-                console.log("items: ", items);
                 that.setState({
                   playersOnline: items
                 })
@@ -118,15 +119,15 @@ export default class Home extends Component {
   
   Rooms = {
     items: [
-      {room_id:1, room_name: "Game Room 1", player1: null, player2: null},
-      {room_id:2, room_name: "Game Room 2", player1: null, player2: null},
-      {room_id:3, room_name: "Game Room 3", player1: null, player2: null},
-      {room_id:4, room_name: "Game Room 4", player1: null, player2: null},
-      {room_id:5, room_name: "Game Room 5", player1: null, player2: null},
-      {room_id:6, room_name: "Game Room 6", player1: null, player2: null},
-      {room_id:7, room_name: "Game Room 7", player1: null, player2: null},
-      {room_id:8, room_name: "Game Room 8", player1: null, player2: null},
-      {room_id:9, room_name: "Game Room 9", player1: null, player2: null},
+      {room_id:0, room_name: "Game Room 1", player1: null, player2: null},
+      {room_id:1, room_name: "Game Room 2", player1: null, player2: null},
+      {room_id:2, room_name: "Game Room 3", player1: null, player2: null},
+      {room_id:3, room_name: "Game Room 4", player1: null, player2: null},
+      {room_id:4, room_name: "Game Room 5", player1: null, player2: null},
+      {room_id:5, room_name: "Game Room 6", player1: null, player2: null},
+      {room_id:6, room_name: "Game Room 7", player1: null, player2: null},
+      {room_id:7, room_name: "Game Room 8", player1: null, player2: null},
+      {room_id:8, room_name: "Game Room 9", player1: null, player2: null},
     ]
   }
 
@@ -153,7 +154,10 @@ export default class Home extends Component {
               .then(function(data) {
                   const user = data;
                   that.setState({
-                    friend_list: user.friends
+                    friend_list: user.friends,
+                    prompt: "Successfully add friend!",
+                    hasPrompt: true,
+                    hasError: false
                   })
                 })
             .catch(function(error){
@@ -162,6 +166,11 @@ export default class Home extends Component {
           })
       .catch(function(error){
         console.log(error);
+        that.setState({
+          errorMsg: "Player already in your friend list",
+          hasError: true,
+          hasPrompt: false
+        })
       })
   }
 
@@ -188,10 +197,14 @@ export default class Home extends Component {
               .then(function(data) {
                   const user = data;
                   that.setState({
-                    friend_list: user.friends
+                    friend_list: user.friends,
+                    prompt: "Successfully unfriend!",
+                    hasPrompt: true,
+                    hasError: false
                   })
                   // console.log("f:" , that.state.friend_list)
                 })
+
             .catch(function(error){
               console.log(error);
             })
@@ -203,9 +216,8 @@ export default class Home extends Component {
   }
 
   handleJoin(roomId){
-    console.log(roomId);
     const that = this;
-    sessionStorage.setItem("lobbyId", roomId);
+    console.log(roomId);
     fetch('http://localhost:5000/api/user/updateRoom/', {
         method: 'PATCH',
         credentials: 'include',
@@ -250,6 +262,8 @@ export default class Home extends Component {
 
   render() {
     const showError = this.state.hasError ? "show" : "hide";
+    const showPrompt = this.state.hasPrompt ? "show" : "hide";
+
 
     return (
       <div className="background">
@@ -264,6 +278,7 @@ export default class Home extends Component {
         <div className="empty">
           <h1>Welcome, {this.state.user._id}</h1>
           <div className={showError} style={{color: "red", marginLeft:"150px", marginTop:"30px"}}> Error: {this.state.errorMsg}</div>
+          <div className={showPrompt} style={{color: "green", marginLeft:"150px", marginTop:"30px"}}>{this.state.prompt}</div>
         </div>
 
         <div id="lobby_leftsidebar">

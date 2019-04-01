@@ -20,7 +20,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "heroku-postbuild": "cd GameRoomUI && cd game-room && npm install && npm run build",
+    "heroku-postbuild": "cd GameRoomUI && cd game-room && npm install --only=dev --no-shrinkwrap && npm run build",
     "client": "cd GameRoomUI && cd game-room && npm start",
     "dev": "concurrently \"node app.js\" \"npm run client\""
   },

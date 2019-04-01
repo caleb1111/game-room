@@ -58,11 +58,11 @@ export default class Shop extends Component {
     const that = this;
     console.log("item:", item);
     const fd = new FormData();
-    fd.append('item', item.itemId, item.item_name, item.item_img, item.price);
+    fd.append('item', item.itemId, item.price);
     // set the coins of the user
     // add the item to his purchased list
-    console.log("item detail:", item.itemId, item.item_name, item.price);
-    fetch('http://localhost:5000/api/user/', {
+    console.log("item detail:", item.itemId, item.price);
+    fetch('http://localhost:5000/api/pay/purchaseItem', {
       credentials: 'include',
       method: 'PATCH',
       body: fd
@@ -71,23 +71,13 @@ export default class Shop extends Component {
       return response.json(); 
     })
       .then(function(data) {
-
-        fetch('http://localhost:5000/api/currUser/', {
-          credentials: 'include',
+        console.log("coin data", data)
+        const newCoins = data;
+        that.setState({
+          coins: newCoins
         })
-        .then(function(response) {
-          return response.json(); 
-        })
-          .then(function(data) {
-              const user = data;
-              that.setState({
-                coins: user.coins,
-              })
-          })
-        .catch(function(error){
-          console.log(error);
-        })
-        })
+        console.log("new coin", newCoins)
+      })
     .catch(function(error){
       console.log(error);
     })

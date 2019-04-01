@@ -160,9 +160,12 @@ class player {
                 shipsArray = this.ships.carriers;
                 break;
         }
+     
         shipsArray.forEach((ship) => {
             if (!ship.placed) {
+                
                 if (this.canPlace(ship.size, x, y, rotated, this.board)) {
+                    
                     this.Place(ship.size, x, y, rotated, this.board);
                     ship.x = x;
                     ship.y = y;
@@ -172,11 +175,14 @@ class player {
                     return true;
                 }
             }
+            
         });
+        console.log(this.board);
         return placed;
     }
 
-    canPlace(size, x, y, rotated, board) {
+    canPlace(size, y, x, rotated, board) {
+        console.log("asdfasfasf ", rotated, "    ", x);
         if (rotated) {
             if ((x + 1) - size < 0) {
                 return false;
@@ -202,7 +208,8 @@ class player {
         }
     }
 
-    Place(size, x, y, rotated, board) {
+    Place(size, y, x, rotated, board) {
+
         if (rotated) {
             for (let i = x; i >= (x + 1) - size; i--) {
                 board[i][y] = 2;
@@ -219,7 +226,7 @@ class player {
     }
 
     Hit(x, y) {
-        console.log(x, y)
+        console.log(x, y);
         if(this.board[x][y] < 0) {
             return -1
         }
@@ -242,6 +249,7 @@ class player {
             if(this.ships.hasOwnProperty(key)) {
                 this.ships[key].forEach((ship) => {
                     if (!ship.placed) {
+             
                         isFinished = false;
                         return;
                     }
@@ -249,6 +257,7 @@ class player {
             }
         }
         this.finished = isFinished;
+        console.log("Finished(): ", this.finished);
         return isFinished;
     }
 
@@ -322,9 +331,9 @@ class gameSession {
     }
 }
 
-const gameSessions = Array(0);
-for(let i = 1; i < 10; i++) {
-    gameSessions.push(new gameSession(i))
+const gameSessions = Array(9);
+for(let i = 0; i < 9; i++) {
+    gameSessions[i] = new gameSession(i);
 };
 
 io.on("connection", function (socket) {
@@ -383,11 +392,12 @@ io.on("connection", function (socket) {
     socket.on("ready", function(lobbyId) {
         const session = gameSessions[lobbyId];
         if(session){
+            console.log(session);
             if(session.player2){
                 if(session.player2.id === socket.id) {
                     session.p2Ready = true;
                 }
-                if(session.p1Ready && session.p2Ready) {
+                if(session.player1 && session.player2) {
                     session.player1.setOpponent(session.player2);
                     session.player2.setOpponent(session.player1);
                     io.to("lobby"+lobbyId).emit("gameStart", lobbyId);
@@ -397,29 +407,57 @@ io.on("connection", function (socket) {
                     session.p1Ready = true;
                 }
             }
+            
         }
+    });
+
+    socket.on("sendState", (lobbyId, data) =>{
+        let player;
+        let opp;
+        const session = gameSessions[lobbyId];
+        if(session) {
+            if(session.player1.socketId === socket.id) {
+                player = session.player1;
+                
+            } else if (session.player2.socketId === socket.id) {
+                player = session.player2;
+            }
+        }
+        if (player){
+            io.to(player.opponent.socketId).emit("getState",data);
+        }
+        
+
     });
 
     socket.on("place", (lobbyId, type, x, y, rotated, returnStatus) => {
         let player;
+        x =x /40;
+        rotated = !rotated;
+        y=y/40;
         const session = gameSessions[lobbyId];
         let placed = false;
+       
         if(session) {
             if(session.player1.socketId === socket.id) {
-                player = session.player1.socketId
+                player = session.player1;
             } else if (session.player2.socketId === socket.id) {
-                player = session.player2.socketId;
+                player = session.player2;
             }
         } else {
-            returnResult(-1);
+            returnStatus(-1);
         }
+        
         if(player) {
+   
             placed = player.placeShip(type, x, y, rotated);
             if(placed) {
                 socket.emit("displayShips", player.ships);
                 if(player.Finished() && player.opponent.Finished()) {
+           
                     io.to("lobby"+lobbyId).emit("finished");
                     session.player1.turn = true;
+                    console.log(session.player1.turn);
                     io.to(session.player1.socketId).emit("changeTurn", true);
                     io.to(session.player2.socketId).emit("changeTurn", false);
                 }
@@ -430,20 +468,23 @@ io.on("connection", function (socket) {
         return placed ? returnStatus(null) : returnStatus("Cannot Place There");
     });
 
-    socket.on("shot", (lobbyId, x, y, returnResult) => {
+    socket.on("shot", (lobbyId, y, x, returnResult) => {
         let player;
+        x=x/40;
+        y=y/40;
         const session = gameSessions[lobbyId];
         if(session) {
             if(session.player1.socketId === socket.id) {
-                player = session.player1.socketId
+                player = session.player1;
             } else if (session.player2.socketId === socket.id) {
-                player = session.player2.socketId;
+                player = session.player2;
             }
         } else {
             returnResult(-1);
         }
         if(player) {
             let hit;
+            console.log(player);
             if(player.turn) {
                 hit = player.opponent.Hit(x, y);
                 if(hit === -1) { //return [-1, "Already shot there."] 
@@ -458,7 +499,11 @@ io.on("connection", function (socket) {
                     gameList[lobby].reset();
         
                 }
-                hit ? returnResult(1, "" + x + y) : returnResult(2,"");
+                x = x * 40;
+                y = y * 40;
+                let ret = y.toString()+x.toString();
+                console.log("Ret: ", ret); 
+                hit ? returnResult(1, ret) : returnResult(2,ret);
                 io.to(player.socketId).emit("changeTurn", false);
                 io.to(player.opponent.socketId).emit("changeTurn", true);
             } else {
@@ -665,6 +710,8 @@ app.patch("/api/pay/chargeCoins", (req, res) => {
 
 app.patch("/api/user/updateRoom/", (req, res) => {
     let roomId = req.body.roomId;
+    console.log("uodate room", roomId)
+
     let myquery = { _id: req.user._id };
     let newvalues = { $set: {roomId: roomId} };
     db.collection('users').updateOne(myquery, newvalues, function(err, result){
@@ -691,7 +738,7 @@ app.patch("/api/pay/purchaseItem", (req, res) => {
         db.collection("user").updateOne(myquery, newvalues, function(err, result){
             if (err) return res.status(500).end(err);
             req.session.user = req.user;
-            res.json("successfully purchased item");
+            res.json(req.user.coins);
         })
     }
 })
