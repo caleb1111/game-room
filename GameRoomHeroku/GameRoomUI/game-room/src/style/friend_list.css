@@ -1,0 +1,84 @@
+
+.friend_list {
+    width: 250px;
+	height: 280px;
+	padding: 10px 10px 10px 10px;
+	font-size: 11px;
+    position: relative;
+    background: url(../media/lobby/playerListBackground.png) repeat;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.friend_box {
+  color: black;
+  font-size: 120%;
+  border-radius: 10px;
+  height: 220px;
+  width: 230px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.friend_list .menu_title { color: white; margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 20px; font-weight: bold; margin-bottom: 10px;}
+
+#friends {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+#friends li {
+    font-weight: bold;
+    background-color: #eee;
+  border-radius:10px;
+  height: 50px;
+  padding: 5px 10px;
+  transform: scale(0.9);
+  cursor: pointer;
+}
+
+#friends li:nth-child(odd) {
+    background: #bbb;
+}
+
+#friends li:hover {
+    opacity: 1;
+  transform: scale(1);
+}
+
+cite {
+  font-size: 90%;
+  display: block;
+}
+
+cite img {
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.f_btn,
+.f_btn:visited {
+  margin-top: 6px;
+    background-color: #111;
+    width: 45%;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.f_btn:hover,
+.f_btn:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+
+}

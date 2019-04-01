@@ -1,0 +1,102 @@
+
+.chat_box {
+	width: 280px;
+  height: 580px;
+	padding: 10px 10px 10px 10px;
+	font-size: 11px;
+	position: relative;
+  background: url(../media/lobby/chatBackground.png) repeat;
+  border-radius: 10px;
+}
+
+.chat_content {
+	height: 550px;
+	width: 260px;
+}
+
+
+.messages_box {
+  color: black;
+  font-size: 120%;
+  border-radius: 10px;
+  height: 450px;
+  width: 260px;
+  overflow-y: scroll; 
+}
+
+.chat_box .menu_title { color: white; margin-left: 0px; width: 200px; margin-top: -8px; height: 25px; font-size: 20px; font-weight: bold; margin-bottom: 10px;}
+
+.chat_box .form_element{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    margin-bottom:10px;
+    margin-top: 10px;
+    font-size: 16px;
+    border-radius:10px;
+    padding:5px 10px 5px 10px;
+}
+
+/* ------------BUTTONS------------  */
+button[type="submit"]{
+    display: none;
+}
+
+.btn_msg,
+.btn_msg:visited {
+    background-color: #111;
+    width: 50%;
+    margin-left: 60px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_msg:hover,
+.btn_msg:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}
+
+#message {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  transform: scale(1);
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+#message li {
+  font-weight: bold;
+  background-color: #bbb;
+  border-radius:10px;
+  height: auto;
+  padding: 5px 10px;
+  word-break: break-all;
+  font-size: 120%;
+  cursor: pointer;
+  transform: scale(0.9);
+}
+
+#message li:nth-child(odd) {
+  background: #eee;
+}
+
+#message li:hover {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.msg img {
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+

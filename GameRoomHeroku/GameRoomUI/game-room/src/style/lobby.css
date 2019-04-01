@@ -1,0 +1,87 @@
+ul, li {
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+
+.empty {
+	height: 100px;
+}
+
+.clear {
+	clear:left;
+}
+
+.half { width: 220px }
+
+.left { float: left }
+.right { float: right }
+
+#lobby_wrapper {
+	width: 1140px;
+	margin: 0 auto
+}
+
+#lobby_sidebar {
+	float: right;
+	width: 200px;
+	padding-left: 20px;
+	background:	url(../media/lobby/lobby_sidebar.png) center left no-repeat
+}
+
+#lobby_leftsidebar {
+	float: left;
+	width: 350px;
+	margin-left: -100px;
+	padding-left: 40px;
+	background:	url(../media/lobby/lobby_sidebar.png) center right no-repeat
+}
+
+#lobby_main {
+	float: left;
+	margin-left: 25px;
+	width: 660px;
+	height: 640px;
+}
+
+/* scroll bar gotten from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_custom_scrollbar2 */
+/* width */
+::-webkit-scrollbar {
+	background: black; 
+	width: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px grey; 
+	border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+	background: white; 
+	border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+	background: gray; 
+  }
+/* ------------------------------------------------------- */
+
+#game_room li {
+	float: left;
+	width: 180px;
+	height: 180px;
+	margin: 15px 15px 15px 15px;
+	text-align: center;
+	color: white;
+	background: url(../media/lobby/roomBG.png);
+	transform: scale(1);
+  transition: transform 1s, opacity 0.5s;
+}
+
+#game_room li:hover {
+  transform: scale(1.13);
+}
+#game_room li.no_margin_right { margin-right: 0 }

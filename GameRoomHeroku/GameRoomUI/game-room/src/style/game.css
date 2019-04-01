@@ -1,0 +1,298 @@
+.white{
+    color: white;
+}
+
+#playerBoard {
+    background: #f1f1f1;
+    border:  2px solid white
+}
+
+#player{
+    margin-right: 30px;
+}
+
+#opponent{
+    margin-left: 30px;
+}
+
+
+#opponentBoard {
+    background: #f1f1f1;
+    border:  2px solid white
+}
+
+.board {
+    display: flex;
+    flex-direction: row;
+}
+
+#fleetText {
+    text-align: center;
+    font-size: 20px;
+}
+
+#gameTitle {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+#logs{
+    margin-left: 80px;
+}
+
+
+
+#deployments{
+    display: flex;
+    flex-direction: row;
+}
+
+#textLog{
+    width: 350px;
+    height: 400px;
+    border-radius: 15px;
+    padding: 15px 15px 15px 15px;
+    background-color: #f1f1f1;
+    overflow: auto;
+}
+
+.entry{
+    color: #fff;
+    width: 100px;
+    align-self: center;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.shipName{
+    text-align: center;
+    display: table;
+    margin: 0 auto;
+    font-weight: bolder;
+}
+
+.selector{
+    display: none;
+    width: inherit;
+    height: 5px;
+    background: cyan;
+    margin-top: 25px;
+    margin: 25px auto;
+}
+
+.btn_rotate,
+.btn_rotate:visited {
+    background-color: #111;
+    width: auto;
+    height: 20%;
+    margin-top: 100px;
+    margin-left: 60px;
+    margin-bottom: 100px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_rotate:hover,
+.btn_rotate:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}
+
+#ending{
+    height: 300px;
+    width: 600px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    padding: 0px 20px 20px 20px;
+    border: 1px solid lightgray;
+    border-radius: 20px;
+    color: white;
+}
+
+#ending p {
+    margin-top: 50px;
+    margin-left: 10px;
+    color: royalblue;
+}
+
+
+#result{
+    font-size: 40px;
+    text-align: center;
+}
+
+#returnButton{
+    display: table;
+    margin: 0 auto;
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    border: 5px solid lightgreen;
+    background-color: black;
+    color: white;
+}
+
+#status{
+    text-align: center;
+    font-weight: bolder;
+    color: lightgreen;
+}
+
+.coinImg{
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+    margin-top: 40px
+}
+
+#gameContent{
+    display: table;
+    margin: 0 auto;
+}
+
+
+#drawingTemplates{
+    padding-top: 1000px;
+}
+
+#destroyerPlace, #submarinePlace, #cruiserPlace {
+    cursor: pointer;
+}
+
+.btn_return,
+.btn_return:visited {
+    background-color: #111;
+    width: auto;
+    margin-top: 50px;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #808080;
+    color: white;
+    cursor: pointer;
+}
+
+.btn_return:hover,
+.btn_return:active {
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+}
+
+#carrierBar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px solid lightgreen;
+}
+
+#dreadnoughtBar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px solid lightgreen;
+}
+
+#cruiserBar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px solid lightgreen;
+}
+
+#submarineBar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px solid lightgreen;
+}
+
+#destroyerBar {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: 5px solid lightgreen;
+}
+
+#logTitle {
+    font-weight: bolder;
+    font-size: 120%;
+}
+
+#oFleet {
+    font-weight: bolder;
+    font-size: 120%;
+}
+
+#yFleet {
+    font-weight: bolder;
+    font-size: 120%;
+}
+
+.fleets {
+    display: flex;
+    flex-direction: row;
+    margin-left: 120px;
+}
+
+.fleetTitle {
+    margin-left: 180px;
+    font-size: 120%;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.statusMsg {
+    font-size: 120%;
+    margin-top: 20px;
+}
+
+.log_box{
+    color: black;
+    font-size: 120%;
+    border-radius: 10px;
+    height: 400px;
+    width: 360px;
+    overflow-y: scroll; 
+    overflow-x: hidden; 
+}
+
+#log {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    transform: scale(1);
+    transition: transform 0.5s, opacity 0.5s;
+  }
+  
+  #log li {
+    background-color: #bbb;
+    border-radius:10px;
+    height: auto;
+    padding: 5px 10px;
+    word-break: break-all;
+    font-size: 120%;
+    cursor: pointer;
+  }
+  
+  #log li:nth-child(odd) {
+    background: #eee;
+  }
+  
+  #log li:hover {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+  
+.green {
+    color: lightgreen
+}
+
+.red {
+    color: lightcoral
+}

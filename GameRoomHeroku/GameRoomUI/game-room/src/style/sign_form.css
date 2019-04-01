@@ -1,0 +1,84 @@
+.signup_form{
+    margin: 0px 1px;
+    display:flex;
+    flex-direction: column;
+}
+
+.signup_form .form_title{
+    text-align:center;
+    font-size:350%;
+    font-weight:bold;
+    margin:-20px -10px 0px -10px;
+    padding:10px 0px 10px 25px;
+    color: #f2c50e;
+}
+
+.signup_form .form_radio{
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.signup_form .form_element{
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    margin-bottom:10px;
+    margin-top: 10px;
+    font-size: 20px;
+    border-radius:10px;
+    padding:5px 10px 5px 10px;
+}
+
+.sign_logo {
+    margin-top: 100px;
+    margin-bottom: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.sign_logo:hover,
+.sign_logo:active{
+    border-bottom: 2px solid #918a85;
+    /* add the transition */
+    transition: border-bottom 0.4s;
+}
+
+.text {
+    color:#f7dc6f;
+}
+
+/* ------------BUTTONS------------  */
+button[type="submit"]{
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.btn_signup, .btn_signin,
+.btn_signup:visited, .btn_signin:visited {
+    margin-top: 20px;
+    width: 15%;
+    margin-left: auto;
+    margin-right: auto; 
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 200px;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+    border: 1px solid #f7dc6f;
+    color: #f7dc6f;
+    cursor: pointer;
+}
+
+.btn_signup:hover, .btn_signin:hover,
+.btn_signup:active, .btn_signin:active {
+    background-color: #e2b70d;
+    border: 1px solid #e2b70d;
+    color: #fff;
+}
