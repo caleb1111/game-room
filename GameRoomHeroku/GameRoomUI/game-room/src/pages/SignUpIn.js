@@ -80,7 +80,7 @@ export default class SignUpIn extends Component {
               <div className="form_title">𝕊𝕚𝕘𝕟 𝕌𝕡/𝕊𝕚𝕘𝕟 𝕀𝕟</div>
               <input type="text" name="username" className="form_element" placeholder="Enter a username" 
               onChange={e => this.setState({ username: e.target.value })} required/>
-              <input type="text" name="password" className="form_element" placeholder="Enter a password" 
+              <input type="password" name="password" className="form_element" placeholder="Enter a password" 
               onChange={e => this.setState({ password: e.target.value })} required/>
               <div className="buttons">
                   <label htmlFor="signup" className="btn_signup">Sign Up</label>
