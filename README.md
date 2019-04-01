@@ -2,6 +2,10 @@
 
 Notes: 403 error stops the site from working since most things use sockets to work. It is caused from CORS with react + socket io. We’ve searched the internet for the problem, but no one seems to have the same problem (it’s always 404 or something in conjunction with iinode or nodebb). The app works fully in localHost (in which is also included in the repo in GameRoom folder) with all features: game, chat, friend list, player list, shop, profiles, paypal.
 
+
+
+Also for the game, the ships that you place cannot be displayed.
+
 **CSCC09 Proposal**
 
 **Team members: ZhiHong(Caleb) Chen, Yishuai Wang, TianJi Liu**
