@@ -47,8 +47,9 @@ class Nav extends React.Component {
             <ul className="main-nav">
                 <li style={{visibility:"hidden"}}><Link to='/game/'>Game</Link></li>
                 <li><Link to='/home/' onClick={()=> this.handleProfileReset()}>Lobby</Link></li>
-                <li><Link to='/shop/'>Shop</Link></li>
+                <li><Link to='/shop/' onClick={()=> this.handleProfileReset()}>Shop</Link></li>
                 <li><Link to='/userprofile/'>User Profile</Link></li>
+                <li><Link to='/credits/' onClick={()=> this.handleProfileReset()}>Credits</Link></li>
                 <li><Link to='/signin/' 
                 onClick={() => this.handleSignout()}>Sign Out</Link></li>
             </ul>

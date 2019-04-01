@@ -4,6 +4,7 @@ import './style/index.css';
 import './style/vendors/grid.css';
 import './style/vendors/normalize.css';
 import Home from './pages/Home';
+import Credits from './pages/Credits';
 import Game from './pages/Game';
 import Shop from './pages/Shop';
 import SignUpIn from './pages/SignUpIn';
@@ -52,6 +53,7 @@ function AppRouter() {
           <Route path="/home/" component={Home} />
           <Route path="/UserProfile/" component={UserProfile} />
           <Route path="/shop/" component={Shop} />
+          <Route path="/credits/" component={Credits} />
           <Route path="/signin/" component={SignUpIn} />
         </div>
       </Router>
