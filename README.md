@@ -2,9 +2,11 @@
 
 Notes: 403 error stops the site from working since most things use sockets to work. It is caused from CORS with react + socket io. We’ve searched the internet for the problem, but no one seems to have the same problem (it’s always 404 or something in conjunction with iinode or nodebb). The app works fully in localHost (in which is also included in the repo in GameRoom folder) with all features: game, chat, friend list, player list, shop, profiles, paypal.
 
-For paypal login here is a sand box account that you can log in with: 
+For paypal login here is a sandbox account that you can log in with: 
 Username: cscc09@hotmail.com
 Password: asdfghjkl
+
+We kept the paypal in sandbox mode since we need to get approval from paypal for it to acually go live mode with an account
 
 Also for the game, the ships that you place cannot be displayed.
 
