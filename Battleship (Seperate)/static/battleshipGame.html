@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link href="style/game.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    
+    <p id="gameTitle">BattleShip</p>
+    <p id="error_box"></p>
+
+    <div id="ending">
+        <p id="result">Result</p>
+        <div class="board">
+            <p>Gained </p>
+            <p id="earned">xxx </p>
+            <img class="coin" src="assets/coin.png"></img>
+        </div>
+        <button id="returnButton">Return to Lobby</button>
+    </div>
+
+    <div id="gameContent">
+
+        <div class="board">
+            <div id="player">
+                <!--Seems like setting canvas size within css breaks canvas scaling-->
+                <p id="yFleet">Your Fleet</p>
+                <canvas width="400" height="400" id="playerBoard"></canvas>
+            </div>
+            <div id="opponent">
+                <p id="oFleet">Opponent's Fleet</p>
+                <canvas width="400" height="400" id="opponentBoard"></canvas>
+            </div>
+            <div id="turnText"></div>
+
+            <div id="logs">
+                <p id="logTitle">Log</p>
+                <p id="textLog"></p>
+            </div>
+            
+        </div>
+        <h3 id="status">Waiting For Both Players To Set Up</h3>
+        <div id="fl">
+            <p id="fleetText">Fleet</p>
+            <div id="deployments">
+                <div id="carrierSelect" class="entry">
+                    
+                    <img id="carrierImg" class="shipName" src="assets/carrier.png"></img>
+                    <div id ="carrierBar" class="selector"></div>
+                    <p class="shipName">Carrier</p>
+                    <p class="shipName" id="carrierRemaining">Remaining: </p>
+                </div>
+
+                <div id="dreadnoughtSelect" class="entry">
+                    <img id="dreadnoughtImg" class="shipName" src="assets/dreadnought.png"></img>
+                    <div id="dreadnoughtBar" class="selector"></div>
+                    <p class="shipName">Dreadnought</p>
+                    <p class="shipName" id="dreadnoughtRemaining">Remaining: </p>
+                </div>
+
+                <div id="cruiserSelect" class="entry">
+                    <img id="cruiserImg" class="shipName" src="assets/cruiser.png"></img>
+                    <div id="cruiserBar"class="selector"></div>
+                    <p class="shipName">Cruiser</p>
+                    <p class="shipName" id="cruiserRemaining">Remaining: </p>
+                </div>
+
+                <div id="submarineSelect" class="entry">
+                    <img id="submarineImg" class="shipName" src="assets/submarine.png"></img>
+                    <div id="submarineBar" class="selector"></div>
+                    <p class="shipName">Submarine</p>
+                    <p class="shipName" id="submarineRemaining">Remaining: </p>
+                </div>
+
+                <div id="destroyerSelect" class="entry">
+                    <img id="destroyerImg" class="shipName" src="assets/destroyer.png"></img>
+                    <div id="destroyerBar" class="selector"></div>
+                    <p class="shipName">Destroyer</p>
+                    <p class="shipName" id="destroyerRemaining">Remaining: </p>
+                </div>
+
+                <button id="rotateShips">ROTATE</button>
+            </div>
+        </div>
+
+    </div>
+
+<div class="deployments" id="drawingTemplates">
+    <img id="destroyerPlace" class="place" src="assets/destroyer.png"></img>
+    <img id="destroyerHPlace" class="place" src="assets/destroyerH.png"></img>
+    <img id="submarinePlace" class="place" src="assets/submarine.png"></img>
+    <img id="submarineHPlace" class="place" src="assets/submarineH.png"></img>
+    <img id="cruiserPlace" class="place" src="assets/cruiser.png"></img>
+    <img id="cruiserHPlace" class="place" src="assets/cruiserH.png"></img>
+    <img id="dreadnoughtPlace" class="place" src="assets/dreadnought.png"></img>
+    <img id="dreadnoughtHPlace" class="place" src="assets/dreadnoughtH.png"></img>
+    <img id="carrierPlace" class="place" src="assets/carrier.png"></img>
+    <img id="carrierHPlace" class="place" src="assets/carrierH.png"></img>
+    <img id="hit" class="place" src="assets/hit.png"></img>
+    <img id="miss" class="place" src="assets/miss.png"></img>
+
+</div>
+    <footer>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="js/gameIndex.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    </footer>
+</body>
+
+</html>

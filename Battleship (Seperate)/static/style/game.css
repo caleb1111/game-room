@@ -1,0 +1,144 @@
+#playerBoard {
+    background: #f1f1f1;
+    border:  2px solid white
+}
+
+#player{
+    margin-right: 30px;
+}
+
+#opponent{
+    margin-left: 30px;
+}
+
+
+#opponentBoard {
+    background: #f1f1f1;
+    border:  2px solid white
+}
+
+.board {
+    display: flex;
+    flex-direction: row;
+}
+
+#fleetText {
+    text-align: center;
+    font-size: 20px;
+}
+
+#gameTitle {
+    text-align: center;
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+#logs{
+    margin-left: 80px;
+}
+
+
+
+#deployments{
+    display: flex;
+    flex-direction: row;
+}
+
+#textLog{
+    width: 350px;
+    height: 400px;
+    border-radius: 15px;
+    padding: 15px 15px 15px 15px;
+    background-color: #f1f1f1;
+    overflow: auto;
+}
+
+.entry{
+    width: 100px;
+    align-self: center;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.shipName{
+    text-align: center;
+    display: table;
+    margin: 0 auto;
+    font-weight: bolder;
+}
+
+.selector{
+    display: none;
+    width: inherit;
+    height: 5px;
+    background: cyan;
+    margin-top: 25px;
+    margin: 25px auto;
+}
+
+#rotateShips{
+    border: 5px solid lightgreen;
+    color: lightgreen;
+    font-weight: bolder;
+    background-color: black;
+    width: 80px;
+    height: 100px;
+    margin-top: 15px;
+}
+
+#ending{
+    display: table;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    padding: 0px 20px 20px 20px;
+    background-color: lightgray;
+    border-radius: 20px;
+    
+}
+#earned{
+    margin-left: 10px;
+    font-weight: bolder;
+    color: royalblue;
+}
+
+
+#result{
+    font-size: 40px;
+    text-align: center;
+}
+
+#returnButton{
+    display: table;
+    margin: 0 auto;
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    border: 5px solid lightgreen;
+    background-color: black;
+    color: white;
+}
+
+#status{
+    text-align: center;
+    font-weight: bolder;
+    color: lightgreen;
+}
+
+.coin{
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+}
+
+#gameContent{
+    display: table;
+    margin: 0 auto;
+}
+
+#drawingTemplates{
+    padding-top: 1000px;
+}
+
+body{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
