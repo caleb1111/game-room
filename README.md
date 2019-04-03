@@ -10,6 +10,8 @@ We kept the paypal in sandbox mode since we need to get approval from paypal for
 
 Also for the game, the ships that you place cannot be displayed.
 
+Video URL: https://www.youtube.com/watch?v=kzUyZDkugXw&feature=youtu.be
+
 **CSCC09 Proposal**
 
 **Team members: ZhiHong(Caleb) Chen, Yishuai Wang, TianJi Liu**
